@@ -12,7 +12,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var wordCount = document.getElementById(".story-body").innerHTML.split(' ').length;
+    var wordCount = document.getElementById(".story-body").innerHTML.split(' ').length; //will only work if the DOM element contains text only. Consider modifying for flexibility.
     var averageReadSpeed = 400; //according to Google, average read speed is 200 wpm with 60% comprehension. Need to find 95th percentile number. Arbitrarily doubling for now.
     var readJS = {
         debug: {
