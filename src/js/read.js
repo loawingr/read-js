@@ -11,7 +11,9 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
 (function(){
     "use strict";
     // Set the name of the hidden property and the change event for visibility
-    var hidden, visibilityChange; 
+    var hidden, visibilityChange;
+    var wordCount = document.getElementById(".story-body").innerHTML.split(' ').length;
+    var averageReadSpeed = 400; //according to Google, average read speed is 200 wpm with 60% comprehension. Need to find 95th percentile number. Arbitrarily doubling for now.
     var readJS = {
         debug: {
             console:false,
@@ -36,10 +38,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             domNode:30, //100 points awarded if the user scrolls past the percentage point of the DOM node
             readingPoint:400, // if the number of points exceeds this limit than the person has read the article
             domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
-            timeInView:6 //the minimum number of seconds the DOM node needs to be in view
-            //under 5 seconds: Nigel, Ning, Sam, Natasha, Jamie, Richard
-            //5-10 seconds (1-2 sentences): Rob, Kristen, Edric, Alice
-            //about 30 seconds to 1 minute (paragraph): Patrice, Patrick, Dave, Xiaodong
+            timeInView:(wordCount*(domNode/100)/averageReadSpeed) //calculated minimum time necessary to reach the 100% scroll node above
         },
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
@@ -58,7 +57,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 readJS.activity.timeOnPage+=timeInterval;
                 readJS.activity.timeInUnknownState+=timeInterval;
                 //add very little points when time passes by
-                readJS.activity.readingPoints+=timeInterval; 
+                readJS.activity.readingPoints+=timeInterval;
                 //detected the user has scrolled which means they are active on the page
                 if (!!readJS.activity.scrolled){
                     readJS.activity.scrolled = false;
@@ -70,7 +69,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                     readJS.addPoints();
                     readJS.hasRead();
                 }
-                
+
             }, readJS.timeInterval*1000);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
         },
@@ -159,7 +158,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 readJS.debug.overlay = true;
                 return;
             }
-            
+
             if (document.location.href.match(/statsConsole\=true/)){
                 readJS.debug.console = true;
                 return;
@@ -210,7 +209,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         */
         getVisibilityProperties : function(){
             var hidden, visibilityChange;
-            if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
                 hidden = "hidden";
                 visibilityChange = "visibilitychange";
             } else if (typeof document.mozHidden !== "undefined") {
@@ -239,14 +238,14 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             }
         },
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
-        //the calculations assume 
+        //the calculations assume
         inView : function(domNode){
 
             readJS.domNode = domNode;
 
             //top left and bottom right coordinate points of the viewport
             var vp = { tl:[], br:[]};
-            
+
             //x coordinate of the top left corner of the viewport
             vp.tl[0] = Math.abs(document.body.scrollLeft);
 
@@ -283,7 +282,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 vui.style.zIndex = 9999;
                 //console.log(vui);
             }
-            
+
             //top left and bottom right coordinate points of the dom node
             var dn = { tl:[], br:[]};
 
@@ -379,7 +378,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             }
             readJS.activity.dnp = dnip;
             readJS.activity.vpp = dnvp;
-            
+
             return { "dom_node_inview_percent":dnip, "dom_node_viewport_percent": dnvp };
         },
         handleScroll : function(){
@@ -435,6 +434,3 @@ if (!!readJSConfig && !!readJSConfig.el && !!readJSConfig.cb){
     readJS.initialize(readJSConfig.cb);
 
 }
-
-
-
