@@ -31,7 +31,7 @@ function get_text(element) {
     var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
     var readJS = {
         debug: {
-            console:true,
+            console:false,
             overlay:false
         },
         timeInterval: 1.5, //number of seconds between checking whether to poll the DOM
