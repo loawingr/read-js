@@ -8,25 +8,10 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
     Read.js assumes:
     1) The article width never exceeds the viewport width
 */
-
-function getText(element) {
-    "use strict";
-    var ret = "";
-    var length = element.childNodes.length;
-    for(var i = 0; i < length; i++) {
-        var node = element.childNodes[i];
-        if(node.nodeType !== 8) {
-            ret += node.nodeType !== 1 ? node.nodeValue : getText(node);
-        }
-    }
-    return ret;
-}
-
 (function(){
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var wordCount = getText(document.querySelector(readJSConfig.el)).split(" ").length;
     var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
     var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
     var readJS = {
@@ -53,7 +38,6 @@ function getText(element) {
             domNode:percentagePoint, //100 points awarded if the user scrolls past the percentage point of the DOM node
             readingPoint:400, // if the number of points exceeds this limit than the person has read the article
             domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
-            timeInView:(wordCount*(percentagePoint/100)/averageReadSpeed) //calculated minimum time necessary to read domNode percentage
         },
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
@@ -95,6 +79,20 @@ function getText(element) {
             if (!!readJS.debug.console){
                 console.log(arguments);
             }
+        },
+        /*
+            getText() will search the domNode for childNodes of text
+        */
+        getText : function(element){
+            var ret = "";
+            var length = element.childNodes.length;
+            for(var i = 0; i < length; i++) {
+                var node = element.childNodes[i];
+                if(node.nodeType !== 8) {
+                    ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
+                }
+            }
+            return ret;
         },
         /*
             calculateCoordinates() will determine the amount of overlap between the dom node and the viewport
@@ -406,6 +404,8 @@ function getText(element) {
         },
         handleLoad : function(){
             readJS.domNode = document.querySelector(readJSConfig.el);
+            var wordCount = readJS.getText(readJS.domNode).split(" ").length;
+            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed
             readJS.domNode.addEventListener("click", readJS.handleClick);
             readJS.calculateCoordinates();
         },
