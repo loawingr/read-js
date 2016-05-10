@@ -404,8 +404,10 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         },
         handleLoad : function(){
             readJS.domNode = document.querySelector(readJSConfig.el);
+            // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
-            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed //readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
+            // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
+            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed
             readJS.domNode.addEventListener("click", readJS.handleClick);
             readJS.calculateCoordinates();
         },
