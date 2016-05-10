@@ -26,8 +26,7 @@ function getText(element) {
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var wordCount = getText(document.getElementsByClassName("story-body")[0]).split(" ").length;
-    console.log(wordCount);
+    var wordCount = getText(document.querySelector(readJSConfig.el)).split(" ").length;
     var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
     var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
     var readJS = {
