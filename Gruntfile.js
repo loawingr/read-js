@@ -83,7 +83,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-karma");
 
-  grunt.registerTask("default", ["jshint", "uglify", "copy:build", "karma" ]);
+  grunt.registerTask("default", ["jshint", "uglify", "copy:build" ]);
+  grunt.registerTask("build", ["default"]);
+  grunt.registerTask("test", ["karma"]);
     
 };
 
