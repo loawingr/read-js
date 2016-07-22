@@ -16,7 +16,8 @@ module.exports = function(grunt) {
           "escape" : true,
           "unescape" : true,
           "module" : true,
-          "readJS" : true
+          "readJS" : true,
+          "readJSConfig" : true
         },
         immed : false,
         indent : 4,
@@ -60,12 +61,12 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          "build/js/read.js": ["./src/js/read.js"]
+          "build/js/read.js": ["./src/js/config.js", "./src/js/read.js"]
         }
       }
     },
     jshint: {
-      files: ["Gruntfile.js", "./src/js/read.js"],
+      files: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js"],
       options: hint_opts
     }
   };
