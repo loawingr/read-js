@@ -1,9 +1,3 @@
-var readJSConfig = window.readingJSConfig || {};
-if (!readJSConfig.el){ readJSConfig.el = ".story-body"; }
-if (!readJSConfig.cb){ readJSConfig.cb = function(){
-    "use strict";
-    alert("The article has been read");
-}; }
 /*
     Read.js assumes:
     1) The article width never exceeds the viewport width
@@ -84,15 +78,26 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             getText() will search the domNode for childNodes of text
         */
         getText : function(element){
-            var ret = "";
-            var length = element.childNodes.length;
-            for(var i = 0; i < length; i++) {
-                var node = element.childNodes[i];
-                if(node.nodeType !== 8) {
-                    ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
+            try{
+                var ret = "";
+                //element doesn't have nested DOM elements
+                if(typeof(element.childNodes) === "undefined"){
+                    return element.nodeValue;
                 }
+
+                //element has nested DOM elements
+                var length = element.childNodes.length;
+                for(var i = 0; i < length; i++) {
+                    var node = element.childNodes[i];
+                    if(node.nodeType !== 8) {
+                        ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
+                    }
+                }
+                return ret;
+            }catch(err){
+                //readJS.console(err);
             }
-            return ret;
+            
         },
         /*
             calculateCoordinates() will determine the amount of overlap between the dom node and the viewport
@@ -407,7 +412,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
             // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
-            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed
+            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed;
             readJS.domNode.addEventListener("click", readJS.handleClick);
             readJS.calculateCoordinates();
         },
@@ -436,7 +441,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
     window.readJS = readJS;
 
 })();
-if (!!readJSConfig && !!readJSConfig.el && !!readJSConfig.cb){
+if (typeof(readJSConfig) !== "undefined" && typeof(readJSConfig.el) !== "string" && typeof(readJSConfig.cb) !== "function" ){
 
     //scroll event listener
     window.addEventListener("scroll", readJS.handleScroll);
