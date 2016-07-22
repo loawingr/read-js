@@ -68,6 +68,11 @@ module.exports = function(grunt) {
     jshint: {
       files: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js"],
       options: hint_opts
+    },
+    karma:{
+      readjs : {
+        configFile : "test/conf/read.conf.js"
+      }
     }
   };
 
@@ -76,8 +81,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-karma");
 
-  grunt.registerTask("default", ["jshint", "uglify", "copy:build" ]);
+  grunt.registerTask("default", ["jshint", "uglify", "copy:build", "karma" ]);
     
 };
 
