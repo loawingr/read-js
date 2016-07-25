@@ -14,6 +14,7 @@
     "jquery": "^3.1.0",
     "karma": "^1.1.1",
     "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.1.1",
     "karma-html2js-preprocessor": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-junit-reporter": "^1.1.0",
@@ -24,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/loawingr/read-js.git"
   },
-  "scripts":{
+  "scripts": {
     "test": "grunt test"
   }
 }

@@ -72,6 +72,9 @@ module.exports = function(grunt) {
     karma:{
       readjs : {
         configFile : "test/conf/read.conf.js"
+      },
+      coverage : {
+        configFile : "test/conf/coverage.conf.js"
       }
     }
   };
@@ -83,8 +86,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-karma");
 
-  grunt.registerTask("default", ["jshint", "uglify", "copy:build" ]);
-  grunt.registerTask("build", ["default"]);
+  grunt.registerTask("default", ["build", "test" ]);
+  grunt.registerTask("build", ["jshint", "uglify", "copy:build"]);
   grunt.registerTask("test", ["karma"]);
     
 };
