@@ -32,6 +32,31 @@ describe("read-js-tests", function(){
         expect(1 < window.readJS.thresholds.domNode && window.readJS.thresholds.domNode <= 100).toBeTruthy();
     });
 
+    it("should-update", function(){
+        readJS.activity.pollingPoints = 0;
+        readJS.activity.timeInUnknownState = 0;
+        //console.log(readJS.activity.pollingPoints, readJS.thresholds.domPolling);
+        expect(readJS.isUpdateRequired()).toBeTruthy();
+        //console.log(readJS.activity.pollingPoints, readJS.thresholds.domPolling);
+
+        readJS.activity.pollingPoints = 0;
+        readJS.activity.timeInUnknownState = 1;
+        expect(readJS.isUpdateRequired()).not.toBeTruthy();
+
+        readJS.activity.pollingPoints = 0;
+        readJS.activity.timeInUnknownState = 2;
+        expect(readJS.isUpdateRequired()).not.toBeTruthy();
+
+        readJS.activity.pollingPoints = 0;
+        readJS.activity.timeInUnknownState = 3;
+        expect(readJS.isUpdateRequired()).not.toBeTruthy();
+
+        readJS.activity.pollingPoints = 0;
+        readJS.activity.timeInUnknownState = 4;
+        expect(readJS.isUpdateRequired()).not.toBeTruthy();
+
+    });
+
     //do something after each test
     afterEach(function() {
     });
