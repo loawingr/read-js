@@ -16,6 +16,12 @@ describe("read-js-tests", function(){
     it("get-text", function(){
         var el = document.getElementById("get-simple-text");
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
+
+        el = document.getElementById("get-nested-text");
+        expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
+
+        el = document.getElementById("avoid-image-text");
+        expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should  be returned");
     });
 
     //do something after each test
