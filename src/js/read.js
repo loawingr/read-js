@@ -6,7 +6,6 @@
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
     var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
     var readJS = {
         debug: {
@@ -39,17 +38,18 @@
         initialize : function(callback){
 
             if (typeof(callback)!== "function"){
-                console.log("ERROR: readJS.initialize() expected a callback function");
+                readJS.console("ERROR: readJS.initialize() expected a callback function");
                 return false;
             }
             readJS.callback = callback;
 
-            if (!readJS.domNode){
+            if (!readJSConfig.el){
+                readJS.console("ERROR: readJS.initialize() expected a dom node to inspect");
                 return false;
             }
 
             //check if the reader is actually reading at a decaying rate
-            readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.timeInterval*1000);
+            readJS.readingWorker = window.setInterval(function(){ readJS.checkActivity(); }, readJS.timeInterval*1000);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
             return true;
         },
@@ -57,6 +57,7 @@
             checkActivity is meant to determine if the user is active on the page
         */
         checkActivity : function(){
+
             var timeInterval = readJS.timeInterval; //seconds
             readJS.activity.timeOnPage+=timeInterval;
             readJS.activity.timeInUnknownState+=timeInterval;
@@ -119,11 +120,11 @@
                         ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
                     }
                 }
-                return ret;
+                return ret.replace(/[\t\n\r]+/g, "").replace(/\s+/g, " ").trim();
             }catch(err){
-                //readJS.console(err);
+                readJS.console(err);
+                return false;
             }
-            
         },
         /*
             calculateCoordinates() will determine the amount of overlap between the dom node and the viewport
@@ -141,7 +142,7 @@
         /*
             hasRead() will determine if the user has read the article
         */
-        hasRead: function(){
+        hasRead : function(){
             if (!!readJS.activity.read){
                 return true;
             }
@@ -154,7 +155,7 @@
                 window.clearInterval(readJS.readingWorker);
                 return true;
             }else{
-                readJS.console("readingPoints:", readJS.activity.readingPoints, "timeInView:", readJS.activity.timeInView);
+                readJS.console("readingPoints: "+ readJS.activity.readingPoints, "timeInView: "+ readJS.activity.timeInView, readJS.thresholds.readingPoint, readJS.thresholds.timeInView);
                 return false;
             }
         },
@@ -447,8 +448,9 @@
         setTimeInViewThreshold : function(){
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
+            var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
             // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
-            readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed;
+            readJS.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.timeInterval);
         },
         removeListeners : function(){
             window.removeEventListener("scroll", readJS.handleScroll);
@@ -475,7 +477,7 @@
     window.readJS = readJS;
 
 })();
-if (typeof(readJSConfig) !== "undefined" && typeof(readJSConfig.el) !== "string" && typeof(readJSConfig.cb) !== "function" ){
+if (typeof(readJSConfig) !== "undefined" && typeof(readJSConfig.el) === "string" && typeof(readJSConfig.cb) === "function" ){
 
     //scroll event listener
     window.addEventListener("scroll", readJS.handleScroll);
@@ -489,4 +491,6 @@ if (typeof(readJSConfig) !== "undefined" && typeof(readJSConfig.el) !== "string"
     //set it all in motion
     readJS.initialize(readJSConfig.cb);
 
+}else{
+    console.log("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
 }

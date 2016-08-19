@@ -20,7 +20,7 @@ describe("read-js-tests", function(){
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
 
         el = document.getElementById("avoid-image-text");
-        expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should  be returned");
+        expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
     });
 
     it("config", function(){
@@ -263,9 +263,11 @@ describe("read-js-tests", function(){
     });
 
     it("initialize", function(){
-        delete readJS.domNode;
+        var el = readJSConfig.el;
+        delete readJSConfig.el;
         expect(readJS.initialize(function(){ alert(1); })).toBeFalsy();
 
+        readJSConfig.el = el;
         readJS.handleLoad();
         spyOn(window, "setInterval");
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
