@@ -6,8 +6,7 @@ module.exports = function(config) {
     
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: "",
-    
-    
+
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ["jasmine"],
@@ -15,9 +14,10 @@ module.exports = function(config) {
     
         // list of files / patterns to load in the browser
         files: [
-          cwd+"/src/js/read.js", //read JS library
           cwd+"/node_modules/jquery/dist/jquery.min.js", //jQuery is used to insert html snippets into DOM for automated tests
           cwd+"/test/html/*.html", //pattern for including html snippet files
+          cwd+"/test/js/read.setup.js", //config file
+          cwd+"/src/js/read.js", //read JS library
           cwd+"/test/js/read.test.js" //test cases
         ],
     

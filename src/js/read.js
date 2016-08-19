@@ -40,31 +40,55 @@
 
             if (typeof(callback)!== "function"){
                 console.log("ERROR: readJS.initialize() expected a callback function");
-                return;
+                return false;
             }
             readJS.callback = callback;
 
-            //check if the reader is actually reading at a decaying rate
-            readJS.readingWorker = window.setInterval(function(){
-                var timeInterval = readJS.timeInterval; //seconds
-                readJS.activity.timeOnPage+=timeInterval;
-                readJS.activity.timeInUnknownState+=timeInterval;
-                //add very little points when time passes by
-                readJS.activity.readingPoints+=timeInterval;
-                //detected the user has scrolled which means they are active on the page
-                if (!!readJS.activity.scrolled){
-                    readJS.activity.scrolled = false;
-                    readJS.reactivate();
-                    readJS.console("detected scroll:", readJS.activity.timeOnPage, " seconds");
-                }
-                if(readJS.isUpdateRequired()){
-                    readJS.calculateCoordinates();
-                    readJS.addPoints();
-                    readJS.hasRead();
-                }
+            if (!readJS.domNode){
+                return false;
+            }
 
-            }, readJS.timeInterval*1000);
+            //check if the reader is actually reading at a decaying rate
+            readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.timeInterval*1000);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
+            return true;
+        },
+        /*
+            checkActivity is meant to determine if the user is active on the page
+        */
+        checkActivity : function(){
+            var timeInterval = readJS.timeInterval; //seconds
+            readJS.activity.timeOnPage+=timeInterval;
+            readJS.activity.timeInUnknownState+=timeInterval;
+            //add very little points when time passes by
+            readJS.activity.readingPoints+=timeInterval;
+            //detected the user has scrolled which means they are active on the page
+            readJS.detectForScroll();
+            readJS.endConditionsChecked();
+        },
+        /*
+            endConditionsChecked will check for success conditions and add points accordingly and then see if the script should stop
+        */
+        endConditionsChecked : function(){
+            if(!!readJS.isUpdateRequired()){
+                readJS.calculateCoordinates();
+                readJS.addPoints();
+                readJS.hasRead();
+                return true;
+            }
+            return false;
+        },
+        /*
+            detectForScroll reads the scroll boolean to see if the event has happened and reactivate the script
+        */
+        detectForScroll : function(){
+            if (!!readJS.activity.scrolled){
+                readJS.activity.scrolled = false;
+                readJS.reactivate();
+                readJS.console("detected scroll:", readJS.activity.timeOnPage, " seconds");
+                return true;
+            }
+            return false;
         },
         /*
             console() will debug the message if the debug mode permits
@@ -72,7 +96,9 @@
         console : function(){
             if (!!readJS.debug.console){
                 console.log(arguments);
+                return true;
             }
+            return false;
         },
         /*
             getText() will search the domNode for childNodes of text
@@ -106,8 +132,10 @@
             if (!!readJS.domNode){
                 var r = readJS.inView(readJS.domNode);
                 readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
+                return true;
             }else{
-                console.log("ERROR: could not find the story body");
+                readJS.console("ERROR: could not find the story body");
+                return false;
             }
         },
         /*
@@ -115,7 +143,7 @@
         */
         hasRead: function(){
             if (!!readJS.activity.read){
-                return;
+                return true;
             }
             if (readJS.activity.readingPoints > readJS.thresholds.readingPoint && readJS.activity.timeInView >= readJS.thresholds.timeInView){
                 readJS.activity.read = true;
@@ -124,8 +152,10 @@
                 readJS.console("readJS: the user has read the article", readJS.activity.readingPoints);
                 readJS.console("readJS: ending interval ID", readJS.readingWorker);
                 window.clearInterval(readJS.readingWorker);
+                return true;
             }else{
                 readJS.console("readingPoints:", readJS.activity.readingPoints, "timeInView:", readJS.activity.timeInView);
+                return false;
             }
         },
         /*
@@ -133,7 +163,7 @@
         */
         addPoints : function(){
             if(!readJS.inViewport(readJS.domNode)){
-                return;
+                return false;
             }
             //user is reading because enough of the dom node has been scrolled through
             if (readJS.activity.dnp > readJS.thresholds.domNode){
@@ -143,6 +173,7 @@
             if (readJS.activity.vpp > readJS.thresholds.viewport){
                 readJS.activity.readingPoints += readJS.activity.increment;
             }
+            return readJS.activity.readingPoints;
         },
         /*
             isUpdateRequired() determines if the DOM node calculations should be run
@@ -151,8 +182,8 @@
             readJS.activity.pollingPoints += 100*Math.pow(0.9, readJS.activity.timeInUnknownState);
             //it's been long enough to check again
             if (readJS.activity.pollingPoints >= readJS.thresholds.domPolling ){
+                readJS.console("readJS: analyzing the DOM at", readJS.activity.timeOnPage, " seconds", readJS.activity.pollingPoints);
                 readJS.activity.pollingPoints = 0;
-                readJS.console("readJS: analyzing the DOM at", readJS.activity.timeOnPage, " seconds");
                 return true;
             }
 
@@ -409,12 +440,15 @@
         },
         handleLoad : function(){
             readJS.domNode = document.querySelector(readJSConfig.el);
+            readJS.setTimeInViewThreshold();
+            readJS.domNode.addEventListener("click", readJS.handleClick);
+            readJS.calculateCoordinates();
+        },
+        setTimeInViewThreshold : function(){
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
             // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
             readJS.thresholds.timeInView = wordCount*(percentagePoint/100)/averageReadSpeed;
-            readJS.domNode.addEventListener("click", readJS.handleClick);
-            readJS.calculateCoordinates();
         },
         removeListeners : function(){
             window.removeEventListener("scroll", readJS.handleScroll);
