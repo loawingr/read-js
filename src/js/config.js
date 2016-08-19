@@ -1,4 +1,4 @@
-var readJSConfig = window.readingJSConfig || {};
+var readJSConfig = window.readJSConfig || {};
 if (!readJSConfig.el){ readJSConfig.el = ".story-body"; }
 if (!readJSConfig.cb){ readJSConfig.cb = function(){
     "use strict";
