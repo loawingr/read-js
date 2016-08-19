@@ -49,7 +49,7 @@
             }
 
             //check if the reader is actually reading at a decaying rate
-            readJS.readingWorker = window.setInterval(function(){ readJS.checkActivity(); }, readJS.timeInterval*1000);
+            readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.timeInterval*1000);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
             return true;
         },
@@ -108,9 +108,9 @@
             try{
                 var ret = "";
                 //element doesn't have nested DOM elements
-                if(typeof(element.childNodes) === "undefined"){
-                    return element.nodeValue;
-                }
+                //if(typeof(element.childNodes) === "undefined"){
+                //    return element.nodeValue;
+                //}
 
                 //element has nested DOM elements
                 var length = element.childNodes.length;
