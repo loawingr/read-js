@@ -251,7 +251,22 @@ describe("read-js-tests", function(){
         readJS.detectForScroll();
         expect(readJS.reactivate).toHaveBeenCalled();
         expect(readJS.activity.scrolled).toBeFalsy();
-    });  
+    });
+
+    it("will-handle-clicks", function(){
+        readJS.activity.readingPoints = 0;
+        spyOn(readJS, "reactivate");
+        readJS.handleClick();
+        expect(readJS.reactivate).toHaveBeenCalled();
+        expect(readJS.activity.readingPoints).toBe(readJS.activity.increment);
+    });
+
+    it("will-handle-scrolls", function(){
+        spyOn(readJS, "showScrollInfo");
+        readJS.handleScroll();
+        expect(readJS.activity.scrolled).toBeTruthy();
+        expect(readJS.showScrollInfo).toHaveBeenCalled();
+    });
 
     it("console", function(){
         readJS.debug.console = true;
