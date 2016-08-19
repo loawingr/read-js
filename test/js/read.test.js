@@ -13,6 +13,7 @@ describe("read-js-tests", function(){
     });
 
     it("get-text", function(){
+        
         var el = document.getElementById("get-simple-text");
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
 
@@ -21,6 +22,12 @@ describe("read-js-tests", function(){
 
         el = document.getElementById("avoid-image-text");
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
+
+        el = document.getElementById("text-input");
+        
+        expect(window.readJS.getText(el)).toBe("");
+
+        expect(readJS.getText()).toBeFalsy();        
     });
 
     it("config", function(){
@@ -287,6 +294,16 @@ describe("read-js-tests", function(){
         spyOn(window, "setInterval");
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
         expect(window.setInterval).toHaveBeenCalled();
+    });
+
+    it("calculates-coordinates", function(){
+        var el = readJS.domNode;
+        delete readJS.domNode; 
+        expect(readJS.calculateCoordinates()).toBeFalsy();
+
+        readJS.domNode = el;
+        expect(readJS.calculateCoordinates()).toBeTruthy();
+        
     });
 
     //do something after each test
