@@ -115,6 +115,7 @@ describe("read-js-tests", function(){
     
 
     it("in-view", function(){
+        console.log(readJS.domNode);
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         var iv = readJS.inView(readJS.domNode);
         expect(iv.dom_node_inview_percent).toBe(100);
@@ -163,8 +164,23 @@ describe("read-js-tests", function(){
     });
 
     it("time-in-view-threshold", function(){
+        var dn = readJS.domNode;
         readJS.setTimeInViewThreshold();
-        expect(readJS.thresholds.timeInView).toBeLessThan(6); //less than 6 seconds to read a small paragraph
+        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.minTimeInView); //less than 3 seconds to read enough of a small paragraph
+
+        readJS.domNode = document.getElementById("anthem");
+        readJS.domNode.style.display = "block";
+        readJS.setTimeInViewThreshold();
+        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.minTimeInView); //read through a very short paragraph
+        readJS.domNode.style.display = "none";
+
+        readJS.domNode = document.getElementById("story-body");
+        readJS.domNode.style.display = "block";
+        readJS.setTimeInViewThreshold();
+        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.maxTimeInView); //less than 10 seconds to read enough of a lengthy article
+        readJS.domNode.style.display = "none";
+
+        readJS.domNode = dn;
     });
 
     it("has-read", function(){ //this test relies on the time in view threshold test to be before it

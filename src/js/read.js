@@ -31,6 +31,8 @@
             domNode:percentagePoint, //100 points awarded if the user scrolls past the percentage point of the DOM node
             readingPoint:400, // if the number of points exceeds this limit than the person has read the article
             domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
+            minTimeInView: 3, //min number of seconds for the text to be in view
+            maxTimeInView: 20 //max number of seconds for the text to be in view
         },
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
@@ -451,6 +453,15 @@
             var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
             // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
             readJS.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.timeInterval);
+            
+            //console.log("threshold of timeInView", readJS.thresholds.timeInView);
+            
+            if (readJS.thresholds.minTimeInView > readJS.thresholds.timeInView){
+                readJS.thresholds.timeInView = readJS.thresholds.minTimeInView;
+            }else if(readJS.thresholds.timeInView > readJS.thresholds.maxTimeInView){
+                readJS.thresholds.timeInView = readJS.thresholds.maxTimeInView;
+            }
+            //console.log("recalculated threshold of timeInView", readJS.thresholds.timeInView);
         },
         removeListeners : function(){
             window.removeEventListener("scroll", readJS.handleScroll);
