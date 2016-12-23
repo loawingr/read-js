@@ -1,9 +1,3 @@
-var readJSConfig = window.readingJSConfig || {};
-if (!readJSConfig.el){ readJSConfig.el = ".story-body"; }
-if (!readJSConfig.cb){ readJSConfig.cb = function(){
-    "use strict";
-    alert("The article has been read");
-}; }
 /*
     Read.js assumes:
     1) The article width never exceeds the viewport width
@@ -11,7 +5,8 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
 (function(){
     "use strict";
     // Set the name of the hidden property and the change event for visibility
-    var hidden, visibilityChange; 
+    var hidden, visibilityChange;
+    var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
     var readJS = {
         debug: {
             console:false,
@@ -33,13 +28,11 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         },
         thresholds:{
             viewport:25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
-            domNode:30, //100 points awarded if the user scrolls past the percentage point of the DOM node
+            domNode:percentagePoint, //100 points awarded if the user scrolls past the percentage point of the DOM node
             readingPoint:400, // if the number of points exceeds this limit than the person has read the article
             domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
-            timeInView:6 //the minimum number of seconds the DOM node needs to be in view
-            //under 5 seconds: Nigel, Ning, Sam, Natasha, Jamie, Richard
-            //5-10 seconds (1-2 sentences): Rob, Kristen, Edric, Alice
-            //about 30 seconds to 1 minute (paragraph): Patrice, Patrick, Dave, Xiaodong
+            minTimeInView: 3, //min number of seconds for the text to be in view
+            maxTimeInView: 20 //max number of seconds for the text to be in view
         },
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
@@ -47,32 +40,58 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         initialize : function(callback){
 
             if (typeof(callback)!== "function"){
-                console.log("ERROR: readJS.initialize() expected a callback function");
-                return;
+                readJS.console("ERROR: readJS.initialize() expected a callback function");
+                return false;
             }
             readJS.callback = callback;
 
+            if (!readJSConfig.el){
+                readJS.console("ERROR: readJS.initialize() expected a dom node to inspect");
+                return false;
+            }
+
             //check if the reader is actually reading at a decaying rate
-            readJS.readingWorker = window.setInterval(function(){
-                var timeInterval = readJS.timeInterval; //seconds
-                readJS.activity.timeOnPage+=timeInterval;
-                readJS.activity.timeInUnknownState+=timeInterval;
-                //add very little points when time passes by
-                readJS.activity.readingPoints+=timeInterval; 
-                //detected the user has scrolled which means they are active on the page
-                if (!!readJS.activity.scrolled){
-                    readJS.activity.scrolled = false;
-                    readJS.reactivate();
-                    readJS.console("detected scroll:", readJS.activity.timeOnPage, " seconds");
-                }
-                if(readJS.isUpdateRequired()){
-                    readJS.calculateCoordinates();
-                    readJS.addPoints();
-                    readJS.hasRead();
-                }
-                
-            }, readJS.timeInterval*1000);
+            readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.timeInterval*1000);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
+            return true;
+        },
+        /*
+            checkActivity is meant to determine if the user is active on the page
+        */
+        checkActivity : function(){
+
+            var timeInterval = readJS.timeInterval; //seconds
+            readJS.activity.timeOnPage+=timeInterval;
+            readJS.activity.timeInUnknownState+=timeInterval;
+            //add very little points when time passes by
+            readJS.activity.readingPoints+=timeInterval;
+            //detected the user has scrolled which means they are active on the page
+            readJS.detectForScroll();
+            readJS.endConditionsChecked();
+        },
+        /*
+            endConditionsChecked will check for success conditions and add points accordingly and then see if the script should stop
+        */
+        endConditionsChecked : function(){
+            if(!!readJS.isUpdateRequired()){
+                readJS.calculateCoordinates();
+                readJS.addPoints();
+                readJS.hasRead();
+                return true;
+            }
+            return false;
+        },
+        /*
+            detectForScroll reads the scroll boolean to see if the event has happened and reactivate the script
+        */
+        detectForScroll : function(){
+            if (!!readJS.activity.scrolled){
+                readJS.activity.scrolled = false;
+                readJS.reactivate();
+                readJS.console("detected scroll:", readJS.activity.timeOnPage, " seconds");
+                return true;
+            }
+            return false;
         },
         /*
             console() will debug the message if the debug mode permits
@@ -80,6 +99,33 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         console : function(){
             if (!!readJS.debug.console){
                 console.log(arguments);
+                return true;
+            }
+            return false;
+        },
+        /*
+            getText() will search the domNode for childNodes of text
+        */
+        getText : function(element){
+            try{
+                var ret = "";
+                //element doesn't have nested DOM elements
+                //if(typeof(element.childNodes) === "undefined"){
+                //    return element.nodeValue;
+                //}
+
+                //element has nested DOM elements
+                var length = element.childNodes.length;
+                for(var i = 0; i < length; i++) {
+                    var node = element.childNodes[i];
+                    if(node.nodeType !== 8) {
+                        ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
+                    }
+                }
+                return ret.replace(/[\t\n\r]+/g, "").replace(/\s+/g, " ").trim();
+            }catch(err){
+                readJS.console(err);
+                return false;
             }
         },
         /*
@@ -89,16 +135,18 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             if (!!readJS.domNode){
                 var r = readJS.inView(readJS.domNode);
                 readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
+                return true;
             }else{
-                console.log("ERROR: could not find the story body");
+                readJS.console("ERROR: could not find the story body");
+                return false;
             }
         },
         /*
             hasRead() will determine if the user has read the article
         */
-        hasRead: function(){
+        hasRead : function(){
             if (!!readJS.activity.read){
-                return;
+                return true;
             }
             if (readJS.activity.readingPoints > readJS.thresholds.readingPoint && readJS.activity.timeInView >= readJS.thresholds.timeInView){
                 readJS.activity.read = true;
@@ -107,8 +155,10 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 readJS.console("readJS: the user has read the article", readJS.activity.readingPoints);
                 readJS.console("readJS: ending interval ID", readJS.readingWorker);
                 window.clearInterval(readJS.readingWorker);
+                return true;
             }else{
-                readJS.console("readingPoints:", readJS.activity.readingPoints, "timeInView:", readJS.activity.timeInView);
+                readJS.console("readingPoints: "+ readJS.activity.readingPoints, "timeInView: "+ readJS.activity.timeInView, readJS.thresholds.readingPoint, readJS.thresholds.timeInView);
+                return false;
             }
         },
         /*
@@ -116,7 +166,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         */
         addPoints : function(){
             if(!readJS.inViewport(readJS.domNode)){
-                return;
+                return false;
             }
             //user is reading because enough of the dom node has been scrolled through
             if (readJS.activity.dnp > readJS.thresholds.domNode){
@@ -126,6 +176,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             if (readJS.activity.vpp > readJS.thresholds.viewport){
                 readJS.activity.readingPoints += readJS.activity.increment;
             }
+            return readJS.activity.readingPoints;
         },
         /*
             isUpdateRequired() determines if the DOM node calculations should be run
@@ -134,8 +185,8 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             readJS.activity.pollingPoints += 100*Math.pow(0.9, readJS.activity.timeInUnknownState);
             //it's been long enough to check again
             if (readJS.activity.pollingPoints >= readJS.thresholds.domPolling ){
+                readJS.console("readJS: analyzing the DOM at", readJS.activity.timeOnPage, " seconds", readJS.activity.pollingPoints);
                 readJS.activity.pollingPoints = 0;
-                readJS.console("readJS: analyzing the DOM at", readJS.activity.timeOnPage, " seconds");
                 return true;
             }
 
@@ -159,7 +210,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 readJS.debug.overlay = true;
                 return;
             }
-            
+
             if (document.location.href.match(/statsConsole\=true/)){
                 readJS.debug.console = true;
                 return;
@@ -210,7 +261,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         */
         getVisibilityProperties : function(){
             var hidden, visibilityChange;
-            if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
                 hidden = "hidden";
                 visibilityChange = "visibilitychange";
             } else if (typeof document.mozHidden !== "undefined") {
@@ -239,14 +290,14 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             }
         },
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
-        //the calculations assume 
+        //the calculations assume
         inView : function(domNode){
 
             readJS.domNode = domNode;
 
             //top left and bottom right coordinate points of the viewport
             var vp = { tl:[], br:[]};
-            
+
             //x coordinate of the top left corner of the viewport
             vp.tl[0] = Math.abs(document.body.scrollLeft);
 
@@ -283,7 +334,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
                 vui.style.zIndex = 9999;
                 //console.log(vui);
             }
-            
+
             //top left and bottom right coordinate points of the dom node
             var dn = { tl:[], br:[]};
 
@@ -379,7 +430,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
             }
             readJS.activity.dnp = dnip;
             readJS.activity.vpp = dnvp;
-            
+
             return { "dom_node_inview_percent":dnip, "dom_node_viewport_percent": dnvp };
         },
         handleScroll : function(){
@@ -392,8 +443,25 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
         },
         handleLoad : function(){
             readJS.domNode = document.querySelector(readJSConfig.el);
+            readJS.setTimeInViewThreshold();
             readJS.domNode.addEventListener("click", readJS.handleClick);
             readJS.calculateCoordinates();
+        },
+        setTimeInViewThreshold : function(){
+            // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
+            var wordCount = readJS.getText(readJS.domNode).split(" ").length;
+            var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
+            // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
+            readJS.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.timeInterval);
+            
+            //console.log("threshold of timeInView", readJS.thresholds.timeInView);
+            
+            if (readJS.thresholds.minTimeInView > readJS.thresholds.timeInView){
+                readJS.thresholds.timeInView = readJS.thresholds.minTimeInView;
+            }else if(readJS.thresholds.timeInView > readJS.thresholds.maxTimeInView){
+                readJS.thresholds.timeInView = readJS.thresholds.maxTimeInView;
+            }
+            //console.log("recalculated threshold of timeInView", readJS.thresholds.timeInView);
         },
         removeListeners : function(){
             window.removeEventListener("scroll", readJS.handleScroll);
@@ -420,7 +488,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
     window.readJS = readJS;
 
 })();
-if (!!readJSConfig && !!readJSConfig.el && !!readJSConfig.cb){
+if (typeof(readJSConfig) !== "undefined" && typeof(readJSConfig.el) === "string" && typeof(readJSConfig.cb) === "function" ){
 
     //scroll event listener
     window.addEventListener("scroll", readJS.handleScroll);
@@ -434,7 +502,6 @@ if (!!readJSConfig && !!readJSConfig.el && !!readJSConfig.cb){
     //set it all in motion
     readJS.initialize(readJSConfig.cb);
 
+}else{
+    console.log("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
 }
-
-
-
