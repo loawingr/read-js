@@ -12,16 +12,18 @@ You click on the first item in the list.
 You quickly realize after 5-10 seconds that it's not what you were looking for so you hit the back button. Problem is there was a false positive logged as a page view by the analytics tool on that first content page.
 You continue to look and go back and forth between list of content and story pages until you find what you are actually looking for.
 You might have continued this pattern 3,4,5 times before finding what you are looking for but you also triggered 3,4,5 page views (ie. false positives) for the news organizations that you visited.
+
 Those news organizations are saying alright we are great!
 Look at all the page views we got!
 People are reading a ton of our content!
 In actual fact the page views were rejections of the content.
 These false positives got me thinking about the following questions:
 
-Is there anything out there that could detect that a person read an article?
-And it accounted for when the user switches tabs?
-And it accounted for the occupied space of the article in the viewport?
-And it accounted the amount of time the user had the article in view?
+*Is there anything out there that could detect that a person read an article?
+*And it accounted for when the user switches tabs?
+*And it accounted for the occupied space of the article in the viewport?
+*And it accounted the amount of time the user had the article in view?
+
 I couldn't find anything out there so I built it.
 It's called Read JS. :)
 
