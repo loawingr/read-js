@@ -19,10 +19,10 @@ People are reading a ton of our content!
 In actual fact the page views were rejections of the content.
 These false positives got me thinking about the following questions:
 
-*Is there anything out there that could detect that a person read an article?
-*And it accounted for when the user switches tabs?
-*And it accounted for the occupied space of the article in the viewport?
-*And it accounted the amount of time the user had the article in view?
+* Is there anything out there that could detect that a person read an article?
+* And it accounted for when the user switches tabs?
+* And it accounted for the occupied space of the article in the viewport?
+* And it accounted the amount of time the user had the article in view?
 
 I couldn't find anything out there so I built it.
 It's called Read JS. :)
