@@ -27,6 +27,16 @@ These false positives got me thinking about the following questions:
 I couldn't find anything out there so I built it.
 It's called Read JS. :)
 
+## How does the JS determine the user is active?
+
+* The browser tab with Read JS running in it must be the active tab
+* If the user clicks on the article text
+* If the user highlights any of the article text
+* If the user scrolls inside the webpage
+
+## How does the JS score towards reading?
+TBD
+
 ## Getting started
 Run the following commands at the root directory of read-js
 ```sh
