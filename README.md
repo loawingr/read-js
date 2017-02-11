@@ -132,7 +132,7 @@ TODO: Example: Want to see some visual overlays to see the DOM calculations in a
 
 |Method       |Return Value Type|Parameters|Description                                      | Available |
 |-------------|-----------------| -------- | ----------------------------------------------- | --------- |
-| getConfig() | Object          | None     | Will return the readJSConfig object being used  | No        |
+| getConfig() | Object          | None     | Will return the readJSConfig object being used  | Yes       |
 | isOn()      | Boolean         | None     | Will tell you if readJS is on right now         | No        |
 | turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | No        |
 | setConfig() | Boolean         | Object   | Use for SPA app state content changes           | No        |
