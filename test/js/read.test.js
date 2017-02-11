@@ -322,6 +322,21 @@ describe("read-js-tests", function(){
         
     });
 
+    it("returns default config", function(){
+        expect(readJS.getConfig().timeInterval).toBe(1.5);
+        expect(readJS.getConfig().activity.averageReadSpeed).toBe(5);
+        expect(readJS.getConfig().activity.increment).toBe(100);
+        expect(readJS.getConfig().debug.console).toBeFalsy();
+        expect(readJS.getConfig().debug.overlay).toBeFalsy();
+        //expect(readJS.getConfig().thresholds.timeInView).toBe(0);
+        expect(readJS.getConfig().thresholds.viewport).toBe(25);
+        expect(readJS.getConfig().thresholds.domNode).toBe(30);
+        expect(readJS.getConfig().thresholds.readingPoint).toBe(400);
+        expect(readJS.getConfig().thresholds.domPolling).toBe(100);
+        expect(readJS.getConfig().thresholds.minTimeInView).toBe(3);
+        expect(readJS.getConfig().thresholds.maxTimeInView).toBe(20);
+    });
+
     //do something after each test
     afterEach(function() {
     });

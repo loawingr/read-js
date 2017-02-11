@@ -24,7 +24,8 @@
             pollingPoints: 0, //the points accumulated before polling the DOM
             readingPoints: 0, //the points accumulated during reading time; if points exceeds the reading point threshold then the person has read the article
             increment: 100, //the number of points awarded when reading activity types have been determined
-            read: false
+            read: false,
+            averageReadSpeed : 300/60 //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
         },
         thresholds:{
             viewport:25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
@@ -34,6 +35,21 @@
             minTimeInView: 3, //min number of seconds for the text to be in view
             maxTimeInView: 20 //max number of seconds for the text to be in view
         },
+        /*
+            getConfig: will return the current read JS config thresholds and settings
+        */
+        getConfig : function(){
+            return {
+                debug : readJS.debug,
+                timeInterval : readJS.timeInterval,
+                activity: {
+                    increment: readJS.activity.increment,
+                    averageReadSpeed: readJS.activity.averageReadSpeed
+                },
+                thresholds: readJS.thresholds
+            };
+        },
+
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
         */
@@ -450,7 +466,7 @@
         setTimeInViewThreshold : function(){
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
-            var averageReadSpeed = 300/60; //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
+            var averageReadSpeed = readJS.activity.averageReadSpeed; 
             // readJS.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.thresholds.domNode
             readJS.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.timeInterval);
             
