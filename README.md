@@ -38,7 +38,7 @@ It's called Read JS. :)
 Run the following commands at the root directory of read-js
 ```sh
 $ npm install
-$ grunt
+$ npm run build
 ```
 
 Open the test file in a web browser of your choosing
@@ -135,7 +135,6 @@ TODO: Example: Want to see some visual overlays to see the DOM calculations in a
 | getConfig() | Object          | None     | Will return the readJSConfig object being used  | Yes       |
 | isOn()      | Boolean         | None     | Will tell you if readJS is on right now         | No        |
 | turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | No        |
-| setConfig() | Boolean         | Object   | Use for SPA app state content changes           | No        |
 | turnOn()    | Boolean         | None     | Use for SPA app state changes to start listening| No        |
 
 ## Single Page Apps (SPA) - Not Currently Supported
@@ -149,7 +148,7 @@ You must tell ReadJS that it is in an SPA by:
 To support SPA's there are 3 methods that are exposed.
 
 * Call turnOff() to stop readJS before changing app state to stop all listeners and DOM calculations
-* Pass in a new config with setConfig() based on the content type and reading/scanning behaviour you want to encourage.
+* Set new configuration in readJSConfig object based on the content type and reading/scanning behaviour you want to encourage.
 * Call turnOn() to indicate the DOM node has been loaded and rendered and to start listening based on the new config object
 
 ## Version
