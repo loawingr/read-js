@@ -6,7 +6,7 @@
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var percentagePoint = 30; //the percentage limit that the user needs to scroll past for reading
+    var percentagePoint = 30; //the word count percentage and amount of dom node needing to be visible in viewport for awarding reading points
     var isOn = false;
     var initialized = false;
     var readJS = {
@@ -15,6 +15,7 @@
         */
         resetConfigStatus : function(){
             readJS.status = {
+                strict : false, // be very strict on read/scan verb
                 spa : false, //tell readJS if it is in a single page app
                 debug: {
                     console:false,
@@ -23,6 +24,7 @@
                 timeInterval: 1.5, //number of seconds between checking whether to poll the DOM
                 activity:{
                     scrollDepth: 0, //the number of pixels that the browser has travelled vertically
+                    maxVertical: 0, //the vertical percentage of the dom node the user has seen
                     timeOnPage:0, //number of seconds the user is on the page
                     timeInUnknownState:0, //number of idle seconds
                     timeInView:0, //number of seconds the story is in the viewport
@@ -37,11 +39,13 @@
                 },
                 thresholds:{
                     viewport:25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
-                    domNode:percentagePoint, //100 points awarded if the user scrolls past the percentage point of the DOM node
+                    domNode:percentagePoint, //100 reading points awarded if the user has 30% of DOM node in the viewport
+                    minVertical:50, //100 reading points awarded if the user scrolls past the percentage point of the DOM node
                     readingPoint:400, // if the number of points exceeds this limit than the person has read the article
                     domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
                     minTimeInView: 3, //min number of seconds for the text to be in view
-                    maxTimeInView: 20 //max number of seconds for the text to be in view
+                    maxTimeInView: 20, //max number of seconds for the text to be in view
+                    scrollDepth: 0 // dynamically calculated because dependant on dom node height
                 }
             };
             return true;
@@ -65,6 +69,9 @@
             }
             if (typeof(readJSConfig.spa) === "boolean"){
                 readJS.status.spa = readJSConfig.spa;
+            }
+            if (typeof(readJSConfig.strict) === "boolean"){
+                readJS.status.strict = readJSConfig.strict;
             }
             if (!!readJSConfig.debug){
                 if(typeof(readJSConfig.debug.console) === "boolean"){
@@ -106,6 +113,9 @@
                 }
                 if (typeof(readJSConfig.thresholds.maxTimeInView) === "number"){
                     readJS.status.thresholds.maxTimeInView = readJSConfig.thresholds.maxTimeInView;
+                }
+                if (typeof(readJSConfig.thresholds.minVertical) === "number"){
+                    readJS.status.thresholds.minVertical = readJSConfig.thresholds.minVertical;
                 }
             }
             if (typeof(readJSConfig.el) !== "string"){
@@ -236,18 +246,45 @@
             if (!!readJS.status.activity.read){
                 return true;
             }
-            if (readJS.status.activity.readingPoints > readJS.status.thresholds.readingPoint && readJS.status.activity.timeInView >= readJS.status.thresholds.timeInView){
-                readJS.status.activity.read = true;
-                readJS.callback();
-                readJS.removeListeners();
-                readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
-                readJS.console("readJS: ending interval ID", readJS.readingWorker);
-                window.clearInterval(readJS.readingWorker);
-                return true;
-            }else{
-                readJS.console("readingPoints: "+ readJS.status.activity.readingPoints, "timeInView: "+ readJS.status.activity.timeInView, readJS.status.thresholds.readingPoint, readJS.status.thresholds.timeInView);
+            if (!!readJS.status.strict){
+                //did not scroll far down enough
+                if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth){
+                    readJS.console("STRICT MODE: didn't scroll far enough");
+                    readJS.report();
+                    return false;
+                }
+                //does not have enough of the dom node in the viewport
+                if (readJS.status.activity.dnp < readJS.status.thresholds.domNode){
+                    readJS.console("STRICT MODE: not enough of dom node is in view");
+                    readJS.report();
+                    return false;
+                }
+            }
+            //not enough points scored
+            if (readJS.status.activity.readingPoints <= readJS.status.thresholds.readingPoint){
+                readJS.report();
                 return false;
             }
+            //not enough time in view
+            if (readJS.status.activity.timeInView < readJS.status.thresholds.timeInView){
+                readJS.report();
+                return false;
+            }
+            
+            readJS.status.activity.read = true;
+            readJS.callback();
+            readJS.removeListeners();
+            readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
+            readJS.console("readJS: ending interval ID", readJS.readingWorker);
+            window.clearInterval(readJS.readingWorker);
+            return true;
+            
+        },
+        /*
+            report() will console out what readJS knows so far
+        */
+        report : function(){
+            readJS.console("readingPoints: "+ readJS.status.activity.readingPoints, "timeInView: "+ readJS.status.activity.timeInView, readJS.status.thresholds.readingPoint, readJS.status.thresholds.timeInView);
         },
         /*
             addPoints() will recognize actions that will get us closer to the reading state
@@ -256,7 +293,7 @@
             if(!readJS.inViewport(readJS.domNode)){
                 return false;
             }
-            //user is reading because enough of the dom node has been scrolled through
+            //user is reading because enough of the dom node is in the viewport
             if (readJS.status.activity.dnp > readJS.status.thresholds.domNode){
                 readJS.status.activity.readingPoints += readJS.status.activity.increment;
             }
@@ -264,6 +301,10 @@
             if (readJS.status.activity.vpp > readJS.status.thresholds.viewport){
                 readJS.status.activity.readingPoints += readJS.status.activity.increment;
             }
+            //user is reading because they have scrolled passed a certain vertical threshold
+            //if (readJS.status.activity.scrollDepth > readJS.status.thresholds.scrollDepth){
+            //    readJS.status.activity.readingPoints += readJS.status.activity.increment/5;   
+            //}
             return readJS.status.activity.readingPoints;
         },
         /*
@@ -284,7 +325,7 @@
         /*
             reactivate: the user has done something interesting on the page like click or scroll so it is time to reset the decay curve
         */
-        reactivate: function(){
+        reactivate : function(){
             readJS.console("readJS: reactivating refresh rate");
             readJS.status.activity.timeInUnknownState = 0;
             readJS.status.activity.pollingPoints += readJS.status.activity.increment;
@@ -293,7 +334,7 @@
         /*
             inDebugMode: reads the query string to figure out how to behave
         */
-        inDebugMode: function(){
+        inDebugMode : function(){
 
             //add the scrolling debugging console
             if (!!readJS.status.debug.overlay){
@@ -324,10 +365,16 @@
             if (!readJS.status.debug.overlay){
                 return false;
             }
+            document.getElementById("scrollinfo").innerHTML = readJS.status.activity.scrollDepth;
+            return true;
+        },
+        /*
+            getScrollInfo: will detect if user has scrolled pass threshold point
+        */
+        getScrollInfo : function(){
             var calculated = Math.abs(document.body.scrollTop) + window.innerHeight;
             if (calculated > readJS.status.activity.scrollDepth){
                 readJS.status.activity.scrollDepth = calculated;
-                document.getElementById("scrollinfo").innerHTML = calculated;
             }
             return true;
         },
@@ -434,11 +481,17 @@
             //y coordinate of the top left corner of the dom node
             dn.tl[1] = bcr.top + parseInt(window.scrollY,10);
 
-            //x coordinate of the top left corner of the dom node
+            //x coordinate of the bottom right corner of the dom node
             dn.br[0] = dn.tl[0] + bcr.width;
 
-            //y coordinate of the top left corner of the dom node
+            //y coordinate of the bottom right corner of the dom node
             dn.br[1] = dn.tl[1] + bcr.height;
+
+            //get the scroll info with the time interval/cadence
+            readJS.getScrollInfo();
+
+            //pixel point of minVertical percentage
+            readJS.status.thresholds.scrollDepth = Math.abs(dn.tl[1]) + (bcr.height * readJS.status.thresholds.minVertical / 100);
 
             if (!!readJS.status.debug.overlay){
                 //highlight dom node
