@@ -4,3 +4,7 @@ if (!readJSConfig.cb){ readJSConfig.cb = function(){
     "use strict";
     alert("The article has been read");
 }; }
+readJSConfig.debug = {
+	overlay: true,
+	console: true
+};
