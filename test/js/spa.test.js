@@ -103,11 +103,20 @@ describe("spa tests of readJS", function(){
         expect(cfg.thresholds.domPolling).toBe(90);
         expect(cfg.thresholds.minTimeInView).toBe(1);
         expect(cfg.thresholds.maxTimeInView).toBe(10);
-
     });
 
     it("should now be ready to turn on", function(){
+        readJS.domNode = document.getElementById("paragraph");
         expect(readJS.turnOn()).toBeTruthy();
+    });
+
+    it("should be able to remove debugging overlay dom nodes", function(){
+        readJS.inView(readJS.domNode);
+        expect(readJS.removeOverlay("viewport_inview")).toBeTruthy();
+        expect(readJS.removeOverlay("overlap_inview")).toBeTruthy();
+        expect(readJS.removeOverlay("dummy_overlay")).toBeFalsy();
+        expect(document.getElementById("viewport_inview")).toBeNull();
+        expect(document.getElementById("overlap_inview")).toBeNull();
     });
 
     it("should now be ready to turn off", function(){
