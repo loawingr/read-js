@@ -144,5 +144,22 @@
 				<h2>Pretend this is the global footer</h2>
 			</footer>
 		</div>
+		<script type="text/javascript">
+			var readJSConfig = {
+				debug: {
+					console: true,
+					overlay: true
+				},
+				thresholds: {
+					timeInView: 5, //5 seconds of viewing time
+					domNode: 80, //the 80% of the vertical space must be scrolled passed
+					viewport: 50, //50% of the viewport must be occupied by the list of content
+				},
+				el: ".card-list",
+				cb: function(){ alert("The user scanned the list of cards"); }
+				
+			};
+		</script>
+		<script type="text/javascript" src="../js/read.js"></script>
 	</body>
 </html>
