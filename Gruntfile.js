@@ -70,7 +70,10 @@ module.exports = function(grunt) {
       options: hint_opts
     },
     karma:{
-      readjs : {
+      spa : {
+        configFile : "test/conf/spa.conf.js"
+      },
+      read : {
         configFile : "test/conf/read.conf.js"
       },
       coverage : {
