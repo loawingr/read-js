@@ -26,6 +26,7 @@
     "url": "https://github.com/loawingr/read-js.git"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "build" : "grunt"
   }
 }
