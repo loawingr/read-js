@@ -535,6 +535,10 @@
             readJS.calculateCoordinates();
         },
         setTimeInViewThreshold : function(){
+
+            if(typeof(readJS.status.thresholds.timeInView) === "number"){
+                return false; //manually overriden so no need to word count
+            }
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
             var averageReadSpeed = readJS.status.activity.averageReadSpeed; 
@@ -542,13 +546,14 @@
             readJS.status.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.status.timeInterval);
             
             //console.log("threshold of timeInView", readJS.status.thresholds.timeInView);
-            
             if (readJS.status.thresholds.minTimeInView > readJS.status.thresholds.timeInView){
                 readJS.status.thresholds.timeInView = readJS.status.thresholds.minTimeInView;
             }else if(readJS.status.thresholds.timeInView > readJS.status.thresholds.maxTimeInView){
                 readJS.status.thresholds.timeInView = readJS.status.thresholds.maxTimeInView;
             }
+            
             //console.log("recalculated threshold of timeInView", readJS.status.thresholds.timeInView);
+            return true;
         },
         removeListeners : function(){
             window.removeEventListener("scroll", readJS.handleScroll);

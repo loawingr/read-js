@@ -170,15 +170,20 @@ describe("read-js-tests", function(){
 
         readJS.domNode = document.getElementById("anthem");
         readJS.domNode.style.display = "block";
+        delete(readJS.status.thresholds.timeInView);
         readJS.setTimeInViewThreshold();
         expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView); //read through a very short paragraph
         readJS.domNode.style.display = "none";
 
         readJS.domNode = document.getElementById("story-body");
         readJS.domNode.style.display = "block";
+        delete(readJS.status.thresholds.timeInView);
         readJS.setTimeInViewThreshold();
         expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.maxTimeInView); //less than 10 seconds to read enough of a lengthy article
         readJS.domNode.style.display = "none";
+
+        readJS.status.thresholds.timeInView = 4;
+        expect(readJS.setTimeInViewThreshold()).toBeFalsy();
 
         readJS.domNode = dn;
     });
