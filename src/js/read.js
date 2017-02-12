@@ -514,7 +514,6 @@
             if (!readJS.inViewport(readJS.domNode)){
                 return { "dom_node_inview_percent":0, "dom_node_viewport_percent": 0 };
             }
-            readJS.status.activity.timeInView += readJS.status.timeInterval;
 
             //How much of the dom node is overlapping with the viewport?
             var overlap = { tl:[], br:[]};
@@ -572,7 +571,15 @@
             readJS.status.activity.dnp = dnip;
             readJS.status.activity.vpp = dnvp;
 
-            return { "dom_node_inview_percent":dnip, "dom_node_viewport_percent": dnvp };
+            var retval = { "dom_node_inview_percent":dnip, "dom_node_viewport_percent": dnvp };
+
+            //if in strict mode and not enough of the dom node is in the viewport or not enough of the viewport is occupied by dom node then don't increment timeInView
+            if(!!readJS.status.strict && (dnip < readJS.status.thresholds.domNode || dnvp < readJS.status.thresholds.viewport)){
+                    return retval;
+            }
+            //increment timeInView
+            readJS.status.activity.timeInView += readJS.status.timeInterval;    
+            return retval;
         },
         handleScroll : function(){
             readJS.status.activity.scrolled = true;
