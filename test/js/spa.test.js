@@ -46,6 +46,7 @@ describe("spa tests of readJS", function(){
         expect(readJS.setConfig()).toBeTruthy();
         expect(readJS.turnOn()).toBeTruthy();
         expect(readJS.isOn()).toBeTruthy();
+        expect(readJS.turnOn()).toBeFalsy();
     });
 
     it("prevents setting config while on", function(){
@@ -111,6 +112,11 @@ describe("spa tests of readJS", function(){
 
     it("should now be ready to turn off", function(){
         expect(readJS.turnOff()).toBeTruthy();
+    });
+
+    it("not turn on more than once if not a spa", function(){
+        readJSConfig.spa = false;
+        expect(readJS.turnOn()).toBeFalsy();
     });
 
     //reset after all test cases
