@@ -97,6 +97,12 @@ Example: If readJSConfig.thresholds.timeInView is not defined then you can set a
 	readJSConfig.thresholds.maxTimeInView = 15; //default is 20 seconds
 ```
 
+Example: In strict mode the thresholds.domNode & thresholds.viewport need to be satisfied to increment the timeInView
+
+```js
+	readJSConfig.strict = true; //default is false
+```
+
 ## Criteria before reading points are scored
 
 The browser tab with Read JS running must be the active tab
@@ -114,6 +120,11 @@ Example: User must scroll passed 30% of content vertical height to be awarded re
 Example: User must accumulate 200 polling points before JS does mathematical calculations with DOM node positioning in viewport
 ```js
 	readJSConfig.thresholds.domPolling = 200; //default is 100
+```
+
+Example: In strict mode the thresholds.minVertical & thresholds.domNode need to satisfied before readJS determines the content has been read/scanned
+```js
+	readJSConfig.strict = true; //default is false
 ```
 
 ## Debug Modes
