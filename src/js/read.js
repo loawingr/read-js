@@ -322,13 +322,14 @@
         */
         showScrollInfo: function(){
             if (!readJS.status.debug.overlay){
-                return;
+                return false;
             }
             var calculated = Math.abs(document.body.scrollTop) + window.innerHeight;
             if (calculated > readJS.status.activity.scrollDepth){
                 readJS.status.activity.scrollDepth = calculated;
                 document.getElementById("scrollinfo").innerHTML = calculated;
             }
+            return true;
         },
         /*
             removeOverlay: utility function to remove dom nodes

@@ -327,6 +327,11 @@ describe("read-js-tests", function(){
         
     });
 
+    it("prevents-scroll-info", function(){
+        readJS.status.debug.overlay = false;
+        expect(readJS.showScrollInfo()).toBeFalsy();
+    });
+
     it("returns default config", function(){
         var cfg = readJS.getConfig();
         expect(cfg.spa).toBeFalsy();
