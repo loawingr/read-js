@@ -4,7 +4,7 @@ describe("read-js-tests", function(){
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
     //turn on console logging
-    readJS.debug.console = true;
+    readJS.status.debug.console = true;
 
     readJS.domNode = document.querySelector("#paragraph");
 
@@ -31,85 +31,85 @@ describe("read-js-tests", function(){
     });
 
     it("config", function(){
-        expect(window.readJS.timeInterval).toBeGreaterThan(1); //for performance reasons
-        expect(window.readJS.thresholds.readingPoint).toBeGreaterThan(window.readJS.activity.increment);
-        expect(window.readJS.thresholds.domPolling).toBe(window.readJS.activity.increment);
-        expect(1 < window.readJS.thresholds.viewport && window.readJS.thresholds.viewport <= 100).toBeTruthy();
-        expect(1 < window.readJS.thresholds.domNode && window.readJS.thresholds.domNode <= 100).toBeTruthy();
+        expect(window.readJS.status.timeInterval).toBeGreaterThan(1); //for performance reasons
+        expect(window.readJS.status.thresholds.readingPoint).toBeGreaterThan(window.readJS.status.activity.increment);
+        expect(window.readJS.status.thresholds.domPolling).toBe(window.readJS.status.activity.increment);
+        expect(1 < window.readJS.status.thresholds.viewport && window.readJS.status.thresholds.viewport <= 100).toBeTruthy();
+        expect(1 < window.readJS.status.thresholds.domNode && window.readJS.status.thresholds.domNode <= 100).toBeTruthy();
     
         expect(readJS.initialize().toBeFalsy);
         expect(readJS.hasRead()).toBeFalsy();
-        expect(readJS.activity.readingPoints).toBeLessThan(readJS.thresholds.readingPoint);
-        expect(readJS.activity.timeInView).toBe(0);
+        expect(readJS.status.activity.readingPoints).toBeLessThan(readJS.status.thresholds.readingPoint);
+        expect(readJS.status.activity.timeInView).toBe(0);
     });
 
     it("should-update", function(){
         
-        readJS.activity.timeInUnknownState = 0;
+        readJS.status.activity.timeInUnknownState = 0;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
-        readJS.activity.timeInUnknownState = 1.5;
+        readJS.status.activity.timeInUnknownState = 1.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 3;
+        readJS.status.activity.timeInUnknownState = 3;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
-        readJS.activity.timeInUnknownState = 4.5;
+        readJS.status.activity.timeInUnknownState = 4.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
         
-        readJS.activity.timeInUnknownState = 6;
+        readJS.status.activity.timeInUnknownState = 6;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
-        readJS.activity.timeInUnknownState = 7.5;
+        readJS.status.activity.timeInUnknownState = 7.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 9;
+        readJS.status.activity.timeInUnknownState = 9;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 10.5;
+        readJS.status.activity.timeInUnknownState = 10.5;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
-        readJS.activity.timeInUnknownState = 12;
+        readJS.status.activity.timeInUnknownState = 12;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 13.5;
+        readJS.status.activity.timeInUnknownState = 13.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 15;
+        readJS.status.activity.timeInUnknownState = 15;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 16.5;
+        readJS.status.activity.timeInUnknownState = 16.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 18;
+        readJS.status.activity.timeInUnknownState = 18;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
-        readJS.activity.timeInUnknownState = 19.5;
+        readJS.status.activity.timeInUnknownState = 19.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 21;
+        readJS.status.activity.timeInUnknownState = 21;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 22.5;
+        readJS.status.activity.timeInUnknownState = 22.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 24;
+        readJS.status.activity.timeInUnknownState = 24;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 25.5;
+        readJS.status.activity.timeInUnknownState = 25.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 27;
+        readJS.status.activity.timeInUnknownState = 27;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 28.5;
+        readJS.status.activity.timeInUnknownState = 28.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 30;
+        readJS.status.activity.timeInUnknownState = 30;
         expect(readJS.isUpdateRequired()).toBeFalsy();
 
-        readJS.activity.timeInUnknownState = 0;
-        readJS.activity.pollingPoints = 0;
+        readJS.status.activity.timeInUnknownState = 0;
+        readJS.status.activity.pollingPoints = 0;
     });
 
     
@@ -119,65 +119,65 @@ describe("read-js-tests", function(){
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         var iv = readJS.inView(readJS.domNode);
         expect(iv.dom_node_inview_percent).toBe(100);
-        expect(readJS.activity.dnp).toBe(100);
+        expect(readJS.status.activity.dnp).toBe(100);
 
         expect(iv.dom_node_viewport_percent).toBeGreaterThan(25);
-        expect(readJS.activity.vpp).toBeGreaterThan(25);
+        expect(readJS.status.activity.vpp).toBeGreaterThan(25);
         
     });
 
     it("add-double-points", function(){ //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
-        readJS.activity.readingPoints = 0;
+        readJS.status.activity.readingPoints = 0;
         readJS.addPoints();
-        expect(readJS.activity.dnp).toBeGreaterThan(readJS.thresholds.domNode);
-        expect(readJS.activity.vpp).toBeGreaterThan(readJS.thresholds.viewport);
-        expect(readJS.activity.readingPoints).toBe(readJS.activity.increment*2);
+        expect(readJS.status.activity.dnp).toBeGreaterThan(readJS.status.thresholds.domNode);
+        expect(readJS.status.activity.vpp).toBeGreaterThan(readJS.status.thresholds.viewport);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment*2);
     });
 
     it("add-viewport-points", function(){ //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
-        readJS.activity.readingPoints = 0;
-        readJS.activity.vpp = 26; // 1 more than threshold
-        readJS.activity.dnp = 29; // 1 less than threshold
+        readJS.status.activity.readingPoints = 0;
+        readJS.status.activity.vpp = 26; // 1 more than threshold
+        readJS.status.activity.dnp = 29; // 1 less than threshold
         readJS.addPoints();
-        expect(readJS.activity.dnp).toBeLessThan(readJS.thresholds.domNode);
-        expect(readJS.activity.vpp).toBeGreaterThan(readJS.thresholds.viewport);
-        expect(readJS.activity.readingPoints).toBe(readJS.activity.increment);
+        expect(readJS.status.activity.dnp).toBeLessThan(readJS.status.thresholds.domNode);
+        expect(readJS.status.activity.vpp).toBeGreaterThan(readJS.status.thresholds.viewport);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
     it("add-viewport-points", function(){ //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
-        readJS.activity.readingPoints = 0;
-        readJS.activity.vpp = 24; // 1 less than threshold
-        readJS.activity.dnp = 31; // 1 more than threshold
+        readJS.status.activity.readingPoints = 0;
+        readJS.status.activity.vpp = 24; // 1 less than threshold
+        readJS.status.activity.dnp = 31; // 1 more than threshold
         readJS.addPoints();
-        expect(readJS.activity.dnp).toBeGreaterThan(readJS.thresholds.domNode);
-        expect(readJS.activity.vpp).toBeLessThan(readJS.thresholds.viewport);
-        expect(readJS.activity.readingPoints).toBe(readJS.activity.increment);
+        expect(readJS.status.activity.dnp).toBeGreaterThan(readJS.status.thresholds.domNode);
+        expect(readJS.status.activity.vpp).toBeLessThan(readJS.status.thresholds.viewport);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
     it("reactivate", function(){
-        readJS.activity.pollingPoints = 0;
+        readJS.status.activity.pollingPoints = 0;
         readJS.reactivate();
-        expect(readJS.activity.pollingPoints).toBe(readJS.thresholds.domPolling);
+        expect(readJS.status.activity.pollingPoints).toBe(readJS.status.thresholds.domPolling);
     });
 
     it("time-in-view-threshold", function(){
         var dn = readJS.domNode;
         readJS.setTimeInViewThreshold();
-        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.minTimeInView); //less than 3 seconds to read enough of a small paragraph
+        expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView); //less than 3 seconds to read enough of a small paragraph
 
         readJS.domNode = document.getElementById("anthem");
         readJS.domNode.style.display = "block";
         readJS.setTimeInViewThreshold();
-        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.minTimeInView); //read through a very short paragraph
+        expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView); //read through a very short paragraph
         readJS.domNode.style.display = "none";
 
         readJS.domNode = document.getElementById("story-body");
         readJS.domNode.style.display = "block";
         readJS.setTimeInViewThreshold();
-        expect(readJS.thresholds.timeInView).toBe(readJS.thresholds.maxTimeInView); //less than 10 seconds to read enough of a lengthy article
+        expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.maxTimeInView); //less than 10 seconds to read enough of a lengthy article
         readJS.domNode.style.display = "none";
 
         readJS.domNode = dn;
@@ -185,18 +185,18 @@ describe("read-js-tests", function(){
 
     it("has-read", function(){ //this test relies on the time in view threshold test to be before it
         //fake the lock
-        readJS.activity.read = true;
+        readJS.status.activity.read = true;
         expect(readJS.hasRead()).toBeTruthy();
 
         //setup not read conditions
-        readJS.activity.read = false;
-        console.log("readingPoints: "+ readJS.activity.readingPoints);
-        console.log("timeInView: "+ readJS.activity.timeInView);
+        readJS.status.activity.read = false;
+        console.log("readingPoints: "+ readJS.status.activity.readingPoints);
+        console.log("timeInView: "+ readJS.status.activity.timeInView);
         expect(readJS.hasRead()).toBeFalsy();        
 
         //setup read conditions
-        readJS.activity.readingPoints = 401; // 1 more than threshold
-        readJS.activity.timeInView = readJS.thresholds.timeInView;
+        readJS.status.activity.readingPoints = 401; // 1 more than threshold
+        readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
 
         readJS.callback = function(){
             console.log("The article has been read.");
@@ -213,9 +213,9 @@ describe("read-js-tests", function(){
 
     it("check-activity", function(){
 
-        readJS.activity.timeOnPage = 0;
-        readJS.activity.timeInUnknownState = 0;
-        readJS.activity.readingPoints = 0;
+        readJS.status.activity.timeOnPage = 0;
+        readJS.status.activity.timeInUnknownState = 0;
+        readJS.status.activity.readingPoints = 0;
 
         spyOn(readJS, "detectForScroll");
         spyOn(readJS, "endConditionsChecked");
@@ -225,9 +225,9 @@ describe("read-js-tests", function(){
         expect(readJS.detectForScroll).toHaveBeenCalled();
         expect(readJS.endConditionsChecked).toHaveBeenCalled();
 
-        expect(readJS.activity.timeOnPage).toBe(readJS.timeInterval);
-        expect(readJS.activity.timeInUnknownState).toBe(readJS.timeInterval);
-        expect(readJS.activity.readingPoints).toBe(readJS.timeInterval);
+        expect(readJS.status.activity.timeOnPage).toBe(readJS.status.timeInterval);
+        expect(readJS.status.activity.timeInUnknownState).toBe(readJS.status.timeInterval);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.timeInterval);
     });
 
     it("will-check-for-required-update", function(){
@@ -237,14 +237,14 @@ describe("read-js-tests", function(){
     });
 
     it("does-not-check-end-conditions", function(){
-        readJS.activity.timeInUnknownState = 1;
-        readJS.activity.pollingPoints = 0;
+        readJS.status.activity.timeInUnknownState = 1;
+        readJS.status.activity.pollingPoints = 0;
         expect(readJS.endConditionsChecked()).toBeFalsy();
     });
 
     it("does-check-end-conditions", function(){
-        readJS.activity.timeInUnknownState = 0;
-        readJS.activity.pollingPoints = 0;
+        readJS.status.activity.timeInUnknownState = 0;
+        readJS.status.activity.pollingPoints = 0;
 
         expect(readJS.endConditionsChecked()).toBeTruthy();
     });
@@ -263,40 +263,40 @@ describe("read-js-tests", function(){
     });
 
     it("will-reactivate-on-delay-upon-scroll", function(){
-        readJS.activity.scrolled = false;
+        readJS.status.activity.scrolled = false;
         expect(readJS.detectForScroll()).toBeFalsy();
 
-        readJS.activity.scrolled = true;
+        readJS.status.activity.scrolled = true;
         expect(readJS.detectForScroll()).toBeTruthy();
 
-        readJS.activity.scrolled = true;
+        readJS.status.activity.scrolled = true;
         spyOn(readJS, "reactivate");
         readJS.detectForScroll();
         expect(readJS.reactivate).toHaveBeenCalled();
-        expect(readJS.activity.scrolled).toBeFalsy();
+        expect(readJS.status.activity.scrolled).toBeFalsy();
     });
 
     it("will-handle-clicks", function(){
-        readJS.activity.readingPoints = 0;
+        readJS.status.activity.readingPoints = 0;
         spyOn(readJS, "reactivate");
         readJS.handleClick();
         expect(readJS.reactivate).toHaveBeenCalled();
-        expect(readJS.activity.readingPoints).toBe(readJS.activity.increment);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
     it("will-handle-scrolls", function(){
         spyOn(readJS, "showScrollInfo");
         readJS.handleScroll();
-        expect(readJS.activity.scrolled).toBeTruthy();
+        expect(readJS.status.activity.scrolled).toBeTruthy();
         expect(readJS.showScrollInfo).toHaveBeenCalled();
     });
 
     it("console", function(){
-        readJS.debug.console = true;
+        readJS.status.debug.console = true;
         expect(readJS.console("hello Richard!")).toBeTruthy();
         expect(readJS.console("apple", "orange")).toBeTruthy();
 
-        readJS.debug.console = false;
+        readJS.status.debug.console = false;
         expect(readJS.console("hello Richard!")).toBeFalsy();
     });
 
@@ -323,21 +323,24 @@ describe("read-js-tests", function(){
     });
 
     it("returns default config", function(){
-        expect(readJS.getConfig().timeInterval).toBe(1.5);
-        expect(readJS.getConfig().activity.averageReadSpeed).toBe(5);
-        expect(readJS.getConfig().activity.increment).toBe(100);
-        expect(readJS.getConfig().debug.console).toBeFalsy();
-        expect(readJS.getConfig().debug.overlay).toBeFalsy();
-        //expect(readJS.getConfig().thresholds.timeInView).toBe(0);
-        expect(readJS.getConfig().thresholds.viewport).toBe(25);
-        expect(readJS.getConfig().thresholds.domNode).toBe(30);
-        expect(readJS.getConfig().thresholds.readingPoint).toBe(400);
-        expect(readJS.getConfig().thresholds.domPolling).toBe(100);
-        expect(readJS.getConfig().thresholds.minTimeInView).toBe(3);
-        expect(readJS.getConfig().thresholds.maxTimeInView).toBe(20);
+        var cfg = readJS.getConfig();
+        expect(cfg.spa).toBeFalsy();
+        expect(cfg.timeInterval).toBe(1.5);
+        expect(cfg.activity.averageReadSpeed).toBe(5);
+        expect(cfg.activity.increment).toBe(100);
+        expect(cfg.debug.console).toBeFalsy();
+        expect(cfg.debug.overlay).toBeFalsy();
+        expect(cfg.thresholds.viewport).toBe(25);
+        expect(cfg.thresholds.domNode).toBe(30);
+        expect(cfg.thresholds.readingPoint).toBe(400);
+        expect(cfg.thresholds.domPolling).toBe(100);
+        expect(cfg.thresholds.minTimeInView).toBe(3);
+        expect(cfg.thresholds.maxTimeInView).toBe(20);
     });
 
-    //do something after each test
-    afterEach(function() {
+    //reset after all test cases
+    afterAll(function() {
+        readJS.turnOff();
+        readJS.resetConfigStatus();
     });
 });
