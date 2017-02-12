@@ -348,6 +348,28 @@ describe("read-js-tests", function(){
         expect(cfg.thresholds.maxTimeInView).toBe(20);
     });
 
+    it("should know check reading conditions/behaviours or indicators", function(){
+        readJS.status.strict = true;
+        readJS.status.activity.read = false;
+        readJS.status.activity.scrollDepth = 30;
+        readJS.status.thresholds.scrollDepth = 40;
+        expect(readJS.hasRead()).toBeFalsy();
+
+        readJS.status.activity.scrollDepth = 50;
+        readJS.status.thresholds.scrollDepth = 40;
+        readJS.status.activity.dnp = 10;
+        readJS.status.thresholds.domNode = 20;
+        expect(readJS.hasRead()).toBeFalsy();
+
+        readJS.status.strict = false;
+        readJS.status.activity.readingPoints = 500;
+        readJS.status.thresholds.readingPoint = 300;
+        readJS.status.activity.timeInView = 3;
+        readJS.status.thresholds.timeInView = 5;
+        expect(readJS.hasRead()).toBeFalsy();
+
+    });
+
     //reset after all test cases
     afterAll(function() {
         readJS.turnOff();

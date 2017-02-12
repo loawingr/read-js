@@ -61,6 +61,7 @@ describe("spa tests of readJS", function(){
 
     it("allows overriding default configuration", function(){
         window.readJSConfig = {
+            strict: false,
             spa: true,
             timeInterval: 3,
             activity: {
@@ -91,6 +92,7 @@ describe("spa tests of readJS", function(){
         var cfg = readJS.getConfig();
         
         //expect certain config values that have been overridden
+        expect(cfg.strict).toBeFalsy();
         expect(cfg.spa).toBeTruthy();
         expect(cfg.timeInterval).toBe(3);
         expect(cfg.activity.averageReadSpeed).toBe(6);
