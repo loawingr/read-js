@@ -65,33 +65,33 @@ The custom callback allows the developer to do whatever they want with the detec
 
 ## Configurable Settings
 
-TODO: Example: Assuming average person can read 300 words per minute for this article
+Example: Assuming average person can read 300 words per minute for this article
 ```js
 	readJSConfig.activity.avgReadingSpeed = 300/60; //default is 300/60
 ```
 
-TODO: Example: Score 100 reading points when the scrolls passed a vertical threshold point of the content or the content is occupying enough of the viewport. Score 100 polling points when the user clicks on the DOM node or scrolls on the page.
+Example: Score 100 reading points when the scrolls passed a vertical threshold point of the content or the content is occupying enough of the viewport. Score 100 polling points when the user clicks on the DOM node or scrolls on the page.
 ```js
 	readJSConfig.activity.increment = 100; //default is 100
 ```
 
-TODO: Example: 500 reading points need to accumulate/scored before reading/scanning action has been decided
+Example: 500 reading points need to accumulate/scored before reading/scanning action has been decided
 ```js
 	readJSConfig.thresholds.readingPoint = 500; //default is 400
 ```
 ## Criteria before recalculating DOM node position relative to viewport
 
-TODO: Example: Every 3 seconds the JS will check to see if the user did anything interesting like scroll, click, have enough of the viewport occupied. During idle time the readingPoints will increment by the timeInterval. In this example 
+Example: Every 3 seconds the JS will check to see if the user did anything interesting like scroll, click, have enough of the viewport occupied. During idle time the readingPoints will increment by the timeInterval. In this example 
 ```js
 	readJSConfig.timeInterval = 3; //default is 1.5 seconds
 ```
 
-TODO: Example: The user must have 5 seconds of time where the readJSConfig.thresholds.viewport threshold is satisfied.
+Example: The user must have 5 seconds of time where the readJSConfig.thresholds.viewport threshold is satisfied.
 ```js
 	readJSConfig.thresholds.timeInView = 5; //JS uses word count and avgReadingSpeed to determine dynamically as default
 ```
 
-TODO: Example: If readJSConfig.thresholds.timeInView is not defined then you can set a min and max for dynamic calculator
+Example: If readJSConfig.thresholds.timeInView is not defined then you can set a min and max for dynamic calculator
 ```js
 	readJSConfig.thresholds.minTimeInView = 3; //default is 3 seconds
 	readJSConfig.thresholds.maxTimeInView = 15; //default is 20 seconds
@@ -101,29 +101,29 @@ TODO: Example: If readJSConfig.thresholds.timeInView is not defined then you can
 
 The browser tab with Read JS running must be the active tab
 
-TODO: Example: User must have 30% of the viewport occupied by the content you want read/scanned before scoring
+Example: User must have 30% of the viewport occupied by the content you want read/scanned before scoring
 ```js
 	readJSConfig.thresholds.viewport = 30; //default is 25% 
 ```
 
-TODO: Example: User must scroll passed 30% of content vertical height to be awarded readJSConfig.activity.increment
+Example: User must scroll passed 30% of content vertical height to be awarded readJSConfig.activity.increment
 ```js
 	readJS.thresholds.domNode = 30 //default is 30%
 ```
 
-TODO: Example: User must accumulate 200 polling points before JS does mathematical calculations with DOM node positioning in viewport
+Example: User must accumulate 200 polling points before JS does mathematical calculations with DOM node positioning in viewport
 ```js
 	readJSConfig.thresholds.domPolling = 200; //default is 100
 ```
 
 ## Debug Modes
 
-TODO: Example: Want to see some log info in the developer tools?
+Example: Want to see some log info in the developer tools?
 ```js
 	readJSConfig.debug.statsConsole = true; //default is false
 ```
 
-TODO: Example: Want to see some visual overlays to see the DOM calculations in action?
+Example: Want to see some visual overlays to see the DOM calculations in action?
 ```js
 	readJSConfig.debug.statsOverlay = true; //default is false
 ```
@@ -133,11 +133,11 @@ TODO: Example: Want to see some visual overlays to see the DOM calculations in a
 |Method       |Return Value Type|Parameters|Description                                      | Available |
 |-------------|-----------------| -------- | ----------------------------------------------- | --------- |
 | getConfig() | Object          | None     | Will return the readJSConfig object being used  | Yes       |
-| isOn()      | Boolean         | None     | Will tell you if readJS is on right now         | No        |
-| turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | No        |
-| turnOn()    | Boolean         | None     | Use for SPA app state changes to start listening| No        |
+| isOn()      | Boolean         | None     | Will tell you if readJS is on right now         | Yes       |
+| turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | Yes       |
+| turnOn()    | Boolean         | None     | Use for SPA app state changes to start listening| Yes       |
 
-## Single Page Apps (SPA) - Not Currently Supported
+## Single Page Apps (SPA) - Needs a Sample Page
 
 You must tell ReadJS that it is in an SPA by:
 
