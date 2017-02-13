@@ -687,6 +687,8 @@
             if (!readJS.status.spa){
                 //onload event listener
                 window.addEventListener("load", readJS.handleLoad);
+            }else{
+                readJS.handleLoad();
             }
 
             //set it all in motion
