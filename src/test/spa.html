@@ -56,6 +56,24 @@
     			display:block;
     			clear:both;
 			}
+			.wrap8,.wrap4{
+				float:left;
+				display:block;
+				padding:1rem;
+				line-height:1.5rem;
+			}
+			.wrap8{
+				max-width:38rem;
+			}
+			.wrap4{
+				max-width:18rem;
+			}
+			.promo{
+				height: 300px;
+				width:100%;
+				padding: 0 1rem;
+				margin:1rem 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -144,6 +162,7 @@
 				<h2>Pretend this is the global footer</h2>
 			</footer>
 		</div>
+		<script src="../js/spa-demo.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var readJSConfig = {
 				debug: {
@@ -161,39 +180,6 @@
 				cb: function(){ alert("The user scanned the list of cards"); }
 				
 			};
-			(function(){
-				function switchToArticle(){
-					//do something
-				}
-				function handleClick(clickEvent){
-					var element = clickEvent.target;
-                	// check if the the clickEvent.target is a link
-                	if ( element.nodeName === "A" ) ){
-                	    //switch to article content
-                	    switchToArticle();
-                	    return true;
-                	} else { // otherwise we'll check its parent classes
-                	    if ( !!element.parentElement ){
-                	        // initialize the parentElement
-                	        var parentElement = element.parentElement;
-                	        while ( !!parentElement && parentElement.nodeName !== "BODY" ) {
-                	            // check if each parent element is a link
-                	            if ( parentElement.nodeName === "A" ){
-                	                //switch to article content
-                	                switchToArticle();
-                	                return true;
-                	            } else {
-                	                // otherwise test the next parent element
-                	                parentElement = parentElement.parentElement;
-                	            }
-                	        }
-                	    } else {
-                	        return false;
-                	    }
-                	}
-				}
-				document.querySelector(".card-list").addEventListener("click", handleClick);
-			});
 		</script>
 		<script type="text/javascript" src="../js/read.js"></script>
 	</body>

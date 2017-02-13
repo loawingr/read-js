@@ -61,12 +61,13 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          "build/js/read.js": ["./src/js/config.js", "./src/js/read.js"]
+          "build/js/read.js": ["./src/js/config.js", "./src/js/read.js"],
+          "build/js/spa-demo.js": ["./src/js/spa-demo.js"]
         }
       }
     },
     jshint: {
-      files: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js"],
+      files: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js", "./src/js/spa-demo.js"],
       options: hint_opts
     },
     karma:{
