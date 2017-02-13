@@ -163,7 +163,7 @@ To support SPA's there are 3 methods that are exposed.
 * Call turnOn() to indicate the DOM node has been loaded and rendered and to start listening based on the new config object
 
 ## Version
-1.0.0
+1.1.0
 
 ## License
 
