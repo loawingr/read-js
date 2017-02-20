@@ -162,8 +162,30 @@ To support SPA's there are 3 methods that are exposed.
 * Set new configuration in readJSConfig object based on the content type and reading/scanning behaviour you want to encourage.
 * Call turnOn() to indicate the DOM node has been loaded and rendered and to start listening based on the new config object
 
+## Browser Compatibility
+
+| Device | OS | Browser | Compatible? |
+| Desktop | OSX El Capitan | Safari | Yes |
+| Desktop | OSX El Capitan | Chrome | Yes |
+| Desktop | OSX El Capitan | Firefox | Yes |
+| Desktop | Windows 8 | IE10 | Not Sure |
+| Desktop | Windows 8 | Chrome | Not Sure |
+| Desktop | Windows 8 | Firefox | Not Sure |
+| Desktop | Windows 8 | Safari | Not Sure |
+| Apple iPad 2 | iOS 9 | Safari | Not Sure |
+| Apple iPad 2 | iOS 9 | Chrome | Not Sure |
+| Apple iPad 2 | iOS 9 | Firefox | Not Sure |
+| Samsung Galaxy Tab 2 | Android 6.0 | Chrome | Not Sure |
+| Samsung Galaxy Tab 2 | Android 6.0 | Firefox | Not Sure |
+| iPhone 5s | iOS 10 | Safari | Not Sure |
+| iPhone 5s | iOS 10 | Chrome | Not Sure |
+| iPhone 5s | iOS 10 | Firefox | Not Sure |
+| Nexus 5 | Android 6.0 | Chrome | Yes |
+| Nexus 5 | Android 6.0 | Firefox | Yes |
+| Nexus 5 | Android 6.0 | Opera Mini | No |
+
 ## Version
-1.1.0
+1.1.1
 
 ## License
 
