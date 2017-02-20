@@ -19,7 +19,8 @@
                 spa : false, //tell readJS if it is in a single page app
                 debug: {
                     console:false,
-                    overlay:false
+                    overlay:false,
+                    overlays: {}
                 },
                 timeInterval: 1.5, //number of seconds between checking whether to poll the DOM
                 activity:{
@@ -379,9 +380,9 @@
             return true;
         },
         /*
-            removeOverlay: utility function to remove dom nodes
+            removeDomNode: utility function to remove dom nodes
         */
-        removeOverlay : function(domNodeId){
+        removeDomNode : function(domNodeId){
             var dn = document.getElementById(domNodeId);
             if (!!dn){
                 var p = dn.parentNode;
@@ -390,6 +391,14 @@
                 return true;
             }
             return false;
+        },
+        /*
+            removeOverlays: utility to remove all overlay DOM nodes
+        */
+        removeOverlays : function(){
+            readJS.removeDomNode("viewport_inview");
+            readJS.removeDomNode("overlap_inview");
+            readJS.removeDomNode("domnode_inview");
         },
         /*
             Cross browser way to detect the visibility properties
@@ -427,6 +436,7 @@
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
         //the calculations assume
         inView : function(domNode){
+            var dui, vui, oui;
 
             readJS.domNode = domNode;
 
@@ -434,10 +444,10 @@
             var vp = { tl:[], br:[]};
 
             //x coordinate of the top left corner of the viewport
-            vp.tl[0] = Math.abs(document.body.scrollLeft);
+            vp.tl[0] = Math.abs(document.body.scrollLeft||document.documentElement.scrollLeft);
 
             //y coordinate of the top left corner the viewport
-            vp.tl[1] = Math.abs(document.body.scrollTop);
+            vp.tl[1] = Math.abs(document.body.scrollTop||document.documentElement.scrollTop);
 
             //x coordinate of the bottom right corner of the viewport
             vp.br[0] = vp.tl[0] + window.innerWidth;
@@ -455,19 +465,23 @@
 
             //highlight viewport
             if (!!readJS.status.debug.overlay){
-                readJS.removeOverlay("viewport_inview");
-                var vui = document.createElement("DIV");
-                vui.id = "viewport_inview";
-                document.body.appendChild(vui);
-                vui.style.position = "absolute";
+                
+                if (!readJS.status.debug.overlays.vui){
+                    vui = document.createElement("DIV");
+                    vui.id = "viewport_inview";
+                    vui.style.position = "absolute";
+                    vui.style.background = "green";
+                    vui.style.opacity = "0.5";
+                    vui.style.zIndex = 9999;
+                    document.body.appendChild(vui);
+                    readJS.status.debug.overlays.vui = vui;
+                }
+                vui = readJS.status.debug.overlays.vui;            
                 vui.style.left = vp.tl[0] + "px";
                 vui.style.top = vp.tl[1] + "px";
                 vui.style.width = vp.width + "px";
                 vui.style.height = vp.height + "px";
-                vui.style.background = "green";
-                vui.style.opacity = "0.5";
-                vui.style.zIndex = 9999;
-                //console.log(vui);
+                //readJS.console(vui);
             }
 
             //top left and bottom right coordinate points of the dom node
@@ -495,19 +509,23 @@
 
             if (!!readJS.status.debug.overlay){
                 //highlight dom node
-                readJS.removeOverlay("domnode_inview");
-                var dui = document.createElement("DIV");
-                dui.id = "domnode_inview";
-                document.body.appendChild(dui);
-                dui.style.position = "absolute";
+                if (!readJS.status.debug.overlays.dui){
+                    dui = document.createElement("DIV");
+                    dui.id = "domnode_inview";
+                    dui.style.position = "absolute";
+                    dui.style.background = "blue";
+                    dui.style.opacity = "0.5";
+                    dui.style.zIndex = 9999;
+                    document.body.appendChild(dui);
+                    readJS.status.debug.overlays.dui = dui;
+                }
+                dui = readJS.status.debug.overlays.dui;
+                
                 dui.style.left = dn.tl[0] + "px";
                 dui.style.top = dn.tl[1] + "px";
                 dui.style.width = bcr.width + "px";
                 dui.style.height = bcr.height + "px";
-                dui.style.background = "blue";
-                dui.style.opacity = "0.5";
-                dui.style.zIndex = 9999;
-                //console.log(dui);
+                //readJS.console(dui);
             }
 
             //element is not in viewport
@@ -554,19 +572,22 @@
 
             if (!!readJS.status.debug.overlay){
                 //highlight the overlap area
-                readJS.removeOverlay("overlap_inview");
-                var ui = document.createElement("DIV");
-                ui.id = "overlap_inview";
-                document.body.appendChild(ui);
-                ui.style.position = "absolute";
-                ui.style.left = overlap.tl[0] + "px";
-                ui.style.top = overlap.tl[1] + "px";
-                ui.style.width = width_of_overlap + "px";
-                ui.style.height = height_of_overlap + "px";
-                ui.style.background = "red";
-                ui.style.opacity = "0.5";
-                ui.style.zIndex = 9999;
-                //console.log(ui);
+                if(!readJS.status.debug.overlays.oui){
+                    oui = document.createElement("DIV");
+                    oui.id = "overlap_inview";
+                    document.body.appendChild(oui);
+                    oui.style.position = "absolute";
+                    oui.style.background = "red";
+                    oui.style.opacity = "0.5";
+                    oui.style.zIndex = 9999;
+                    readJS.status.debug.overlays.oui = oui;
+                }
+                oui = readJS.status.debug.overlays.oui;
+                oui.style.left = overlap.tl[0] + "px";
+                oui.style.top = overlap.tl[1] + "px";
+                oui.style.width = width_of_overlap + "px";
+                oui.style.height = height_of_overlap + "px";
+                //readJS.console(oui);
             }
             readJS.status.activity.dnp = dnip;
             readJS.status.activity.vpp = dnvp;

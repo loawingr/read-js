@@ -116,9 +116,9 @@ describe("spa tests of readJS", function(){
 
     it("should be able to remove debugging overlay dom nodes", function(){
         readJS.inView(readJS.domNode);
-        expect(readJS.removeOverlay("viewport_inview")).toBeTruthy();
-        expect(readJS.removeOverlay("overlap_inview")).toBeTruthy();
-        expect(readJS.removeOverlay("dummy_overlay")).toBeFalsy();
+        expect(readJS.removeDomNode("viewport_inview")).toBeTruthy();
+        expect(readJS.removeDomNode("overlap_inview")).toBeTruthy();
+        expect(readJS.removeDomNode("dummy_overlay")).toBeFalsy();
         expect(document.getElementById("viewport_inview")).toBeNull();
         expect(document.getElementById("overlap_inview")).toBeNull();
     });
