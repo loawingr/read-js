@@ -168,7 +168,7 @@ To support SPA's there are 3 methods that are exposed.
 | Desktop | OSX El Capitan | Safari 9.1.1+ | Yes |
 | Desktop | OSX El Capitan | Chrome 56+ | Yes |
 | Desktop | OSX El Capitan | Firefox 43+ | Yes |
-| Desktop | Windows 8 64-bit | IE 10 | Partial |
+| Desktop | Windows 8 64-bit | IE 10+ | Yes (Non Compatibility Mode) |
 | Desktop | Windows 8 64-bit | Chrome 54+ | Yes |
 | Desktop | Windows 8 64-bit | Firefox 51+ | Yes |
 | Desktop | Windows 8 64-bit | Opera 43+ | Yes |

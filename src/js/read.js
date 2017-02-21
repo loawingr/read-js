@@ -489,11 +489,14 @@
 
             var bcr = domNode.getBoundingClientRect();
 
+            var xOffset = (typeof(window.scrollX) === "undefined")?parseInt(window.pageXOffset, 10):parseInt(window.scrollX,10);
+            var yOffset = (typeof(window.scrollY) === "undefined")?parseInt(window.pageYOffset, 10):parseInt(window.scrollY,10);
+
             //x coordinate of the top left corner of the dom node
-            dn.tl[0] = bcr.left + parseInt(window.scrollX,10);
+            dn.tl[0] = bcr.left + xOffset;
 
             //y coordinate of the top left corner of the dom node
-            dn.tl[1] = bcr.top + parseInt(window.scrollY,10);
+            dn.tl[1] = bcr.top + yOffset;
 
             //x coordinate of the bottom right corner of the dom node
             dn.br[0] = dn.tl[0] + bcr.width;
