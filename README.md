@@ -165,10 +165,11 @@ To support SPA's there are 3 methods that are exposed.
 ## Browser Compatibility
 
 | Device | OS | Browser | Compatible? |
+|-------------------|-------------------|----------------|----------|
 | Desktop | OSX El Capitan | Safari 9.1.1 | Yes |
 | Desktop | OSX El Capitan | Chrome 56 | Yes |
 | Desktop | OSX El Capitan | Firefox 43 | Yes |
-| Desktop | Windows 8 64-bit | IE 10 | Yes (Non Compatibility Mode) |
+| Desktop | Windows 8 64-bit | IE 10 | Partial |
 | Desktop | Windows 8 64-bit | Chrome 54 | Yes |
 | Desktop | Windows 8 64-bit | Firefox 51 | Yes |
 | Desktop | Windows 8 64-bit | Opera 43 | Yes |
@@ -183,13 +184,14 @@ To support SPA's there are 3 methods that are exposed.
 | Samsung Galaxy Tab 4 | Android 5.1.1 | Firefox 51+ | Yes |
 | iPhone 6 | iOS 10.2 | Safari | Yes |
 | iPhone 6 | iOS 10.2 | Chrome 56 | Yes |
-| iPhone 6 | iOS 10.2 | Firefox 6.1 | Yes |
+| iPhone 6 | iOS 10.2 | Firefox 6.1 git | Yes |
 | Nexus 5 | Android 6.0.1 | Chrome 56+ | Yes |
 | Nexus 5 | Android 6.0.1 | Firefox 51+| Yes |
 | Nexus 5 | Android 6.0.1 | Opera Mini | No |
 
 ## Known Bugs
 
+* Compatibility mode in Internet Explorer is currently not supported.
 * On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
 
 ## Version
