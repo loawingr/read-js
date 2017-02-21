@@ -165,13 +165,13 @@ To support SPA's there are 3 methods that are exposed.
 ## Browser Compatibility
 
 | Device | OS | Browser | Compatible? |
-| Desktop | OSX El Capitan | Safari | Yes |
-| Desktop | OSX El Capitan | Chrome | Yes |
-| Desktop | OSX El Capitan | Firefox | Yes |
-| Desktop | Windows 8 | IE10 | Not Sure |
-| Desktop | Windows 8 | Chrome | Not Sure |
-| Desktop | Windows 8 | Firefox | Not Sure |
-| Desktop | Windows 8 | Safari | Not Sure |
+| Desktop | OSX El Capitan | Safari 9.1.1+ | Yes |
+| Desktop | OSX El Capitan | Chrome 56+ | Yes |
+| Desktop | OSX El Capitan | Firefox 43+ | Yes |
+| Desktop | Windows 8 64-bit | IE 10 | Partial |
+| Desktop | Windows 8 64-bit | Chrome 54+ | Yes |
+| Desktop | Windows 8 64-bit | Firefox 51+ | Yes |
+| Desktop | Windows 8 64-bit | Opera 43+ | Yes |
 | Apple iPad 2 | iOS 9 | Safari | Not Sure |
 | Apple iPad 2 | iOS 9 | Chrome | Not Sure |
 | Apple iPad 2 | iOS 9 | Firefox | Not Sure |
