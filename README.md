@@ -165,24 +165,32 @@ To support SPA's there are 3 methods that are exposed.
 ## Browser Compatibility
 
 | Device | OS | Browser | Compatible? |
-| Desktop | OSX El Capitan | Safari 9.1.1+ | Yes |
-| Desktop | OSX El Capitan | Chrome 56+ | Yes |
-| Desktop | OSX El Capitan | Firefox 43+ | Yes |
-| Desktop | Windows 8 64-bit | IE 10+ | Yes (Non Compatibility Mode) |
-| Desktop | Windows 8 64-bit | Chrome 54+ | Yes |
-| Desktop | Windows 8 64-bit | Firefox 51+ | Yes |
-| Desktop | Windows 8 64-bit | Opera 43+ | Yes |
-| Apple iPad 2 | iOS 9 | Safari | Not Sure |
-| Apple iPad 2 | iOS 9 | Chrome | Not Sure |
-| Apple iPad 2 | iOS 9 | Firefox | Not Sure |
-| Samsung Galaxy Tab 2 | Android 6.0 | Chrome | Not Sure |
-| Samsung Galaxy Tab 2 | Android 6.0 | Firefox | Not Sure |
-| iPhone 5s | iOS 10 | Safari | Not Sure |
-| iPhone 5s | iOS 10 | Chrome | Not Sure |
-| iPhone 5s | iOS 10 | Firefox | Not Sure |
-| Nexus 5 | Android 6.0 | Chrome | Yes |
-| Nexus 5 | Android 6.0 | Firefox | Yes |
-| Nexus 5 | Android 6.0 | Opera Mini | No |
+| Desktop | OSX El Capitan | Safari 9.1.1 | Yes |
+| Desktop | OSX El Capitan | Chrome 56 | Yes |
+| Desktop | OSX El Capitan | Firefox 43 | Yes |
+| Desktop | Windows 8 64-bit | IE 10 | Yes (Non Compatibility Mode) |
+| Desktop | Windows 8 64-bit | Chrome 54 | Yes |
+| Desktop | Windows 8 64-bit | Firefox 51 | Yes |
+| Desktop | Windows 8 64-bit | Opera 43 | Yes |
+| Apple iPad Air 2 | iOS 9.3.1 | Safari | Yes |
+| Apple iPad Air 2 | iOS 9.3.1 | Chrome 55 | Yes |
+| Apple iPad Air 2 | iOS 9.3.1 | Firefox 6.1 | Yes |
+| Apple iPad 2 | iOS 9.2.1 | Safari | Yes |
+| Apple iPad 2 | iOS 9.2.1 | Chrome 56 | Yes |
+| Apple iPad 2 | iOS 9.2.1 | Firefox 6.1 | Yes |
+| Apple iPad 2 | iOS 9.2.1 | Opera Mini | No |
+| Samsung Galaxy Tab 4 | Android 5.1.1 | Chrome 55+ | Partial |
+| Samsung Galaxy Tab 4 | Android 5.1.1 | Firefox 51+ | Yes |
+| iPhone 5s | iOS 10 | Safari | Not Tested Yet |
+| iPhone 5s | iOS 10 | Chrome | Not Tested Yet |
+| iPhone 5s | iOS 10 | Firefox | Not Tested Yet |
+| Nexus 5 | Android 6.0.1 | Chrome 56+ | Yes |
+| Nexus 5 | Android 6.0.1 | Firefox 51+| Yes |
+| Nexus 5 | Android 6.0.1 | Opera Mini | No |
+
+## Known Bugs
+
+* On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
 
 ## Version
 1.1.1
