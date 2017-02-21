@@ -181,9 +181,9 @@ To support SPA's there are 3 methods that are exposed.
 | Apple iPad 2 | iOS 9.2.1 | Opera Mini | No |
 | Samsung Galaxy Tab 4 | Android 5.1.1 | Chrome 55+ | Partial |
 | Samsung Galaxy Tab 4 | Android 5.1.1 | Firefox 51+ | Yes |
-| iPhone 5s | iOS 10 | Safari | Not Tested Yet |
-| iPhone 5s | iOS 10 | Chrome | Not Tested Yet |
-| iPhone 5s | iOS 10 | Firefox | Not Tested Yet |
+| iPhone 6 | iOS 10.2 | Safari | Yes |
+| iPhone 6 | iOS 10.2 | Chrome 56 | Yes |
+| iPhone 6 | iOS 10.2 | Firefox 6.1 | Yes |
 | Nexus 5 | Android 6.0.1 | Chrome 56+ | Yes |
 | Nexus 5 | Android 6.0.1 | Firefox 51+| Yes |
 | Nexus 5 | Android 6.0.1 | Opera Mini | No |
