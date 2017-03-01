@@ -211,7 +211,7 @@ To support SPA's there are 3 methods that are exposed.
 * On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
 
 ## Version
-1.1.1
+1.1.2
 
 ## License
 
