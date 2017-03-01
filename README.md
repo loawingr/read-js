@@ -99,7 +99,7 @@ Example: If readJSConfig.thresholds.timeInView is not defined then you can set a
 
 Example: The user must scroll passed 50% of the DOM node vertical height to satisfy the scroll depth threshold.
 ```js
-    readJSConfig.thresholds.scrollDepth = 50%; //
+    readJSConfig.thresholds.scrollDepth = 50%; //default is 0%
 ```
 
 Example: In strict mode the thresholds.domNode & thresholds.viewport need to be satisfied to increment the timeInView
