@@ -721,6 +721,7 @@
             isOn = true;
 
             if (!initialized){
+                readJS.handleVisibilityChange(); //use case:user opens page in new tab which means we need to check if the tab is active before counting
                 initialized = true;
             }
 
