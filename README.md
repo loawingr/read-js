@@ -132,6 +132,16 @@ Example: In strict mode the thresholds.domNode needs to be satisfied before read
 	readJSConfig.strict = true; //default is false
 ```
 
+## DOM Polling Degredation Curve
+
+Read JS will use the formula below to make sure that it's slowing down it's polling activity as time passes without any indication (DOM node clicks, window scrolls) the user is reading. Note that timeInUnknownState is directly correlated with readJSConfig.timeInterval
+
+```js
+readJS.status.activity.pollingPoints += 100*Math.pow(0.9, readJS.status.activity.timeInUnknownState);
+```
+
+If readJSConfig.timeInterval is set at default setting of 1.5 seconds the cadence of DOM reading/calculations are as follows in seconds: 0, 3, 6, 10.5, 18 and then it goes to sleep.
+
 ## Debug Modes
 
 Example: Want to see some log info in the developer tools?
