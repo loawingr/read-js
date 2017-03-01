@@ -97,6 +97,11 @@ Example: If readJSConfig.thresholds.timeInView is not defined then you can set a
 	readJSConfig.thresholds.maxTimeInView = 15; //default is 20 seconds
 ```
 
+Example: The user must scroll passed 50% of the DOM node vertical height to satisfy the scroll depth threshold.
+```js
+    readJSConfig.thresholds.scrollDepth = 50%; //
+```
+
 Example: In strict mode the thresholds.domNode & thresholds.viewport need to be satisfied to increment the timeInView
 
 ```js
@@ -122,7 +127,7 @@ Example: User must accumulate 200 polling points before JS does mathematical cal
 	readJSConfig.thresholds.domPolling = 200; //default is 100
 ```
 
-Example: In strict mode the thresholds.minVertical & thresholds.domNode need to satisfied before readJS determines the content has been read/scanned
+Example: In strict mode the thresholds.domNode needs to be satisfied before readJS determines the content has been read/scanned
 ```js
 	readJSConfig.strict = true; //default is false
 ```
