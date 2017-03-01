@@ -112,7 +112,7 @@ Example: User must have 30% of the viewport occupied by the content you want rea
 	readJSConfig.thresholds.viewport = 30; //default is 25% 
 ```
 
-Example: User must scroll passed 30% of content vertical height to be awarded readJSConfig.activity.increment
+Example: This feature is in here for the display ad viewability use case. The sample below is saying at least 30% of the advert is in view before awarding points equal to readJSConfig.activity.increment
 ```js
 	readJS.thresholds.domNode = 30 //default is 30%
 ```
@@ -144,6 +144,7 @@ Example: Want to see some visual overlays to see the DOM calculations in action?
 |Method       |Return Value Type|Parameters|Description                                      | Available |
 |-------------|-----------------| -------- | ----------------------------------------------- | --------- |
 | getConfig() | Object          | None     | Will return the readJSConfig object being used  | Yes       |
+| setConfig() | Boolean         | None     | Will read from window.readJSConfig object       | Yes       |
 | isOn()      | Boolean         | None     | Will tell you if readJS is on right now         | Yes       |
 | turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | Yes       |
 | turnOn()    | Boolean         | None     | Use for SPA app state changes to start listening| Yes       |
