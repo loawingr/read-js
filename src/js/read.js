@@ -247,14 +247,14 @@
             if (!!readJS.status.activity.read){
                 return true;
             }
+            //did not scroll far down enough
+            if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth){
+                readJS.console("Has not read yet because user didn't pass scrollDepth threshold");
+                readJS.report();
+                return false;
+            }
             if (!!readJS.status.strict){
-                //did not scroll far down enough
-                if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth){
-                    readJS.console("STRICT MODE: didn't scroll far enough");
-                    readJS.report();
-                    return false;
-                }
-                //does not have enough of the dom node in the viewport
+                //does not have enough of the dom node in the viewport (display ad viewability)
                 if (readJS.status.activity.dnp < readJS.status.thresholds.domNode){
                     readJS.console("STRICT MODE: not enough of dom node is in view");
                     readJS.report();
