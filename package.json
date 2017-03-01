@@ -27,6 +27,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "build" : "grunt"
+    "build" : "grunt",
+    "postinstall": "npm run build"
   }
 }
