@@ -1,8 +1,8 @@
 {
   "name": "read-js",
   "description": "Detects if the user is reading the article",
-  "version": "1.1.3",
-  "main": "/build/js/read.js",
+  "version": "1.1.4",
+  "main": "build/js/read.js",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
@@ -28,6 +28,6 @@
   "scripts": {
     "test": "grunt test",
     "build" : "grunt",
-    "postinstall": "npm run build"
+    "prepare": "npm run build"
   }
 }
