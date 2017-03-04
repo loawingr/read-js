@@ -1,0 +1,34 @@
+# Numerous always-ignore extensions
+*.bak
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*.map
+.sass-cache
+
+# OS or Editor folders
+.DS_Store
+._*
+Thumbs.db
+.cache
+.project
+.settings
+.tmproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+*.codekit
+
+# NB: we do *not* ignore the build output directory here
+# (as is done in the .gitignore) because we want it to be
+# included in the published tarball.
+build/coverage
+build/test
+
+node_modules
+test/karma
