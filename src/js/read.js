@@ -732,4 +732,9 @@
     window.readJS = readJS;
 
 })();
-readJS.turnOn();
+if(typeof(readJSConfig)!=="undefined" && readJSConfig.spa !== true){
+    readJS.turnOn(); //auto track on non SPA architecture web pages
+}else{
+    //setup status variables at a minimum
+    readJS.resetConfigStatus();
+}
