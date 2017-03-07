@@ -9,6 +9,7 @@
     var percentagePoint = 30; //the word count percentage and amount of dom node needing to be visible in viewport for awarding reading points
     var isOn = false;
     var initialized = false;
+    var intervals = [];
     var readJS = {
         /*
             resetConfigStatus : resets config to default and all status variables to zero
@@ -146,13 +147,22 @@
                 return false;
             }
             isOn = true;
+            
+            readJS.stopPolling();
             //check if the reader is actually reading at a decaying rate
             readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.status.timeInterval*1000);
+            intervals.push(readJS.readingWorker);
             readJS.console("readJS: starting interval ID", readJS.readingWorker);
 
             readJS.inDebugMode();
 
             return true;
+        },
+        /*
+            getIntervals: returns a list of intervals that were set by window.setInterval
+        */
+        getIntervals : function(){
+            return intervals;
         },
         /*
             checkActivity is meant to determine if the user is active on the page
@@ -197,7 +207,7 @@
         */
         console : function(){
             if (!!readJS.status.debug.console){
-                console.log(arguments);
+                console.log(readJS.readingWorker, arguments);
                 return true;
             }
             return false;
@@ -276,10 +286,19 @@
             readJS.callback();
             readJS.removeListeners();
             readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
-            readJS.console("readJS: ending interval ID", readJS.readingWorker);
-            window.clearInterval(readJS.readingWorker);
+            readJS.stopPolling();
             return true;
             
+        },
+        /*
+            stopPolling() will clear the current interval
+        */
+        stopPolling : function(){
+            if (!!readJS.readingWorker){
+                window.clearInterval(readJS.readingWorker);
+                readJS.console("readJS: ending interval ID", readJS.readingWorker);
+                delete readJS.readingWorker;
+            }
         },
         /*
             report() will console out what readJS knows so far
@@ -426,8 +445,7 @@
             var hidden = readJS.getVisibilityProperties().hiddenProp;
             if (document[hidden]) {
                 readJS.console("readJS: pausing after detecting focus to another tab");
-                readJS.console("ending interval ID ", readJS.readingWorker);
-                window.clearInterval(readJS.readingWorker);
+                readJS.stopPolling();
             }else{
                 readJS.console("readJS: reinitializing after detecting tab is in focus");
                 readJS.initialize(readJS.callback);
@@ -664,8 +682,7 @@
             
             readJS.removeListeners();
             readJS.console("readJS: stopping midway");
-            readJS.console("readJS: ending interval ID", readJS.readingWorker);
-            window.clearInterval(readJS.readingWorker);
+            readJS.stopPolling();
             readJS.status.activity.read = false;
             isOn = false;
 
