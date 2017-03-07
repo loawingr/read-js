@@ -1,3 +1,24 @@
+//define read JS config
+var readJSConfig = {
+    debug: {
+        console: true,
+        overlay: false
+    },
+    spa: true,
+    thresholds: {
+        timeInView: 5, //5 seconds of viewing time
+        domNode: 15, //the 15% of dom node must be in viewport
+        viewport: 50, //50% of the viewport must be occupied by the list of content
+        minVertical: 70, //70% of the dom node must have been seen or scrolled passed
+    },
+    strict: true,
+    el: ".card-list",
+    cb: function(){ 
+        "use strict";
+        alert("The user scanned the list of cards");
+    }
+};
+//basic SPA controller
 (function(){
     "use strict";
     var LANDING_STATE = 1;
@@ -98,5 +119,8 @@
             }
         }
     }
+
     document.querySelector(".content-body").addEventListener("click", handleClick);
+    //start read JS
+    readJS.turnOn();
 })();
