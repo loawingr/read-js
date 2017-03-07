@@ -208,10 +208,10 @@ describe("read-js-tests", function(){
         }
 
         spyOn(readJS, "removeListeners");
-        spyOn(window, "clearInterval");
+        spyOn(readJS, "stopPolling");
         expect(readJS.hasRead()).toBeTruthy();
         expect(readJS.removeListeners).toHaveBeenCalled();
-        expect(window.clearInterval).toHaveBeenCalled();
+        expect(readJS.stopPolling).toHaveBeenCalled();
 
 
     });
