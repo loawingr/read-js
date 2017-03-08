@@ -683,6 +683,7 @@
             readJS.removeListeners();
             readJS.console("readJS: stopping midway");
             readJS.stopPolling();
+            readJS.removeOverlays();
             readJS.status.activity.read = false;
             isOn = false;
 
