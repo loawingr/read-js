@@ -47,7 +47,7 @@
                     minTimeInView: 3, //min number of seconds for the text to be in view
                     maxTimeInView: 20, //max number of seconds for the text to be in view
                     scrollDepth: 0, // dynamically calculated because dependant on dom node height
-                    percentagePoint: 30
+                    percentagePoint: 30 // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
                 }
             };
             return true;

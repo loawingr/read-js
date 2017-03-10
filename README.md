@@ -107,6 +107,12 @@ Example: In strict mode the thresholds.domNode & thresholds.viewport need to be 
 ```js
 	readJSConfig.strict = true; //default is false
 ```
+Example: If readJSConfig.thresholds.timeInView is not defined and strict mode is active, this value will be calculated based
+upon the a percentage of the text and the averageReadingSpeed.
+```js
+	readJSConfig.thresholds.percentagePoint = 50; //default is 30
+```
+
 
 ## Criteria before reading points are scored
 
