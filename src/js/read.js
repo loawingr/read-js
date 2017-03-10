@@ -6,7 +6,6 @@
     "use strict";
     // Set the name of the hidden property and the change event for visibility
     var hidden, visibilityChange;
-    var percentagePoint = 30; //the word count percentage and amount of dom node needing to be visible in viewport for awarding reading points
     var isOn = false;
     var initialized = false;
     var intervals = [];
@@ -41,13 +40,14 @@
                 },
                 thresholds:{
                     viewport:25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
-                    domNode:percentagePoint, //100 reading points awarded if the user has 30% of DOM node in the viewport
+                    domNode:30, //100 reading points awarded if the user has 30% of DOM node in the viewport
                     minVertical:50, //100 reading points awarded if the user scrolls past the percentage point of the DOM node
                     readingPoint:400, // if the number of points exceeds this limit than the person has read the article
                     domPolling:100, // the number of points to accumulate before doing any calculations on the DOM
                     minTimeInView: 3, //min number of seconds for the text to be in view
                     maxTimeInView: 20, //max number of seconds for the text to be in view
-                    scrollDepth: 0 // dynamically calculated because dependant on dom node height
+                    scrollDepth: 0, // dynamically calculated because dependant on dom node height
+                    percentagePoint: 30
                 }
             };
             return true;
@@ -118,6 +118,9 @@
                 }
                 if (typeof(readJSConfig.thresholds.minVertical) === "number"){
                     readJS.status.thresholds.minVertical = readJSConfig.thresholds.minVertical;
+                }
+                if (typeof(readJSConfig.thresholds.percentagePoint) === "number"){
+                    readJS.status.thresholds.percentagePoint = readJSConfig.thresholds.percentagePoint;
                 }
             }
             if (typeof(readJSConfig.el) !== "string"){
@@ -646,7 +649,7 @@
             var wordCount = readJS.getText(readJS.domNode).split(" ").length;
             var averageReadSpeed = readJS.status.activity.averageReadSpeed; 
             // readJS.status.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.status.thresholds.domNode
-            readJS.status.thresholds.timeInView = Math.floor(wordCount*((percentagePoint/100)/averageReadSpeed)/readJS.status.timeInterval);
+            readJS.status.thresholds.timeInView = Math.floor(wordCount*(readJS.status.thresholds.percentagePoint/100)/averageReadSpeed);
             
             //console.log("threshold of timeInView", readJS.status.thresholds.timeInView);
             if (readJS.status.thresholds.minTimeInView > readJS.status.thresholds.timeInView){
