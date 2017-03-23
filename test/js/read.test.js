@@ -166,7 +166,7 @@ describe("read-js-tests", function(){
     it("time-in-view-threshold", function(){
         var dn = readJS.domNode;
         readJS.setTimeInViewThreshold();
-        expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView); //less than 3 seconds to read enough of a small paragraph
+        expect(readJS.status.thresholds.timeInView).toBe(5); //around 5 seconds to read enough of a small paragraph
 
         readJS.domNode = document.getElementById("anthem");
         readJS.domNode.style.display = "block";
