@@ -395,7 +395,14 @@
             getScrollInfo: will detect if user has scrolled pass threshold point
         */
         getScrollInfo : function(){
-            var calculated = Math.abs(document.body.scrollTop) + window.innerHeight;
+            var scrollTop;
+            // Firefox and IE don't support document.body.scrollTop, so we need this logic to select document.documentElement.scrollTop instead
+            if (!!document.body.scrollTop){
+                scrollTop = document.body.scrollTop;
+            } else if (!!document.documentElement.scrollTop){
+                scrollTop = document.documentElement.scrollTop;
+            }
+            var calculated = Math.abs(scrollTop) + window.innerHeight;
             if (calculated > readJS.status.activity.scrollDepth){
                 readJS.status.activity.scrollDepth = calculated;
             }
