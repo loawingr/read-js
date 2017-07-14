@@ -202,6 +202,7 @@ describe("read-js-tests", function(){
         //setup read conditions
         readJS.status.activity.readingPoints = 401; // 1 more than threshold
         readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
+        readJS.status.activity.scrollDepth = readJS.status.thresholds.scrollDepth
 
         readJS.callback = function(){
             console.log("The article has been read.");
