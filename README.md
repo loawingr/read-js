@@ -151,12 +151,12 @@ If readJSConfig.timeInterval is set at default setting of 1.5 seconds the cadenc
 
 Example: Want to see some log info in the developer tools?
 ```js
-	readJSConfig.debug.statsConsole = true; //default is false
+	readJSConfig.debug.console = true; //default is false
 ```
 
 Example: Want to see some visual overlays to see the DOM calculations in action?
 ```js
-	readJSConfig.debug.statsOverlay = true; //default is false
+	readJSConfig.debug.overlay = true; //default is false
 ```
 
 ## General Public Methods
