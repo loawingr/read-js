@@ -1,6 +1,6 @@
 {
-  "name": "read-js DAVID TEST",
-  "description": "Detects if the user is reading the article",
+  "name": "read-js",
+  "description": " DAVID TEST Detects if the user is reading the article",
   "version": "1.1.7",
   "main": "build/js/read.js",
   "devDependencies": {
