@@ -1,3 +1,4 @@
+/* global readJSConfig readJS */
 /*
     Read.js assumes:
     1) The article width never exceeds the viewport width
@@ -5,7 +6,7 @@
 (function() {
     "use strict";
     // Set the name of the hidden property and the change event for visibility
-    var hidden, visibilityChange;
+    var hidden, visibilityChange; // eslint-disable-line
     var isOn = false;
     var initialized = false;
     var intervals = [];
@@ -147,8 +148,8 @@
         */
         calculateTotalTime: function() {
             if (!!readJS.status.activity.initialTime) {
-                let currentTime = new Date().getTime();
-                let currentTotal = readJS.status.activity.totalTime;
+                const currentTime = new Date().getTime();
+                const currentTotal = readJS.status.activity.totalTime;
                 readJS.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(readJS.status.activity.initialTime);
                 readJS.status.activity.initialTime = 0;
             }

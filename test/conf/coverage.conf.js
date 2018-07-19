@@ -15,7 +15,7 @@ module.exports = function(config) {
     
         // list of files / patterns to load in the browser
         files: [
-          cwd+"/src/js/read.js", //read JS library
+          cwd+"/build/read.js", //read JS library
           cwd+"/node_modules/jquery/dist/jquery.min.js", //jQuery is used to insert html snippets into DOM for automated tests
           cwd+"/test/html/*.html", //pattern for including html snippet files
           cwd+"/test/js/*.js" //test cases
