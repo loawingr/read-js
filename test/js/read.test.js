@@ -1,5 +1,5 @@
-describe("read-js-tests", function(){
-    
+describe("read-js-tests", function() {
+
     //custom timeout instead of 5 seconds
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -9,11 +9,10 @@ describe("read-js-tests", function(){
     readJS.domNode = document.querySelector("#paragraph");
 
     //do something before each test
-    beforeEach(function() {
-    });
+    beforeEach(function() {});
 
-    it("get-text", function(){
-        
+    it("get-text", function() {
+
         var el = document.getElementById("get-simple-text");
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
 
@@ -24,27 +23,27 @@ describe("read-js-tests", function(){
         expect(window.readJS.getText(el)).toBe("Hello there! The text of the dom node should be returned");
 
         el = document.getElementById("text-input");
-        
+
         expect(window.readJS.getText(el)).toBe("");
 
-        expect(readJS.getText()).toBeFalsy();        
+        expect(readJS.getText()).toBeFalsy();
     });
 
-    it("config", function(){
+    it("config", function() {
         expect(window.readJS.status.timeInterval).toBeGreaterThan(1); //for performance reasons
         expect(window.readJS.status.thresholds.readingPoint).toBeGreaterThan(window.readJS.status.activity.increment);
         expect(window.readJS.status.thresholds.domPolling).toBe(window.readJS.status.activity.increment);
         expect(1 < window.readJS.status.thresholds.viewport && window.readJS.status.thresholds.viewport <= 100).toBeTruthy();
         expect(1 < window.readJS.status.thresholds.domNode && window.readJS.status.thresholds.domNode <= 100).toBeTruthy();
-    
+
         expect(readJS.initialize().toBeFalsy);
         expect(readJS.hasRead()).toBeFalsy();
         expect(readJS.status.activity.readingPoints).toBeLessThan(readJS.status.thresholds.readingPoint);
         expect(readJS.status.activity.timeInView).toBe(0);
     });
 
-    it("should-update", function(){
-        
+    it("should-update", function() {
+
         readJS.status.activity.timeInUnknownState = 0;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
@@ -56,7 +55,7 @@ describe("read-js-tests", function(){
 
         readJS.status.activity.timeInUnknownState = 4.5;
         expect(readJS.isUpdateRequired()).toBeFalsy();
-        
+
         readJS.status.activity.timeInUnknownState = 6;
         expect(readJS.isUpdateRequired()).toBeTruthy();
 
@@ -112,9 +111,9 @@ describe("read-js-tests", function(){
         readJS.status.activity.pollingPoints = 0;
     });
 
-    
 
-    it("in-view", function(){
+
+    it("in-view", function() {
         console.log(readJS.domNode);
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         var iv = readJS.inView(readJS.domNode);
@@ -123,19 +122,19 @@ describe("read-js-tests", function(){
 
         expect(iv.dom_node_viewport_percent).toBeGreaterThan(25);
         expect(readJS.status.activity.vpp).toBeGreaterThan(25);
-        
+
     });
 
-    it("add-double-points", function(){ //this test always needs to be right after the "in-view" test
+    it("add-double-points", function() { //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         readJS.status.activity.readingPoints = 0;
         readJS.addPoints();
         expect(readJS.status.activity.dnp).toBeGreaterThan(readJS.status.thresholds.domNode);
         expect(readJS.status.activity.vpp).toBeGreaterThan(readJS.status.thresholds.viewport);
-        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment*2);
+        expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment * 2);
     });
 
-    it("add-viewport-points", function(){ //this test always needs to be right after the "in-view" test
+    it("add-viewport-points", function() { //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         readJS.status.activity.readingPoints = 0;
         readJS.status.activity.vpp = 26; // 1 more than threshold
@@ -146,7 +145,7 @@ describe("read-js-tests", function(){
         expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
-    it("add-viewport-points", function(){ //this test always needs to be right after the "in-view" test
+    it("add-viewport-points", function() { //this test always needs to be right after the "in-view" test
         expect(readJS.inViewport(readJS.domNode)).toBeTruthy();
         readJS.status.activity.readingPoints = 0;
         readJS.status.activity.vpp = 24; // 1 less than threshold
@@ -157,13 +156,13 @@ describe("read-js-tests", function(){
         expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
-    it("reactivate", function(){
+    it("reactivate", function() {
         readJS.status.activity.pollingPoints = 0;
         readJS.reactivate();
         expect(readJS.status.activity.pollingPoints).toBe(readJS.status.thresholds.domPolling);
     });
 
-    it("time-in-view-threshold", function(){
+    it("time-in-view-threshold", function() {
         var dn = readJS.domNode;
         readJS.setTimeInViewThreshold();
         expect(readJS.status.thresholds.timeInView).toBe(5); //around 5 seconds to read enough of a small paragraph
@@ -188,23 +187,23 @@ describe("read-js-tests", function(){
         readJS.domNode = dn;
     });
 
-    it("has-read", function(){ //this test relies on the time in view threshold test to be before it
+    it("has-read", function() { //this test relies on the time in view threshold test to be before it
         //fake the lock
         readJS.status.activity.read = true;
         expect(readJS.hasRead()).toBeTruthy();
 
         //setup not read conditions
         readJS.status.activity.read = false;
-        console.log("readingPoints: "+ readJS.status.activity.readingPoints);
-        console.log("timeInView: "+ readJS.status.activity.timeInView);
-        expect(readJS.hasRead()).toBeFalsy();        
+        console.log("readingPoints: " + readJS.status.activity.readingPoints);
+        console.log("timeInView: " + readJS.status.activity.timeInView);
+        expect(readJS.hasRead()).toBeFalsy();
 
         //setup read conditions
         readJS.status.activity.readingPoints = 401; // 1 more than threshold
         readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
         readJS.status.activity.scrollDepth = readJS.status.thresholds.scrollDepth
 
-        readJS.callback = function(){
+        readJS.callback = function() {
             console.log("The article has been read.");
         }
 
@@ -217,7 +216,7 @@ describe("read-js-tests", function(){
 
     });
 
-    it("check-activity", function(){
+    it("check-activity", function() {
 
         readJS.status.activity.timeOnPage = 0;
         readJS.status.activity.timeInUnknownState = 0;
@@ -225,7 +224,7 @@ describe("read-js-tests", function(){
 
         spyOn(readJS, "detectForScroll");
         spyOn(readJS, "endConditionsChecked");
-        
+
         readJS.checkActivity();
 
         expect(readJS.detectForScroll).toHaveBeenCalled();
@@ -236,39 +235,39 @@ describe("read-js-tests", function(){
         expect(readJS.status.activity.readingPoints).toBe(readJS.status.timeInterval);
     });
 
-    it("will-check-for-required-update", function(){
+    it("will-check-for-required-update", function() {
         spyOn(readJS, "isUpdateRequired");
         readJS.endConditionsChecked();
         expect(readJS.isUpdateRequired).toHaveBeenCalled();
     });
 
-    it("does-not-check-end-conditions", function(){
+    it("does-not-check-end-conditions", function() {
         readJS.status.activity.timeInUnknownState = 1;
         readJS.status.activity.pollingPoints = 0;
         expect(readJS.endConditionsChecked()).toBeFalsy();
     });
 
-    it("does-check-end-conditions", function(){
+    it("does-check-end-conditions", function() {
         readJS.status.activity.timeInUnknownState = 0;
         readJS.status.activity.pollingPoints = 0;
 
         expect(readJS.endConditionsChecked()).toBeTruthy();
     });
 
-    it("does-ask-for-end-condition-help", function(){
-        
+    it("does-ask-for-end-condition-help", function() {
+
         spyOn(readJS, "calculateCoordinates");
         spyOn(readJS, "addPoints");
         spyOn(readJS, "hasRead");
 
         readJS.endConditionsChecked();
-        
+
         expect(readJS.calculateCoordinates).toHaveBeenCalled();
         expect(readJS.addPoints).toHaveBeenCalled();
         expect(readJS.hasRead).toHaveBeenCalled();
     });
 
-    it("will-reactivate-on-delay-upon-scroll", function(){
+    it("will-reactivate-on-delay-upon-scroll", function() {
         readJS.status.activity.scrolled = false;
         expect(readJS.detectForScroll()).toBeFalsy();
 
@@ -282,7 +281,7 @@ describe("read-js-tests", function(){
         expect(readJS.status.activity.scrolled).toBeFalsy();
     });
 
-    it("will-handle-clicks", function(){
+    it("will-handle-clicks", function() {
         readJS.status.activity.readingPoints = 0;
         spyOn(readJS, "reactivate");
         readJS.handleClick();
@@ -290,14 +289,14 @@ describe("read-js-tests", function(){
         expect(readJS.status.activity.readingPoints).toBe(readJS.status.activity.increment);
     });
 
-    it("will-handle-scrolls", function(){
+    it("will-handle-scrolls", function() {
         spyOn(readJS, "showScrollInfo");
         readJS.handleScroll();
         expect(readJS.status.activity.scrolled).toBeTruthy();
         expect(readJS.showScrollInfo).toHaveBeenCalled();
     });
 
-    it("console", function(){
+    it("console", function() {
         readJS.status.debug.console = true;
         expect(readJS.console("hello Richard!")).toBeTruthy();
         expect(readJS.console("apple", "orange")).toBeTruthy();
@@ -306,12 +305,12 @@ describe("read-js-tests", function(){
         expect(readJS.console("hello Richard!")).toBeFalsy();
     });
 
-    it("initialize", function(){
+    it("initialize", function() {
         var el = readJSConfig.el;
         delete readJSConfig.el;
-        expect(readJS.initialize(function(){ alert(1); })).toBeFalsy();
-        if(typeof(el) === "string"){
-            el = {read:el};
+        expect(readJS.initialize(function() { alert(1); })).toBeFalsy();
+        if (typeof(el) === "string") {
+            el = { read: el };
         }
         readJSConfig.el = el;
         readJS.handleLoad();
@@ -320,22 +319,22 @@ describe("read-js-tests", function(){
         expect(window.setInterval).toHaveBeenCalled();
     });
 
-    it("calculates-coordinates", function(){
+    it("calculates-coordinates", function() {
         var el = readJS.domNode;
-        delete readJS.domNode; 
+        delete readJS.domNode;
         expect(readJS.calculateCoordinates()).toBeFalsy();
 
         readJS.domNode = el;
         expect(readJS.calculateCoordinates()).toBeTruthy();
-        
+
     });
 
-    it("prevents-scroll-info", function(){
+    it("prevents-scroll-info", function() {
         readJS.status.debug.overlay = false;
         expect(readJS.showScrollInfo()).toBeFalsy();
     });
 
-    it("returns default config", function(){
+    it("returns default config", function() {
         var cfg = readJS.getConfig();
         expect(cfg.spa).toBeFalsy();
         expect(cfg.timeInterval).toBe(1.5);
@@ -351,7 +350,7 @@ describe("read-js-tests", function(){
         expect(cfg.thresholds.maxTimeInView).toBe(20);
     });
 
-    it("should know check reading conditions/behaviours or indicators", function(){
+    it("should know check reading conditions/behaviours or indicators", function() {
         readJS.status.strict = true;
         readJS.status.activity.read = false;
         readJS.status.activity.scrollDepth = 30;
@@ -372,23 +371,90 @@ describe("read-js-tests", function(){
         expect(readJS.hasRead()).toBeFalsy();
 
     });
-    it("should accept readJSConfig.el as a string",function(){
+    it("should accept readJSConfig.el as a string", function() {
         readJSConfig.el = "#paragraph";
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
-    it("should not accept a number for readJSConfig.el",function(){
+    it("should not accept a number for readJSConfig.el", function() {
         readJSConfig.el = 123;
         expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
     })
-    it("should accept readJSConfig.el as an object",function(){
-        readJSConfig.el = {read:"#paragraph"};
+    it("should accept readJSConfig.el as an object", function() {
+        readJSConfig.el = { read: "#paragraph" };
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
-    it("should accept readJSConfig.cb as an object",function(){
-        readJSConfig.cb = {read:function(){console.log("test")}};
+    it("should accept readJSConfig.cb as an object", function() {
+        readJSConfig.cb = { read: function() { console.log("test") } };
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
-    
+    it("should set the initial time", function() {
+        readJS.status.activity.initialTime = 0;
+        readJS.setInitialTime();
+        expect(readJS.status.activity.initialTime).not.toEqual(0);
+    });
+    it("should calculate the total time", function() {
+        var time = 10;
+        spyOn(readJS, "calculateTotalTime").and.returnValue(time);
+        readJS.status.activity.totalTime = 0;
+        expect(readJS.calculateTotalTime()).toEqual(time);
+    });
+    it("should calculate totalTime since initial time is set", function() {
+        readJS.setInitialTime();
+        readJS.calculateTotalTime();
+        expect(readJS.status.activity.totalTime).toBeDefined();
+    });
+
+    it("should return false if no initial time is set", function() {
+        readJS.status.activity.initialTime = 0;
+        readJS.calculateTotalTime();
+        expect(readJS.status.activity.totalTime).toBeFalsy();
+    });
+    it("should return totalTime if totalTime is greater than 0", function() {
+        readJS.status.activity.totalTime = 30;
+        readJS.calculateTotalTime();
+        expect(readJS.status.activity.totalTime).toBe(30);
+    });
+    it("should return the current time from initialTime", function() {
+        jasmine.clock().install();
+        const baseTime = new Date();
+        jasmine.clock().mockDate(baseTime);
+        readJS.setInitialTime();
+        expect(readJS.status.activity.initialTime).toBe(baseTime.getTime());
+        jasmine.clock().uninstall();
+    });
+    it("should set totalTime in activity object", function() {
+        readJS.resetConfigStatus();
+        expect(readJS.status.activity.totalTime).toBe(0);
+        readJS.status.activity.totalTime = 30;
+        readJS.calculateTotalTime();
+        expect(readJS.status.activity.totalTime).toBe(30);
+    });
+    it("should reset initialTime to 0", function() {
+        jasmine.clock().install();
+        const baseTime = new Date();
+        jasmine.clock().mockDate(baseTime);
+        readJS.setInitialTime();
+        expect(readJS.status.activity.initialTime).toBe(baseTime.getTime());
+        readJS.resetConfigStatus();
+        expect(readJS.status.activity.initialTime).toBe(0);
+        jasmine.clock().uninstall();
+    });
+    it("should call calculateTotalTime in callback", function() {
+        spyOn(readJS, "calculateTotalTime").and.returnValue(timeElapsed);
+        //fake the lock
+        readJS.status.activity.read = true;
+        expect(readJS.hasRead()).toBeTruthy();
+        //setup read conditions
+        readJS.status.activity.readingPoints = 401; // 1 more than threshold
+        readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
+        readJS.status.activity.scrollDepth = readJS.status.thresholds.scrollDepth;
+        const timeElapsed = 45;
+        readJS.callback = function(time) {
+            expect(time).toBe(timeElapsed);
+        };
+    });
+    it("")
+
 
 
 

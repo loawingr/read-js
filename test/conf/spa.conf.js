@@ -17,7 +17,7 @@ module.exports = function(config) {
           cwd+"/node_modules/jquery/dist/jquery.min.js", //jQuery is used to insert html snippets into DOM for automated tests
           cwd+"/test/html/*.html", //pattern for including html snippet files
           cwd+"/test/js/spa.setup.js", //config file
-          cwd+"/src/js/read.js", //read JS library
+          cwd+"/build/js/read.js", //read JS library
           cwd+"/test/js/spa.test.js" //test cases
         ],
     

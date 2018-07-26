@@ -36,7 +36,9 @@
                     readingPoints: 0, //the points accumulated during reading time; if points exceeds the reading point threshold then the person has read the article
                     increment: 100, //the number of points awarded when reading activity types have been determined
                     read: false,
-                    averageReadSpeed: 300 / 60 //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
+                    averageReadSpeed: 300 / 60, //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
+                    initialTime:0,
+                    totalTime:0
                 },
                 thresholds: {
                     viewport: 25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
@@ -174,6 +176,29 @@
 
             return true;
         },
+        /*
+            setInitialTime: sets the initial time in activity.initialTime
+        */
+        setInitialTime: function(){
+            readJS.status.activity.initialTime = new Date().getTime();
+        },
+        /*
+            calculateTotalTime: sets the total time as the difference between total time and current time
+        */
+        calculateTotalTime: function(){
+            if(!!readJS.status.activity.initialTime){
+                const currentTime = new Date().getTime();
+                const currentTotal = readJS.status.activity.totalTime;
+                readJS.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(readJS.status.activity.initialTime);
+                readJS.status.activity.initialTime = 0;
+            }
+            if(readJS.status.activity.totalTime > 0){
+                return readJS.status.activity.totalTime;
+            }
+            readJS.console("ERROR: readJS.calculateTotalTIme() - initailTime not set");
+            return false;
+        },
+        
         /*
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
