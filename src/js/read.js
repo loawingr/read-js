@@ -130,8 +130,11 @@
                 readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
-            if (typeof(readJSConfig.cb) !== "function") {
-                readJS.console("ERROR: readJS.setConfig() expected a callback function");
+            if (typeof(readJSConfig.cb) === "function") {
+                readJSConfig.cb = {read:readJSConfig.cb};
+            }
+            if(typeof(readJSConfig.cb) !== "object"){
+                readJS.console("ERROR: readJS.setConfig() expected a callback function or object of callbacks");
                 return false;
             }
             return true;
@@ -142,16 +145,15 @@
         */
         initialize: function(callback) {
 
-            if (typeof(callback) !== "function") {
-                readJS.console("ERROR: readJS.initialize() expected a callback function");
+            if (typeof(callback) === "function") {
+                callback = {read:callback};
+            }
+            if(typeof(callback) !== "object"){
+                readJS.console("ERROR: readJS.initialize() expected a callback function or object of callbacks");
                 return false;
             }
             readJS.callback = callback;
 
-            // if (typeof(readJSConfig.el) !== "string") {
-            //     readJS.console("ERROR: readJS.initialize() expected a dom node to inspect");
-            //     return false;
-            // }
             if(typeof(readJSConfig.el) === "string"){
                 readJSConfig.el = {read:readJSConfig.el};
             }
@@ -653,7 +655,7 @@
             readJS.reactivate();
         },
         handleLoad: function() {
-            console.log("DAVID",readJSConfig.el);
+            console.log("DAVID",readJSConfig.el.read);
             readJS.domNode = document.querySelector(readJSConfig.el.read);
             readJS.setTimeInViewThreshold();
             readJS.domNode.addEventListener("click", readJS.handleClick);
@@ -737,11 +739,14 @@
                 readJSConfig.el = {read:readJSConfig.el};
             }
             if(typeof(readJSConfig.el) !== "object"){
-                readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
+                readJS.console("ERROR:  readJSConfig expected el to be a string or object");
                 return false;
             }
-            if (typeof(readJSConfig.cb) !== "function") {
-                readJS.console("ERROR: Could not find callback function in window.readJSConfig");
+            if (typeof(readJSConfig.cb) === "function") {
+                readJSConfig.cb = {read:readJSConfig.cb};
+            }
+            if(typeof(readJSConfig.cb) !== "object"){
+                readJS.console("ERROR: readJSConfig expected a callback function or object of callbacks");
                 return false;
             }
 

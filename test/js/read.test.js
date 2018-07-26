@@ -310,7 +310,9 @@ describe("read-js-tests", function(){
         var el = readJSConfig.el;
         delete readJSConfig.el;
         expect(readJS.initialize(function(){ alert(1); })).toBeFalsy();
-
+        if(typeof(el) === "string"){
+            el = {read:el};
+        }
         readJSConfig.el = el;
         readJS.handleLoad();
         spyOn(window, "setInterval");
@@ -381,7 +383,13 @@ describe("read-js-tests", function(){
     it("should accept readJSConfig.el as an object",function(){
         readJSConfig.el = {read:"#paragraph"};
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
-    })
+    });
+    it("should accept readJSConfig.cb as an object",function(){
+        readJSConfig.cb = {read:function(){console.log("test")}};
+        expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
+    });
+    
+
 
 
     //reset after all test cases
