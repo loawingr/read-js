@@ -123,8 +123,11 @@
                     readJS.status.thresholds.percentagePoint = readJSConfig.thresholds.percentagePoint;
                 }
             }
-            if (typeof(readJSConfig.el) !== "string") {
-                readJS.console("ERROR: readJS.setConfig() expected a string representation of css selector");
+            if(typeof(readJSConfig.el) === "string"){
+                readJSConfig.el = {read:readJSConfig.el};
+            }
+            if(typeof(readJSConfig.el) !== "object"){
+                readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
             if (typeof(readJSConfig.cb) !== "function") {
@@ -145,10 +148,18 @@
             }
             readJS.callback = callback;
 
-            if (!readJSConfig.el) {
-                readJS.console("ERROR: readJS.initialize() expected a dom node to inspect");
+            // if (typeof(readJSConfig.el) !== "string") {
+            //     readJS.console("ERROR: readJS.initialize() expected a dom node to inspect");
+            //     return false;
+            // }
+            if(typeof(readJSConfig.el) === "string"){
+                readJSConfig.el = {read:readJSConfig.el};
+            }
+            if(typeof(readJSConfig.el) !== "object"){
+                readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
+
             isOn = true;
 
             readJS.stopPolling();
@@ -642,7 +653,8 @@
             readJS.reactivate();
         },
         handleLoad: function() {
-            readJS.domNode = document.querySelector(readJSConfig.el);
+            console.log("DAVID",readJSConfig.el);
+            readJS.domNode = document.querySelector(readJSConfig.el.read);
             readJS.setTimeInViewThreshold();
             readJS.domNode.addEventListener("click", readJS.handleClick);
             readJS.calculateCoordinates();
@@ -721,8 +733,11 @@
                 readJS.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
                 return false;
             }
-            if (typeof(readJSConfig.el) !== "string") {
-                readJS.console("ERROR: Could not find domNode css selector in window.readJSConfig");
+            if(typeof(readJSConfig.el) === "string"){
+                readJSConfig.el = {read:readJSConfig.el};
+            }
+            if(typeof(readJSConfig.el) !== "object"){
+                readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
             if (typeof(readJSConfig.cb) !== "function") {

@@ -370,6 +370,19 @@ describe("read-js-tests", function(){
         expect(readJS.hasRead()).toBeFalsy();
 
     });
+    it("should accept readJSConfig.el as a string",function(){
+        readJSConfig.el = "#paragraph";
+        expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
+    });
+    it("should not accept a number for readJSConfig.el",function(){
+        readJSConfig.el = 123;
+        expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
+    })
+    it("should accept readJSConfig.el as an object",function(){
+        readJSConfig.el = {read:"#paragraph"};
+        expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
+    })
+
 
     //reset after all test cases
     afterAll(function() {
