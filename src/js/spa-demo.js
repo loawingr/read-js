@@ -1,3 +1,4 @@
+/* global readJS */
 //define read JS config
 var readJSConfig = {
     debug: {
@@ -13,7 +14,7 @@ var readJSConfig = {
     },
     strict: true,
     el: ".card-list",
-    cb: function(){ 
+    cb: function(){
         "use strict";
         alert("The user scanned the list of cards");
     }
@@ -51,7 +52,7 @@ var readJSConfig = {
         readJSConfig.thresholds.minVertical = 50;
         readJSConfig.debug.overlay = false;
         readJSConfig.debug.console = true;
-        
+
         if(!readJS.turnOn()){
             alert("switchToArticle(): Error turning on read JS");
             return false;
@@ -76,7 +77,7 @@ var readJSConfig = {
         readJSConfig.thresholds.minVertical = 70;
         readJSConfig.debug.overlay = false;
         readJSConfig.debug.console = true;
-        
+
         if(!readJS.turnOn()){
             alert("switchToListing(): Error turning on read JS");
             return false;
