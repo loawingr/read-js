@@ -37,8 +37,8 @@
                     increment: 100, //the number of points awarded when reading activity types have been determined
                     read: false,
                     averageReadSpeed: 300 / 60, //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
-                    initialTime:0,
-                    totalTime:0
+                    initialTime: 0,
+                    totalTime: 0
                 },
                 thresholds: {
                     viewport: 25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
@@ -125,17 +125,21 @@
                     readJS.status.thresholds.percentagePoint = readJSConfig.thresholds.percentagePoint;
                 }
             }
-            if(typeof(readJSConfig.el) === "string"){
-                readJSConfig.el = {read:readJSConfig.el};
+            if (typeof(readJSConfig.el) === "string") {
+                readJSConfig.el = {
+                    read: readJSConfig.el
+                };
             }
-            if(typeof(readJSConfig.el) !== "object"){
+            if (typeof(readJSConfig.el) !== "object") {
                 readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
             if (typeof(readJSConfig.cb) === "function") {
-                readJSConfig.cb = {read:readJSConfig.cb};
+                readJSConfig.cb = {
+                    read: readJSConfig.cb
+                };
             }
-            if(typeof(readJSConfig.cb) !== "object"){
+            if (typeof(readJSConfig.cb) !== "object") {
                 readJS.console("ERROR: readJS.setConfig() expected a callback function or object of callbacks");
                 return false;
             }
@@ -148,18 +152,22 @@
         initialize: function(callback) {
 
             if (typeof(callback) === "function") {
-                callback = {read:callback};
+                callback = {
+                    read: callback
+                };
             }
-            if(typeof(callback) !== "object"){
+            if (typeof(callback) !== "object") {
                 readJS.console("ERROR: readJS.initialize() expected a callback function or object of callbacks");
                 return false;
             }
             readJS.callback = callback;
 
-            if(typeof(readJSConfig.el) === "string"){
-                readJSConfig.el = {read:readJSConfig.el};
+            if (typeof(readJSConfig.el) === "string") {
+                readJSConfig.el = {
+                    read: readJSConfig.el
+                };
             }
-            if(typeof(readJSConfig.el) !== "object"){
+            if (typeof(readJSConfig.el) !== "object") {
                 readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
@@ -179,20 +187,20 @@
         /*
             setInitialTime: sets the initial time in activity.initialTime
         */
-        setInitialTime: function(){
+        setInitialTime: function() {
             readJS.status.activity.initialTime = new Date().getTime();
         },
         /*
             calculateTotalTime: sets the total time as the difference between total time and current time
         */
-        calculateTotalTime: function(){
-            if(!!readJS.status.activity.initialTime){
+        calculateTotalTime: function() {
+            if (!!readJS.status.activity.initialTime) {
                 const currentTime = new Date().getTime();
                 const currentTotal = readJS.status.activity.totalTime;
                 readJS.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(readJS.status.activity.initialTime);
                 readJS.status.activity.initialTime = 0;
             }
-            if(readJS.status.activity.totalTime > 0){
+            if (readJS.status.activity.totalTime > 0) {
                 return readJS.status.activity.totalTime;
             }
             readJS.console("ERROR: readJS.calculateTotalTIme() - initailTime not set");
@@ -485,7 +493,10 @@
                 hidden = "webkitHidden";
                 visibilityChange = "webkitvisibilitychange";
             }
-            return { hiddenProp: hidden, eventName: visibilityChange };
+            return {
+                hiddenProp: hidden,
+                eventName: visibilityChange
+            };
         },
         // If the page is hidden, pause the DOM polling;
         // if the page is shown, continue to poll the DOM
@@ -507,7 +518,10 @@
             readJS.domNode = domNode;
 
             //top left and bottom right coordinate points of the viewport
-            var vp = { tl: [], br: [] };
+            var vp = {
+                tl: [],
+                br: []
+            };
 
             //x coordinate of the top left corner of the viewport
             vp.tl[0] = Math.abs(document.body.scrollLeft || document.documentElement.scrollLeft);
@@ -551,7 +565,10 @@
             }
 
             //top left and bottom right coordinate points of the dom node
-            var dn = { tl: [], br: [] };
+            var dn = {
+                tl: [],
+                br: []
+            };
 
             var bcr = domNode.getBoundingClientRect();
 
@@ -599,11 +616,17 @@
 
             //element is not in viewport
             if (!readJS.inViewport(readJS.domNode)) {
-                return { "dom_node_inview_percent": 0, "dom_node_viewport_percent": 0 };
+                return {
+                    "dom_node_inview_percent": 0,
+                    "dom_node_viewport_percent": 0
+                };
             }
 
             //How much of the dom node is overlapping with the viewport?
-            var overlap = { tl: [], br: [] };
+            var overlap = {
+                tl: [],
+                br: []
+            };
             //x of the tl overlap coordinate
             overlap.tl[0] = (dn.tl[0] >= vp.tl[0]) ? dn.tl[0] : vp.tl[0];
             //y of the tl overlap coordinate
@@ -661,7 +684,10 @@
             readJS.status.activity.dnp = dnip;
             readJS.status.activity.vpp = dnvp;
 
-            var retval = { "dom_node_inview_percent": dnip, "dom_node_viewport_percent": dnvp };
+            var retval = {
+                "dom_node_inview_percent": dnip,
+                "dom_node_viewport_percent": dnvp
+            };
 
             //if in strict mode and not enough of the dom node is in the viewport or not enough of the viewport is occupied by dom node then don't increment timeInView
             if (!!readJS.status.strict && (dnip < readJS.status.thresholds.domNode || dnvp < readJS.status.thresholds.viewport)) {
@@ -680,7 +706,6 @@
             readJS.reactivate();
         },
         handleLoad: function() {
-            console.log("DAVID",readJSConfig.el.read);
             readJS.domNode = document.querySelector(readJSConfig.el.read);
             readJS.setTimeInViewThreshold();
             readJS.domNode.addEventListener("click", readJS.handleClick);
@@ -760,17 +785,21 @@
                 readJS.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
                 return false;
             }
-            if(typeof(readJSConfig.el) === "string"){
-                readJSConfig.el = {read:readJSConfig.el};
+            if (typeof(readJSConfig.el) === "string") {
+                readJSConfig.el = {
+                    read: readJSConfig.el
+                };
             }
-            if(typeof(readJSConfig.el) !== "object"){
+            if (typeof(readJSConfig.el) !== "object") {
                 readJS.console("ERROR:  readJSConfig expected el to be a string or object");
                 return false;
             }
             if (typeof(readJSConfig.cb) === "function") {
-                readJSConfig.cb = {read:readJSConfig.cb};
+                readJSConfig.cb = {
+                    read: readJSConfig.cb
+                };
             }
-            if(typeof(readJSConfig.cb) !== "object"){
+            if (typeof(readJSConfig.cb) !== "object") {
                 readJS.console("ERROR: readJSConfig expected a callback function or object of callbacks");
                 return false;
             }
