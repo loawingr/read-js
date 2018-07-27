@@ -224,12 +224,12 @@
         /*
             visibleScannableTargets: iterates through readJS.scannableTargets and returns elements currently in view
         */
-        visibleScannableTargets: function() {
-            if (typeof(readJS.scannableTargets) !== "undefined" && readJS.scannableTargets.length > 0) {
+        visibleScannableTargets: function(scannableTargets) {
+            if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
-                for (let i = 0; i < readJS.scannableTargets.length; i++) {
-                    if (readJS.inView(readJS.scannableTargets[i]).dom_node_inview_percent > 80) {
-                        visibleElements.push(readJS.scannableTargets[i]);
+                for (let i = 0; i < scannableTargets.length; i++) {
+                    if (readJS.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
+                        visibleElements.push(scannableTargets[i]);
                     }
                 }
                 return visibleElements;
