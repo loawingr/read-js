@@ -222,6 +222,24 @@
         },
 
         /*
+            visibleScannableTargets: iterates through readJS.scannableTargets and returns elements currently in view
+        */
+        visibleScannableTargets: function() {
+            if (typeof(readJS.scannableTargets) !== "undefined" && readJS.scannableTargets.length > 0) {
+                const visibleElements = [];
+                for (let i = 0; i < readJS.scannableTargets.length; i++) {
+                    if (readJS.inView(readJS.scannableTargets[i]).dom_node_inview_percent > 80) {
+                        visibleElements.push(readJS.scannableTargets[i]);
+                    }
+                }
+                return visibleElements;
+            } else {
+                readJS.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
+                return false;
+            }
+        },
+
+        /*
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
         getIntervals: function() {

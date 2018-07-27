@@ -482,6 +482,12 @@ describe("read-js-tests", function() {
         expect(targets.length).toEqual(1);
     });
 
+    it("should return visible targets from the scannableTargets list", function() {
+        expect(readJS.visibleScannableTargets().length).toEqual(0);
+        delete readJS.scannableTargets;
+        expect(readJS.visibleScannableTargets()).toEqual(false);
+    });
+
     //reset after all test cases
     afterAll(function() {
         readJS.turnOff();
