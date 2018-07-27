@@ -308,9 +308,13 @@ describe("read-js-tests", function() {
     it("initialize", function() {
         var el = readJSConfig.el;
         delete readJSConfig.el;
-        expect(readJS.initialize(function() { alert(1); })).toBeFalsy();
+        expect(readJS.initialize(function() {
+            alert(1);
+        })).toBeFalsy();
         if (typeof(el) === "string") {
-            el = { read: el };
+            el = {
+                read: el
+            };
         }
         readJSConfig.el = el;
         readJS.handleLoad();
@@ -371,33 +375,46 @@ describe("read-js-tests", function() {
         expect(readJS.hasRead()).toBeFalsy();
 
     });
+
     it("should accept readJSConfig.el as a string", function() {
         readJSConfig.el = "#paragraph";
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
+
     it("should not accept a number for readJSConfig.el", function() {
         readJSConfig.el = 123;
         expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
     })
+
     it("should accept readJSConfig.el as an object", function() {
-        readJSConfig.el = { read: "#paragraph" };
+        readJSConfig.el = {
+            read: "#paragraph"
+        };
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
+
     it("should accept readJSConfig.cb as an object", function() {
-        readJSConfig.cb = { read: function() { console.log("test") } };
+        readJSConfig.cb = {
+            read: function() {
+                console.log("test")
+            }
+        };
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
     });
+
     it("should set the initial time", function() {
         readJS.status.activity.initialTime = 0;
         readJS.setInitialTime();
         expect(readJS.status.activity.initialTime).not.toEqual(0);
     });
+
     it("should calculate the total time", function() {
         var time = 10;
         spyOn(readJS, "calculateTotalTime").and.returnValue(time);
         readJS.status.activity.totalTime = 0;
         expect(readJS.calculateTotalTime()).toEqual(time);
     });
+
     it("should calculate totalTime since initial time is set", function() {
         readJS.setInitialTime();
         readJS.calculateTotalTime();
@@ -409,11 +426,13 @@ describe("read-js-tests", function() {
         readJS.calculateTotalTime();
         expect(readJS.status.activity.totalTime).toBeFalsy();
     });
+
     it("should return totalTime if totalTime is greater than 0", function() {
         readJS.status.activity.totalTime = 30;
         readJS.calculateTotalTime();
         expect(readJS.status.activity.totalTime).toBe(30);
     });
+
     it("should return the current time from initialTime", function() {
         jasmine.clock().install();
         const baseTime = new Date();
@@ -422,6 +441,7 @@ describe("read-js-tests", function() {
         expect(readJS.status.activity.initialTime).toBe(baseTime.getTime());
         jasmine.clock().uninstall();
     });
+
     it("should set totalTime in activity object", function() {
         readJS.resetConfigStatus();
         expect(readJS.status.activity.totalTime).toBe(0);
@@ -429,6 +449,7 @@ describe("read-js-tests", function() {
         readJS.calculateTotalTime();
         expect(readJS.status.activity.totalTime).toBe(30);
     });
+
     it("should reset initialTime to 0", function() {
         jasmine.clock().install();
         const baseTime = new Date();
@@ -439,6 +460,7 @@ describe("read-js-tests", function() {
         expect(readJS.status.activity.initialTime).toBe(0);
         jasmine.clock().uninstall();
     });
+
     it("should call calculateTotalTime in callback", function() {
         spyOn(readJS, "calculateTotalTime").and.returnValue(timeElapsed);
         //fake the lock
@@ -453,10 +475,10 @@ describe("read-js-tests", function() {
             expect(time).toBe(timeElapsed);
         };
     });
-    it("")
 
-
-
+    it("should return all nodes of a certain class", function() {
+        expect(readJS.getScannedTargets("headline").length).toEqual(1);
+    });
 
     //reset after all test cases
     afterAll(function() {

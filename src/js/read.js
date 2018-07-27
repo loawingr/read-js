@@ -208,6 +208,20 @@
         },
 
         /*
+            getScannedDomNodes: returns an object containing all the domnodes of the parameter class
+        */
+        getScannedTargets: function(className) {
+            const scannedTargets = document.getElementsByClassName(className);
+            if (scannedTargets.length === 0) {
+                readJS.console("ERROR: readJS.getScannedTargets(className) - No elements by that className!");
+                return false;
+            } else {
+                readJS.scannedTargets = scannedTargets;
+                return readJS.scannedTargets;
+            }
+        },
+
+        /*
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
         getIntervals: function() {
