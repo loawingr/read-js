@@ -477,7 +477,9 @@ describe("read-js-tests", function() {
     });
 
     it("should return all nodes of a certain class", function() {
-        expect(readJS.getScannedTargets("headline").length).toEqual(1);
+        expect(readJS.getScannedTargets("butts")).toBe(false);
+        const targets = readJS.getScannedTargets("headline");
+        expect(targets.length).toEqual(1);
     });
 
     //reset after all test cases
