@@ -198,7 +198,7 @@
             readJS.console("ERROR: readJS.calculateTotalTIme() - initailTime not set");
             return false;
         },
-        
+
         /*
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
