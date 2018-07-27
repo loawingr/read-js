@@ -484,8 +484,19 @@ describe("read-js-tests", function() {
 
     it("should return visible targets from the scannableTargets list", function() {
         expect(readJS.visibleScannableTargets(readJS.scannableTargets).length).toEqual(1);
+    });
+
+    it("should return false if scannableTargets is undefined or 0 length", function() {
         delete readJS.scannableTargets;
         expect(readJS.visibleScannableTargets(readJS.scannableTargets)).toEqual(false);
+        readJS.scannableTargets = [];
+        expect(readJS.visibleScannableTargets(readJS.scannableTargets)).toEqual(false);
+    });
+
+    it("should not return targets that are not visible from the scannableTargets list", function() {
+        const target = readJS.getScannableTargets("non-display-headline");
+        expect(target.length).toEqual(1);
+        expect(readJS.visibleScannableTargets(readJS.scannableTargets).length).toEqual(0);
     });
 
     //reset after all test cases
