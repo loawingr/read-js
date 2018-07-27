@@ -203,7 +203,7 @@
             if (readJS.status.activity.totalTime > 0) {
                 return readJS.status.activity.totalTime;
             }
-            readJS.console("ERROR: readJS.calculateTotalTIme() - initailTime not set");
+            readJS.console("ERROR: readJS.calculateTotalTIme() - initialTime not set");
             return false;
         },
 
