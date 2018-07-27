@@ -208,16 +208,16 @@
         },
 
         /*
-            getScannedDomNodes: returns an object containing all the domnodes of the parameter class
+            getScannableTargets: returns an object containing all the domnodes of the parameter class
         */
-        getScannedTargets: function(className) {
-            const scannedTargets = document.getElementsByClassName(className);
-            if (scannedTargets.length === 0) {
-                readJS.console("ERROR: readJS.getScannedTargets(className) - No elements by that className!");
+        getScannableTargets: function(className) {
+            const scannableTargets = document.getElementsByClassName(className);
+            if (scannableTargets.length === 0) {
+                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!");
                 return false;
             } else {
-                readJS.scannedTargets = scannedTargets;
-                return readJS.scannedTargets;
+                readJS.scannableTargets = scannableTargets;
+                return readJS.scannableTargets;
             }
         },
 

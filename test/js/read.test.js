@@ -477,8 +477,8 @@ describe("read-js-tests", function() {
     });
 
     it("should return all nodes of a certain class", function() {
-        expect(readJS.getScannedTargets("non-existent-headline")).toBe(false);
-        const targets = readJS.getScannedTargets("headline");
+        expect(readJS.getScannableTargets("non-existent-headline")).toBe(false);
+        const targets = readJS.getScannableTargets("headline");
         expect(targets.length).toEqual(1);
     });
 
