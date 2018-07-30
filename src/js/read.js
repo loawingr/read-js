@@ -211,9 +211,9 @@
             getScannableTargets: returns an object containing all the domnodes of the parameter class
         */
         getScannableTargets: function(className) {
-            const scannableTargets = document.getElementsByClassName(className);
+            const scannableTargets = document.querySelectorAll(className);
             if (scannableTargets.length === 0) {
-                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!");
+                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!",className,"SOM STUFF",scannableTargets);
                 return false;
             } else {
                 readJS.scannableTargets = scannableTargets;
@@ -228,9 +228,14 @@
             if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
                 for (let i = 0; i < scannableTargets.length; i++) {
-                    if (readJS.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
+                    const r = readJS.inView(scannableTargets[i]);
+                    if (r.dom_node_inview_percent > readJS.status.thresholds.viewport) {
                         visibleElements.push(scannableTargets[i]);
                     }
+                    readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
+                }
+                if(visibleElements.length > 3){
+                    return false;
                 }
                 return visibleElements;
             } else {
@@ -264,10 +269,15 @@
         */
         endConditionsChecked: function() {
             if (!!readJS.isUpdateRequired()) {
-                readJS.calculateCoordinates();
-                readJS.addPoints();
-                readJS.hasRead();
-                return true;
+
+                const allVisibleElements = readJS.visibleScannableTargets();
+                if(allVisibleElements && allVisibleElements.length > 0){
+                    const firstElementInView = allVisibleElements[0];
+                    readJS.domNode = firstElementInView;
+                    readJS.addPoints();
+                    readJS.hasRead();
+                    return true;
+                }
             }
             return false;
         },
@@ -738,10 +748,11 @@
             readJS.reactivate();
         },
         handleLoad: function() {
+            readJS.getScannableTargets(readJSConfig.el.read);
             readJS.domNode = document.querySelector(readJSConfig.el.read);
             readJS.setTimeInViewThreshold();
             readJS.domNode.addEventListener("click", readJS.handleClick);
-            readJS.calculateCoordinates();
+            readJS.visibleScannableTargets(readJS.scannableTargets);
         },
         setTimeInViewThreshold: function() {
 

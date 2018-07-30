@@ -151,14 +151,13 @@
 					overlay: true
 				},
 				thresholds: {
-					timeInView: 5, //5 seconds of viewing time
-					domNode: 15, //the 15% of dom node must be in viewport
-					viewport: 50, //50% of the viewport must be occupied by the list of content
-					minVertical: 70, //70% of the dom node must have been seen or scrolled passed
+					timeInView: 1, //5 seconds of viewing time
+					viewport: 80, //50% of the viewport must be occupied by the list of content
+					readingPoints: 0 
 				},
 				strict: true,
-				el: ".card-list",
-				cb: function(){ alert("The user scanned the list of cards"); }
+				el: ".card",
+				cb: function(){ console.log("DAVID,BLISS,EDRIC,MICHAEL FIRRREEEEEENDNS FOR EVERE") }
 				
 			};
 		</script>
