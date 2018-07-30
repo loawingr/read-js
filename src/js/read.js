@@ -270,7 +270,7 @@
         endConditionsChecked: function() {
             if (!!readJS.isUpdateRequired()) {
 
-                const allVisibleElements = readJS.visibleScannableTargets();
+                const allVisibleElements = readJS.visibleScannableTargets(readJS.scannableTargets);
                 if(allVisibleElements && allVisibleElements.length > 0){
                     const firstElementInView = allVisibleElements[0];
                     readJS.domNode = firstElementInView;
