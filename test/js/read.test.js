@@ -421,7 +421,8 @@ describe("read-js-tests", function() {
         expect(readJS.status.activity.totalTime).toBeDefined();
     });
 
-    it("should return false if no initial time is set", function() {
+    it("should return false if no total time or initial time is set", function() {
+        readJS.status.activity.totalTime = 0;
         readJS.status.activity.initialTime = 0;
         readJS.calculateTotalTime();
         expect(readJS.status.activity.totalTime).toBeFalsy();
