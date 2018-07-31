@@ -207,10 +207,6 @@
             visibleScannableTargets: iterates through readJS.scannableTargets and returns elements currently in view
         */
         visibleScannableTargets: function(scannableTargets) {
-            if (typeof(scannableTargets) === "undefined" || scannableTargets.length === 0) {
-                readJS.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
-                return false;
-            }
 
             if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
@@ -229,6 +225,9 @@
 
                 return visibleElements;
             }
+
+            readJS.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
+            return false;
         },
 
         /*
