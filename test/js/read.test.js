@@ -248,6 +248,8 @@ describe("read-js-tests", function() {
     });
 
     it("does-check-end-conditions", function() {
+        const queries = document.querySelectorAll(".card");
+        spyOn(readJS, "visibleScannableTargets").and.returnValue(queries);
         readJS.status.activity.timeInUnknownState = 0;
         readJS.status.activity.pollingPoints = 0;
 
@@ -255,14 +257,14 @@ describe("read-js-tests", function() {
     });
 
     it("does-ask-for-end-condition-help", function() {
-
-        spyOn(readJS, "calculateCoordinates");
+        const queries = document.querySelectorAll(".card");
+        spyOn(readJS, "visibleScannableTargets").and.returnValue(queries);
         spyOn(readJS, "addPoints");
         spyOn(readJS, "hasRead");
 
         readJS.endConditionsChecked();
 
-        expect(readJS.calculateCoordinates).toHaveBeenCalled();
+        expect(readJS.visibleScannableTargets).toHaveBeenCalled();
         expect(readJS.addPoints).toHaveBeenCalled();
         expect(readJS.hasRead).toHaveBeenCalled();
     });
@@ -311,11 +313,6 @@ describe("read-js-tests", function() {
         expect(readJS.initialize(function() {
             alert(1);
         })).toBeFalsy();
-        if (typeof(el) === "string") {
-            el = {
-                read: el
-            };
-        }
         readJSConfig.el = el;
         readJS.handleLoad();
         spyOn(window, "setInterval");
@@ -385,22 +382,6 @@ describe("read-js-tests", function() {
         readJSConfig.el = 123;
         expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
     })
-
-    it("should accept readJSConfig.el as an object", function() {
-        readJSConfig.el = {
-            read: "#paragraph"
-        };
-        expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
-    });
-
-    it("should accept readJSConfig.cb as an object", function() {
-        readJSConfig.cb = {
-            read: function() {
-                console.log("test")
-            }
-        };
-        expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
-    });
 
     it("should set the initial time", function() {
         readJS.status.activity.initialTime = 0;
@@ -479,7 +460,7 @@ describe("read-js-tests", function() {
 
     it("should return all nodes of a certain class", function() {
         expect(readJS.getScannableTargets("non-existent-headline")).toBe(false);
-        const targets = readJS.getScannableTargets("headline");
+        const targets = readJS.getScannableTargets(".headline");
         expect(targets.length).toEqual(1);
     });
 
@@ -495,7 +476,7 @@ describe("read-js-tests", function() {
     });
 
     it("should not return targets that are not visible from the scannableTargets list", function() {
-        const target = readJS.getScannableTargets("non-display-headline");
+        const target = readJS.getScannableTargets(".non-display-headline");
         expect(target.length).toEqual(1);
         expect(readJS.visibleScannableTargets(readJS.scannableTargets).length).toEqual(0);
     });
