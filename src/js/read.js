@@ -194,10 +194,11 @@
         getScannableTargets: function(className) {
             const scannableTargets = document.querySelectorAll(className);
             if (scannableTargets.length === 0) {
-                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!",className,"SOM STUFF",scannableTargets);
+                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!");
                 return false;
             } else {
-                readJS.scannableTargets = scannableTargets;
+                readJS.scannableTargets = [];
+                readJS.scannableTargets = Array.prototype.slice.call(scannableTargets);
                 return readJS.scannableTargets;
             }
         },
