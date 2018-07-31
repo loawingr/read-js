@@ -207,22 +207,27 @@
             visibleScannableTargets: iterates through readJS.scannableTargets and returns elements currently in view
         */
         visibleScannableTargets: function(scannableTargets) {
-            if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
-                const visibleElements = [];
-                for (let i = 0; i < scannableTargets.length; i++) {
-                    const r = readJS.inView(scannableTargets[i]);
-                    if (r.dom_node_inview_percent > readJS.status.thresholds.viewport) {
-                        visibleElements.push(scannableTargets[i]);
-                    }
-                    readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
-                }
-                if(visibleElements.length > 3){
-                    return false;
-                }
-                return visibleElements;
-            } else {
+            if (typeof(scannableTargets) === "undefined" || scannableTargets.length === 0) {
                 readJS.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
                 return false;
+            }
+
+            if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
+                const visibleElements = [];
+                readJS.visibleElementsMap = [];
+                for (let i = 0; i < scannableTargets.length; i++) {
+                    if (readJS.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
+                        visibleElements.push(scannableTargets[i]);
+                        readJS.visibleElementsMap.push(i);
+                    }
+                }
+
+                if (visibleElements.length > 3) {
+                    readJS.console("ERROR: readJS.visibleScannableTargets() - More than 3 elements visible!");
+                    return false;
+                }
+
+                return visibleElements;
             }
         },
 
