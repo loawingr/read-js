@@ -332,9 +332,6 @@
             hasRead() will determine if the user has read the article
         */
         hasRead: function() {
-            if (!!readJS.status.activity.read) {
-                return true;
-            }
             //did not scroll far down enough
             if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth) {
                 readJS.console("Has not read yet because user didn't pass scrollDepth threshold");
@@ -360,13 +357,14 @@
                 return false;
             }
 
-            readJS.status.activity.read = true;
             readJS.callback();
-            readJS.removeListeners();
-            readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
-            readJS.stopPolling();
+            readJS.scannableTargets.splice(readJS.visibleElementsMap[0], 1);
+            if(readJS.scannableTargets.length <= 0) {
+                readJS.removeListeners();
+                readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
+                readJS.stopPolling();
+            }
             return true;
-
         },
         /*
             stopPolling() will clear the current interval

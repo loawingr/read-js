@@ -188,17 +188,14 @@ describe("read-js-tests", function() {
     });
 
     it("has-read", function() { //this test relies on the time in view threshold test to be before it
-        //fake the lock
-        readJS.status.activity.read = true;
-        expect(readJS.hasRead()).toBeTruthy();
-
         //setup not read conditions
-        readJS.status.activity.read = false;
         console.log("readingPoints: " + readJS.status.activity.readingPoints);
         console.log("timeInView: " + readJS.status.activity.timeInView);
         expect(readJS.hasRead()).toBeFalsy();
 
         //setup read conditions
+        readJS.scannableTargets = ["target"];
+        readJS.visibleElementsMap = [0];
         readJS.status.activity.readingPoints = 401; // 1 more than threshold
         readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
         readJS.status.activity.scrollDepth = readJS.status.thresholds.scrollDepth
@@ -212,8 +209,6 @@ describe("read-js-tests", function() {
         expect(readJS.hasRead()).toBeTruthy();
         expect(readJS.removeListeners).toHaveBeenCalled();
         expect(readJS.stopPolling).toHaveBeenCalled();
-
-
     });
 
     it("check-activity", function() {
@@ -445,9 +440,6 @@ describe("read-js-tests", function() {
 
     it("should call calculateTotalTime in callback", function() {
         spyOn(readJS, "calculateTotalTime").and.returnValue(timeElapsed);
-        //fake the lock
-        readJS.status.activity.read = true;
-        expect(readJS.hasRead()).toBeTruthy();
         //setup read conditions
         readJS.status.activity.readingPoints = 401; // 1 more than threshold
         readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
