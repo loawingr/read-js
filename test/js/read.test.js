@@ -381,6 +381,11 @@ describe("read-js-tests", function() {
     it("should not accept a number for readJSConfig.el", function() {
         readJSConfig.el = 123;
         expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
+    });
+
+    it("should accept readJSConfig with a property read with config", function(){
+        readJSConfig ={read:readJSConfig};
+        expect(readJS.turnOn()).toBeTruthy();
     })
 
     it("should set the initial time", function() {

@@ -1,4 +1,4 @@
-/* global readJSConfig readJS */
+/* global readJSConfig */
 /*
     Read.js assumes:
     1) The article width never exceeds the viewport width
@@ -9,12 +9,14 @@
     var isOn = false;
     var initialized = false;
     var intervals = [];
-    var readJS = {
+    function readJS(readJSConfig){
         /*
             resetConfigStatus : resets config to default and all status variables to zero
         */
-        resetConfigStatus: function() {
-            readJS.status = {
+        this.readJSConfig = readJSConfig;
+
+        this.resetConfigStatus = () => {
+            this.status = {
                 strict: false, // be very strict on read/scan verb
                 spa: false, //tell readJS if it is in a single page app
                 debug: {
@@ -57,80 +59,81 @@
         /*
             getConfig: will return the current read JS config thresholds and settings
         */
-        getConfig: function() {
-            return readJS.status;
+        this.getConfig = () => {
+            return this.status;
         },
         /*
             setConfig: will allow you to override default config values if it's currently not running
         */
-        setConfig: function() {
+        this.setConfig = () => {
             if (!!isOn) {
                 return false;
             }
-            if (typeof(readJSConfig) === "undefined") {
-                readJS.console("Error: Cannot find Read JS config object readJSConfig");
+
+            if (typeof(this.readJSConfig) === "undefined") {
+                this.console("Error: Cannot find Read JS config object readJSConfig");
                 return false;
             }
-            if (typeof(readJSConfig.spa) === "boolean") {
-                readJS.status.spa = readJSConfig.spa;
+            if (typeof(this.readJSConfig.spa) === "boolean") {
+                this.status.spa = this.readJSConfig.spa;
             }
-            if (typeof(readJSConfig.strict) === "boolean") {
-                readJS.status.strict = readJSConfig.strict;
+            if (typeof(this.readJSConfig.strict) === "boolean") {
+                this.status.strict = this.readJSConfig.strict;
             }
-            if (!!readJSConfig.debug) {
-                if (typeof(readJSConfig.debug.console) === "boolean") {
-                    readJS.status.debug.console = readJSConfig.debug.console;
+            if (!!this.readJSConfig.debug) {
+                if (typeof(this.readJSConfig.debug.console) === "boolean") {
+                    this.status.debug.console = this.readJSConfig.debug.console;
                 }
-                if (typeof(readJSConfig.debug.overlay) === "boolean") {
-                    readJS.status.debug.overlay = readJSConfig.debug.overlay;
-                }
-            }
-            if (typeof(readJSConfig.timeInterval) === "number") {
-                readJS.status.timeInterval = readJSConfig.timeInterval;
-            }
-            if (!!readJSConfig.activity) {
-                if (typeof(readJSConfig.activity.increment) === "number") {
-                    readJS.status.activity.increment = readJSConfig.activity.increment;
-                }
-                if (typeof(readJSConfig.activity.averageReadSpeed) === "number") {
-                    readJS.status.activity.averageReadSpeed = readJSConfig.activity.averageReadSpeed;
+                if (typeof(this.readJSConfig.debug.overlay) === "boolean") {
+                    this.status.debug.overlay = this.readJSConfig.debug.overlay;
                 }
             }
-            if (!!readJSConfig.thresholds) {
-                if (typeof(readJSConfig.thresholds.viewport) === "number") {
-                    readJS.status.thresholds.viewport = readJSConfig.thresholds.viewport;
+            if (typeof(this.readJSConfig.timeInterval) === "number") {
+                this.status.timeInterval = this.readJSConfig.timeInterval;
+            }
+            if (!!this.readJSConfig.activity) {
+                if (typeof(this.readJSConfig.activity.increment) === "number") {
+                    this.status.activity.increment = this.readJSConfig.activity.increment;
                 }
-                if (typeof(readJSConfig.thresholds.domNode) === "number") {
-                    readJS.status.thresholds.domNode = readJSConfig.thresholds.domNode;
-                }
-                if (typeof(readJSConfig.thresholds.readingPoint) === "number") {
-                    readJS.status.thresholds.readingPoint = readJSConfig.thresholds.readingPoint;
-                }
-                if (typeof(readJSConfig.thresholds.domPolling) === "number") {
-                    readJS.status.thresholds.domPolling = readJSConfig.thresholds.domPolling;
-                }
-                if (typeof(readJSConfig.thresholds.timeInView) === "number") {
-                    readJS.status.thresholds.timeInView = readJSConfig.thresholds.timeInView;
-                }
-                if (typeof(readJSConfig.thresholds.minTimeInView) === "number") {
-                    readJS.status.thresholds.minTimeInView = readJSConfig.thresholds.minTimeInView;
-                }
-                if (typeof(readJSConfig.thresholds.maxTimeInView) === "number") {
-                    readJS.status.thresholds.maxTimeInView = readJSConfig.thresholds.maxTimeInView;
-                }
-                if (typeof(readJSConfig.thresholds.minVertical) === "number") {
-                    readJS.status.thresholds.minVertical = readJSConfig.thresholds.minVertical;
-                }
-                if (typeof(readJSConfig.thresholds.percentagePoint) === "number") {
-                    readJS.status.thresholds.percentagePoint = readJSConfig.thresholds.percentagePoint;
+                if (typeof(this.readJSConfig.activity.averageReadSpeed) === "number") {
+                    this.status.activity.averageReadSpeed = this.readJSConfig.activity.averageReadSpeed;
                 }
             }
-            if (typeof(readJSConfig.el) !== "string") {
-                readJS.console("ERROR: readJS.initialize() expected el to be a string");
+            if (!!this.readJSConfig.thresholds) {
+                if (typeof(this.readJSConfig.thresholds.viewport) === "number") {
+                    this.status.thresholds.viewport = this.readJSConfig.thresholds.viewport;
+                }
+                if (typeof(this.readJSConfig.thresholds.domNode) === "number") {
+                    this.status.thresholds.domNode = this.readJSConfig.thresholds.domNode;
+                }
+                if (typeof(this.readJSConfig.thresholds.readingPoint) === "number") {
+                    this.status.thresholds.readingPoint = this.readJSConfig.thresholds.readingPoint;
+                }
+                if (typeof(this.readJSConfig.thresholds.domPolling) === "number") {
+                    this.status.thresholds.domPolling = this.readJSConfig.thresholds.domPolling;
+                }
+                if (typeof(this.readJSConfig.thresholds.timeInView) === "number") {
+                    this.status.thresholds.timeInView = this.readJSConfig.thresholds.timeInView;
+                }
+                if (typeof(this.readJSConfig.thresholds.minTimeInView) === "number") {
+                    this.status.thresholds.minTimeInView = this.readJSConfig.thresholds.minTimeInView;
+                }
+                if (typeof(this.readJSConfig.thresholds.maxTimeInView) === "number") {
+                    this.status.thresholds.maxTimeInView = this.readJSConfig.thresholds.maxTimeInView;
+                }
+                if (typeof(this.readJSConfig.thresholds.minVertical) === "number") {
+                    this.status.thresholds.minVertical = this.readJSConfig.thresholds.minVertical;
+                }
+                if (typeof(this.readJSConfig.thresholds.percentagePoint) === "number") {
+                    this.status.thresholds.percentagePoint = this.readJSConfig.thresholds.percentagePoint;
+                }
+            }
+            if (typeof(this.readJSConfig.el) !== "string") {
+                this.console("ERROR: readJS.initialize() expected el to be a string");
                 return false;
             }
-            if (typeof(readJSConfig.cb) !== "function") {
-                readJS.console("ERROR: readJS.setConfig() expected a callback function");
+            if (typeof(this.readJSConfig.cb) !== "function") {
+                this.console("ERROR: readJS.setConfig() expected a callback function");
                 return false;
             }
 
@@ -140,87 +143,87 @@
         /*
             initialize: set the interval at which the behaviour library will check the page for new activity
         */
-        initialize: function(callback) {
+        this.initialize = (callback) => {
 
             if (typeof(callback) !== "function") {
-                readJS.console("ERROR: readJS.initialize() expected a callback function");
+                this.console("ERROR: readJS.initialize() expected a callback function");
                 return false;
             }
-            readJS.callback = callback;
+            this.callback = callback;
 
-            if (typeof(readJSConfig.el) !== "string") {
-                readJS.console("ERROR: readJS.initialize() expected el to be a string or object");
+            if (typeof(this.readJSConfig.el) !== "string") {
+                this.console("ERROR: readJS.initialize() expected el to be a string or object");
                 return false;
             }
 
             isOn = true;
 
-            readJS.stopPolling();
+            this.stopPolling();
             //check if the reader is actually reading at a decaying rate
-            readJS.readingWorker = window.setInterval(readJS.checkActivity, readJS.status.timeInterval * 1000);
-            intervals.push(readJS.readingWorker);
-            readJS.console("readJS: starting interval ID", readJS.readingWorker);
+            this.readingWorker = window.setInterval(this.checkActivity, this.status.timeInterval * 1000);
+            intervals.push(this.readingWorker);
+            this.console("readJS: starting interval ID", this.readingWorker);
 
-            readJS.inDebugMode();
+            this.inDebugMode();
 
             return true;
         },
         /*
             setInitialTime: sets the initial time in activity.initialTime
         */
-        setInitialTime: function() {
-            readJS.status.activity.initialTime = new Date().getTime();
+        this.setInitialTime = () => {
+            this.status.activity.initialTime = new Date().getTime();
         },
         /*
             calculateTotalTime: sets the total time as the difference between total time and current time
         */
-        calculateTotalTime: function() {
-            if (!!readJS.status.activity.initialTime) {
+        this.calculateTotalTime = () => {
+            if (!!this.status.activity.initialTime) {
                 const currentTime = new Date().getTime();
-                const currentTotal = readJS.status.activity.totalTime;
-                readJS.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(readJS.status.activity.initialTime);
-                readJS.status.activity.initialTime = 0;
+                const currentTotal = this.status.activity.totalTime;
+                this.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(this.status.activity.initialTime);
+                this.status.activity.initialTime = 0;
             }
-            if (readJS.status.activity.totalTime > 0) {
-                return readJS.status.activity.totalTime;
+            if (this.status.activity.totalTime > 0) {
+                return this.status.activity.totalTime;
             }
-            readJS.console("ERROR: readJS.calculateTotalTIme() - initialTime not set");
+            this.console("ERROR: readJS.calculateTotalTIme() - initialTime not set");
             return false;
         },
 
         /*
             getScannableTargets: returns an object containing all the domnodes of the parameter class
         */
-        getScannableTargets: function(className) {
+        this.getScannableTargets = (className) => {
             const scannableTargets = document.querySelectorAll(className);
             if (scannableTargets.length === 0) {
-                readJS.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!",className,"SOM STUFF",scannableTargets);
+                this.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!",className,"SOM STUFF",scannableTargets);
                 return false;
             } else {
-                readJS.scannableTargets = scannableTargets;
-                return readJS.scannableTargets;
+                this.scannableTargets = scannableTargets;
+                return this.scannableTargets;
             }
         },
 
         /*
             visibleScannableTargets: iterates through readJS.scannableTargets and returns elements currently in view
         */
-        visibleScannableTargets: function(scannableTargets) {
+        this.visibleScannableTargets = (scannableTargets) => {
             if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
                 for (let i = 0; i < scannableTargets.length; i++) {
-                    const r = readJS.inView(scannableTargets[i]);
-                    if (r.dom_node_inview_percent > readJS.status.thresholds.viewport) {
+                    const r = this.inView(scannableTargets[i]);
+                    if (r.dom_node_inview_percent > 80) {
                         visibleElements.push(scannableTargets[i]);
                     }
-                    readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
+                    this.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
                 }
                 if(visibleElements.length > 3){
                     return false;
                 }
                 return visibleElements;
             } else {
-                readJS.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
+                this.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
                 return false;
             }
         },
@@ -228,35 +231,35 @@
         /*
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
-        getIntervals: function() {
+        this.getIntervals = () => {
             return intervals;
         },
         /*
             checkActivity is meant to determine if the user is active on the page
         */
-        checkActivity: function() {
+        this.checkActivity = () => {
 
-            var timeInterval = readJS.status.timeInterval; //seconds
-            readJS.status.activity.timeOnPage += timeInterval;
-            readJS.status.activity.timeInUnknownState += timeInterval;
+            var timeInterval = this.status.timeInterval; //seconds
+            this.status.activity.timeOnPage += timeInterval;
+            this.status.activity.timeInUnknownState += timeInterval;
             //add very little points when time passes by
-            readJS.status.activity.readingPoints += timeInterval;
+            this.status.activity.readingPoints += timeInterval;
             //detected the user has scrolled which means they are active on the page
-            readJS.detectForScroll();
-            readJS.endConditionsChecked();
+            this.detectForScroll();
+            this.endConditionsChecked();
         },
         /*
             endConditionsChecked will check for success conditions and add points accordingly and then see if the script should stop
         */
-        endConditionsChecked: function() {
-            if (!!readJS.isUpdateRequired()) {
+        this.endConditionsChecked = () => {
+            if (!!this.isUpdateRequired()) {
 
-                const allVisibleElements = readJS.visibleScannableTargets(readJS.scannableTargets);
+                const allVisibleElements = this.visibleScannableTargets(this.scannableTargets);
                 if(allVisibleElements && allVisibleElements.length > 0){
                     const firstElementInView = allVisibleElements[0];
-                    readJS.domNode = firstElementInView;
-                    readJS.addPoints();
-                    readJS.hasRead();
+                    this.domNode = firstElementInView;
+                    this.addPoints();
+                    this.hasRead();
                     return true;
                 }
             }
@@ -265,11 +268,11 @@
         /*
             detectForScroll reads the scroll boolean to see if the event has happened and reactivate the script
         */
-        detectForScroll: function() {
-            if (!!readJS.status.activity.scrolled) {
-                readJS.status.activity.scrolled = false;
-                readJS.reactivate();
-                readJS.console("detected scroll:", readJS.status.activity.timeOnPage, " seconds");
+        this.detectForScroll = () => {
+            if (!!this.status.activity.scrolled) {
+                this.status.activity.scrolled = false;
+                this.reactivate();
+                this.console("detected scroll:", this.status.activity.timeOnPage, " seconds");
                 return true;
             }
             return false;
@@ -277,9 +280,9 @@
         /*
             console() will debug the message if the debug mode permits
         */
-        console: function() {
-            if (!!readJS.status.debug.console) {
-                console.log(readJS.readingWorker, arguments);
+        this.console = () => {
+            if (!!this.status.debug.console) {
+                console.log(this.readingWorker, arguments);
                 return true;
             }
             return false;
@@ -287,7 +290,7 @@
         /*
             getText() will search the domNode for childNodes of text
         */
-        getText: function(element) {
+        this.getText = (element) => {
             try {
                 var ret = "";
                 //element doesn't have nested DOM elements
@@ -300,114 +303,114 @@
                 for (var i = 0; i < length; i++) {
                     var node = element.childNodes[i];
                     if (node.nodeType !== 8) {
-                        ret += node.nodeType !== 1 ? node.nodeValue : readJS.getText(node);
+                        ret += node.nodeType !== 1 ? node.nodeValue : this.getText(node);
                     }
                 }
                 return ret.replace(/[\t\n\r]+/g, "").replace(/\s+/g, " ").trim();
             } catch (err) {
-                readJS.console(err);
+                this.console(err);
                 return false;
             }
         },
         /*
             calculateCoordinates() will determine the amount of overlap between the dom node and the viewport
         */
-        calculateCoordinates: function() {
-            if (!!readJS.domNode) {
-                var r = readJS.inView(readJS.domNode);
-                readJS.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
+        this.calculateCoordinates = () => {
+            if (!!this.domNode) {
+                var r = this.inView(this.domNode);
+                this.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
                 return true;
             } else {
-                readJS.console("ERROR: could not find the story body");
+                this.console("ERROR: could not find the story body");
                 return false;
             }
         },
         /*
             hasRead() will determine if the user has read the article
         */
-        hasRead: function() {
-            if (!!readJS.status.activity.read) {
+        this.hasRead = () => {
+            if (!!this.status.activity.read) {
                 return true;
             }
             //did not scroll far down enough
-            if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth) {
-                readJS.console("Has not read yet because user didn't pass scrollDepth threshold");
-                readJS.report();
+            if (this.status.activity.scrollDepth < this.status.thresholds.scrollDepth) {
+                this.console("Has not read yet because user didn't pass scrollDepth threshold");
+                this.report();
                 return false;
             }
-            if (!!readJS.status.strict) {
+            if (!!this.status.strict) {
                 //does not have enough of the dom node in the viewport (display ad viewability)
-                if (readJS.status.activity.dnp < readJS.status.thresholds.domNode) {
-                    readJS.console("STRICT MODE: not enough of dom node is in view");
-                    readJS.report();
+                if (this.status.activity.dnp < this.status.thresholds.domNode) {
+                    this.console("STRICT MODE: not enough of dom node is in view");
+                    this.report();
                     return false;
                 }
             }
             //not enough points scored
-            if (readJS.status.activity.readingPoints <= readJS.status.thresholds.readingPoint) {
-                readJS.report();
+            if (this.status.activity.readingPoints <= this.status.thresholds.readingPoint) {
+                this.report();
                 return false;
             }
             //not enough time in view
-            if (readJS.status.activity.timeInView < readJS.status.thresholds.timeInView) {
-                readJS.report();
+            if (this.status.activity.timeInView < this.status.thresholds.timeInView) {
+                this.report();
                 return false;
             }
 
-            readJS.status.activity.read = true;
-            readJS.callback();
-            readJS.removeListeners();
-            readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
-            readJS.stopPolling();
+            this.status.activity.read = true;
+            this.callback();
+            this.removeListeners();
+            this.console("readJS: the user has read the article", this.status.activity.readingPoints);
+            this.stopPolling();
             return true;
 
         },
         /*
             stopPolling() will clear the current interval
         */
-        stopPolling: function() {
-            if (!!readJS.readingWorker) {
-                window.clearInterval(readJS.readingWorker);
-                readJS.console("readJS: ending interval ID", readJS.readingWorker);
-                delete readJS.readingWorker;
+        this.stopPolling = () => {
+            if (!!this.readingWorker) {
+                window.clearInterval(this.readingWorker);
+                this.console("readJS: ending interval ID", this.readingWorker);
+                delete this.readingWorker;
             }
         },
         /*
             report() will console out what readJS knows so far
         */
-        report: function() {
-            readJS.console("readingPoints: " + readJS.status.activity.readingPoints, "timeInView: " + readJS.status.activity.timeInView, readJS.status.thresholds.readingPoint, readJS.status.thresholds.timeInView);
+        this.report = () => {
+            this.console("readingPoints: " + this.status.activity.readingPoints, "timeInView: " + this.status.activity.timeInView, this.status.thresholds.readingPoint, this.status.thresholds.timeInView);
         },
         /*
             addPoints() will recognize actions that will get us closer to the reading state
         */
-        addPoints: function() {
-            if (!readJS.inViewport(readJS.domNode)) {
+        this.addPoints = () => {
+            if (!this.inViewport(this.domNode)) {
                 return false;
             }
             //user is reading because enough of the dom node is in the viewport
-            if (readJS.status.activity.dnp > readJS.status.thresholds.domNode) {
-                readJS.status.activity.readingPoints += readJS.status.activity.increment;
+            if (this.status.activity.dnp > this.status.thresholds.domNode) {
+                this.status.activity.readingPoints += this.status.activity.increment;
             }
             //user is reading because enough of the viewport is being occupied by the article DOM node
-            if (readJS.status.activity.vpp > readJS.status.thresholds.viewport) {
-                readJS.status.activity.readingPoints += readJS.status.activity.increment;
+            if (this.status.activity.vpp > this.status.thresholds.viewport) {
+                this.status.activity.readingPoints += this.status.activity.increment;
             }
             //user is reading because they have scrolled passed a certain vertical threshold
             //if (readJS.status.activity.scrollDepth > readJS.status.thresholds.scrollDepth){
             //    readJS.status.activity.readingPoints += readJS.status.activity.increment/5;
             //}
-            return readJS.status.activity.readingPoints;
+            return this.status.activity.readingPoints;
         },
         /*
             isUpdateRequired() determines if the DOM node calculations should be run
         */
-        isUpdateRequired: function() {
-            readJS.status.activity.pollingPoints += 100 * Math.pow(0.9, readJS.status.activity.timeInUnknownState);
+        this.isUpdateRequired = () => {
+            this.status.activity.pollingPoints += 100 * Math.pow(0.9, this.status.activity.timeInUnknownState);
             //it's been long enough to check again
-            if (readJS.status.activity.pollingPoints >= readJS.status.thresholds.domPolling) {
-                readJS.console("readJS: analyzing the DOM at", readJS.status.activity.timeOnPage, " seconds", readJS.status.activity.pollingPoints);
-                readJS.status.activity.pollingPoints = 0;
+            if (this.status.activity.pollingPoints >= this.status.thresholds.domPolling) {
+                this.console("readJS: analyzing the DOM at", this.status.activity.timeOnPage, " seconds", this.status.activity.pollingPoints);
+                this.status.activity.pollingPoints = 0;
                 return true;
             }
 
@@ -417,53 +420,53 @@
         /*
             reactivate: the user has done something interesting on the page like click or scroll so it is time to reset the decay curve
         */
-        reactivate: function() {
-            readJS.console("readJS: reactivating refresh rate");
-            readJS.status.activity.timeInUnknownState = 0;
-            readJS.status.activity.pollingPoints += readJS.status.activity.increment;
+        this.reactivate = () => {
+            this.console("readJS: reactivating refresh rate");
+            this.status.activity.timeInUnknownState = 0;
+            this.status.activity.pollingPoints += this.status.activity.increment;
 
         },
         /*
             inDebugMode: reads the query string to figure out how to behave
         */
-        inDebugMode: function() {
+        this.inDebugMode = () => {
 
             //add the scrolling debugging console
-            if (!!readJS.status.debug.overlay) {
+            if (!!this.status.debug.overlay) {
                 //add the dom node to overlay
-                readJS.scrollDataOverlay = document.createElement("DIV");
-                readJS.scrollDataOverlay.style.position = "fixed";
-                readJS.scrollDataOverlay.style.bottom = "2em";
-                readJS.scrollDataOverlay.style.right = "2em";
-                readJS.scrollDataOverlay.style.zIndex = 10000;
-                readJS.scrollDataOverlay.id = "scrollinfo";
-                document.body.appendChild(readJS.scrollDataOverlay);
+                this.scrollDataOverlay = document.createElement("DIV");
+                this.scrollDataOverlay.style.position = "fixed";
+                this.scrollDataOverlay.style.bottom = "2em";
+                this.scrollDataOverlay.style.right = "2em";
+                this.scrollDataOverlay.style.zIndex = 10000;
+                this.scrollDataOverlay.id = "scrollinfo";
+                document.body.appendChild(this.scrollDataOverlay);
                 //find the scroll data on initial load
-                readJS.showScrollInfo();
+                this.showScrollInfo();
             }
 
         },
         /*
             inViewport: utility function to determine if any part of the element in question is in the viewport
         */
-        inViewport: function(el) {
+        this.inViewport = (el) => {
             var rect = el.getBoundingClientRect();
             return rect.bottom > 0 && rect.right > 0 && rect.left < window.innerWidth && rect.top < window.innerHeight;
         },
         /*
             showScrollInfo: overlay display to show the maximum scroll depth of the user
         */
-        showScrollInfo: function() {
-            if (!readJS.status.debug.overlay) {
+        this.showScrollInfo = () => {
+            if (!this.status.debug.overlay) {
                 return false;
             }
-            document.getElementById("scrollinfo").innerHTML = readJS.status.activity.scrollDepth;
+            document.getElementById("scrollinfo").innerHTML = this.status.activity.scrollDepth;
             return true;
         },
         /*
             getScrollInfo: will detect if user has scrolled pass threshold point
         */
-        getScrollInfo: function() {
+        this.getScrollInfo = () => {
             var scrollTop;
             // Firefox and IE don't support document.body.scrollTop, so we need this logic to select document.documentElement.scrollTop instead
             if (!!document.body.scrollTop) {
@@ -472,15 +475,15 @@
                 scrollTop = document.documentElement.scrollTop;
             }
             var calculated = Math.abs(scrollTop) + window.innerHeight;
-            if (calculated > readJS.status.activity.scrollDepth) {
-                readJS.status.activity.scrollDepth = calculated;
+            if (calculated > this.status.activity.scrollDepth) {
+                this.status.activity.scrollDepth = calculated;
             }
             return true;
         },
         /*
             removeDomNode: utility function to remove dom nodes
         */
-        removeDomNode: function(domNodeId) {
+        this.removeDomNode = (domNodeId) => {
             var dn = document.getElementById(domNodeId);
             if (!!dn) {
                 var p = dn.parentNode;
@@ -493,15 +496,15 @@
         /*
             removeOverlays: utility to remove all overlay DOM nodes
         */
-        removeOverlays: function() {
-            readJS.removeDomNode("viewport_inview");
-            readJS.removeDomNode("overlap_inview");
-            readJS.removeDomNode("domnode_inview");
+        this.removeOverlays = () => {
+            this.removeDomNode("viewport_inview");
+            this.removeDomNode("overlap_inview");
+            this.removeDomNode("domnode_inview");
         },
         /*
             Cross browser way to detect the visibility properties
         */
-        getVisibilityProperties: function() {
+        this.getVisibilityProperties = () => {
             var hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
                 hidden = "hidden";
@@ -523,22 +526,22 @@
         },
         // If the page is hidden, pause the DOM polling;
         // if the page is shown, continue to poll the DOM
-        handleVisibilityChange: function() {
-            var hidden = readJS.getVisibilityProperties().hiddenProp;
+        this.handleVisibilityChange = () => {
+            var hidden = this.getVisibilityProperties().hiddenProp;
             if (document[hidden]) {
-                readJS.console("readJS: pausing after detecting focus to another tab");
-                readJS.stopPolling();
+                this.console("readJS: pausing after detecting focus to another tab");
+                this.stopPolling();
             } else {
-                readJS.console("readJS: reinitializing after detecting tab is in focus");
-                readJS.initialize(readJS.callback);
+                this.console("readJS: reinitializing after detecting tab is in focus");
+                this.initialize(this.callback);
             }
         },
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
         //the calculations assume
-        inView: function(domNode) {
+        this.inView = (domNode) => {
             var dui, vui, oui;
 
-            readJS.domNode = domNode;
+            this.domNode = domNode;
 
             //top left and bottom right coordinate points of the viewport
             var vp = {
@@ -567,9 +570,9 @@
             vp.area = vp.width * vp.height;
 
             //highlight viewport
-            if (!!readJS.status.debug.overlay) {
+            if (!!this.status.debug.overlay) {
 
-                if (!readJS.status.debug.overlays.vui) {
+                if (!this.status.debug.overlays.vui) {
                     vui = document.createElement("DIV");
                     vui.id = "viewport_inview";
                     vui.style.position = "absolute";
@@ -577,9 +580,9 @@
                     vui.style.opacity = "0.5";
                     vui.style.zIndex = 9999;
                     document.body.appendChild(vui);
-                    readJS.status.debug.overlays.vui = vui;
+                    this.status.debug.overlays.vui = vui;
                 }
-                vui = readJS.status.debug.overlays.vui;
+                vui = this.status.debug.overlays.vui;
                 vui.style.left = vp.tl[0] + "px";
                 vui.style.top = vp.tl[1] + "px";
                 vui.style.width = vp.width + "px";
@@ -611,14 +614,14 @@
             dn.br[1] = dn.tl[1] + bcr.height;
 
             //get the scroll info with the time interval/cadence
-            readJS.getScrollInfo();
+            this.getScrollInfo();
 
             //pixel point of minVertical percentage
-            readJS.status.thresholds.scrollDepth = Math.abs(dn.tl[1]) + (bcr.height * readJS.status.thresholds.minVertical / 100);
+            this.status.thresholds.scrollDepth = Math.abs(dn.tl[1]) + (bcr.height * this.status.thresholds.minVertical / 100);
 
-            if (!!readJS.status.debug.overlay) {
+            if (!!this.status.debug.overlay) {
                 //highlight dom node
-                if (!readJS.status.debug.overlays.dui) {
+                if (!this.status.debug.overlays.dui) {
                     dui = document.createElement("DIV");
                     dui.id = "domnode_inview";
                     dui.style.position = "absolute";
@@ -626,19 +629,19 @@
                     dui.style.opacity = "0.5";
                     dui.style.zIndex = 9999;
                     document.body.appendChild(dui);
-                    readJS.status.debug.overlays.dui = dui;
+                    this.status.debug.overlays.dui = dui;
                 }
-                dui = readJS.status.debug.overlays.dui;
+                dui = this.status.debug.overlays.dui;
 
                 dui.style.left = dn.tl[0] + "px";
                 dui.style.top = dn.tl[1] + "px";
                 dui.style.width = bcr.width + "px";
                 dui.style.height = bcr.height + "px";
-                //readJS.console(dui);
+                //this.console(dui);
             }
 
             //element is not in viewport
-            if (!readJS.inViewport(readJS.domNode)) {
+            if (!this.inViewport(this.domNode)) {
                 return {
                     "dom_node_inview_percent": 0,
                     "dom_node_viewport_percent": 0
@@ -685,9 +688,9 @@
             //percentage of dom node occupying viewport
             var dnvp = overlap_node_area / vp.area * 100;
 
-            if (!!readJS.status.debug.overlay) {
+            if (!!this.status.debug.overlay) {
                 //highlight the overlap area
-                if (!readJS.status.debug.overlays.oui) {
+                if (!this.status.debug.overlays.oui) {
                     oui = document.createElement("DIV");
                     oui.id = "overlap_inview";
                     document.body.appendChild(oui);
@@ -695,17 +698,17 @@
                     oui.style.background = "red";
                     oui.style.opacity = "0.5";
                     oui.style.zIndex = 9999;
-                    readJS.status.debug.overlays.oui = oui;
+                    this.status.debug.overlays.oui = oui;
                 }
-                oui = readJS.status.debug.overlays.oui;
+                oui = this.status.debug.overlays.oui;
                 oui.style.left = overlap.tl[0] + "px";
                 oui.style.top = overlap.tl[1] + "px";
                 oui.style.width = width_of_overlap + "px";
                 oui.style.height = height_of_overlap + "px";
-                //readJS.console(oui);
+                //this.console(oui);
             }
-            readJS.status.activity.dnp = dnip;
-            readJS.status.activity.vpp = dnvp;
+            this.status.activity.dnp = dnip;
+            this.status.activity.vpp = dnvp;
 
             var retval = {
                 "dom_node_inview_percent": dnip,
@@ -713,76 +716,76 @@
             };
 
             //if in strict mode and not enough of the dom node is in the viewport or not enough of the viewport is occupied by dom node then don't increment timeInView
-            if (!!readJS.status.strict && (dnip < readJS.status.thresholds.domNode || dnvp < readJS.status.thresholds.viewport)) {
+            if (!!this.status.strict && (dnip < this.status.thresholds.domNode || dnvp < this.status.thresholds.viewport)) {
                 return retval;
             }
             //increment timeInView
-            readJS.status.activity.timeInView += readJS.status.timeInterval;
+            this.status.activity.timeInView += this.status.timeInterval;
             return retval;
         },
-        handleScroll: function() {
-            readJS.status.activity.scrolled = true;
-            readJS.showScrollInfo();
+        this.handleScroll = () => {
+            this.status.activity.scrolled = true;
+            this.showScrollInfo();
         },
-        handleClick: function() {
-            readJS.status.activity.readingPoints += readJS.status.activity.increment;
-            readJS.reactivate();
+        this.handleClick = () => {
+            this.status.activity.readingPoints += this.status.activity.increment;
+            this.reactivate();
         },
-        handleLoad: function() {
-            readJS.getScannableTargets(readJSConfig.el);
-            readJS.domNode = document.querySelector(readJSConfig.el);
-            readJS.setTimeInViewThreshold();
-            readJS.domNode.addEventListener("click", readJS.handleClick);
-            readJS.visibleScannableTargets(readJS.scannableTargets);
+        this.handleLoad = () => {
+            this.getScannableTargets(this.readJSConfig.el);
+            this.domNode = document.querySelector(this.readJSConfig.el);
+            this.setTimeInViewThreshold();
+            this.domNode.addEventListener("click", this.handleClick);
+            this.visibleScannableTargets(this.scannableTargets);
         },
-        setTimeInViewThreshold: function() {
+        this.setTimeInViewThreshold = () => {
 
-            if (typeof(readJS.status.thresholds.timeInView) === "number") {
+            if (typeof(this.status.thresholds.timeInView) === "number") {
                 return false; //manually overriden so no need to word count
             }
             // get wordCount of the domNode we're watching in order to calculate correct timeInView threshold
-            var wordCount = readJS.getText(readJS.domNode).split(" ").length;
-            var averageReadSpeed = readJS.status.activity.averageReadSpeed;
+            var wordCount = this.getText(this.domNode).split(" ").length;
+            var averageReadSpeed = this.status.activity.averageReadSpeed;
             // readJS.status.thresholds.timeInView is the average time it should take to read the percentage of text set in readJS.status.thresholds.domNode
-            readJS.status.thresholds.timeInView = Math.floor(wordCount * (readJS.status.thresholds.percentagePoint / 100) / averageReadSpeed);
+            this.status.thresholds.timeInView = Math.floor(wordCount * (this.status.thresholds.percentagePoint / 100) / averageReadSpeed);
 
             //console.log("threshold of timeInView", readJS.status.thresholds.timeInView);
-            if (readJS.status.thresholds.minTimeInView > readJS.status.thresholds.timeInView) {
-                readJS.status.thresholds.timeInView = readJS.status.thresholds.minTimeInView;
-            } else if (readJS.status.thresholds.timeInView > readJS.status.thresholds.maxTimeInView) {
-                readJS.status.thresholds.timeInView = readJS.status.thresholds.maxTimeInView;
+            if (this.status.thresholds.minTimeInView > this.status.thresholds.timeInView) {
+                this.status.thresholds.timeInView = this.status.thresholds.minTimeInView;
+            } else if (this.status.thresholds.timeInView > this.status.thresholds.maxTimeInView) {
+                this.status.thresholds.timeInView = this.status.thresholds.maxTimeInView;
             }
 
             //console.log("recalculated threshold of timeInView", readJS.status.thresholds.timeInView);
             return true;
         },
-        removeListeners: function() {
-            window.removeEventListener("scroll", readJS.handleScroll);
-            window.removeEventListener("load", readJS.handleLoad);
-            if (typeof(readJS.domNode) !== "undefined") {
-                readJS.domNode.removeEventListener("click", readJS.handleClick);
+        this.removeListeners = () => {
+            window.removeEventListener("scroll", this.handleScroll);
+            window.removeEventListener("load", this.handleLoad);
+            if (typeof(this.domNode) !== "undefined") {
+                this.domNode.removeEventListener("click", this.handleClick);
             }
-            document.removeEventListener(readJS.getVisibilityProperties().eventName, readJS.handleVisibilityChange, false);
+            document.removeEventListener(this.getVisibilityProperties().eventName, this.handleVisibilityChange, false);
         },
         /*
             isOn : returns the value of isOn private variable
         */
-        isOn: function() {
+        this.isOn = () => {
             return isOn;
         },
         /*
             turnOff : For SPA's to stop Read JS when changing app state
         */
-        turnOff: function() {
+        this.turnOff = () => {
             if (!isOn) {
                 return false;
             }
 
-            readJS.removeListeners();
-            readJS.console("readJS: stopping midway");
-            readJS.stopPolling();
-            readJS.removeOverlays();
-            readJS.status.activity.read = false;
+            this.removeListeners();
+            this.console("readJS: stopping midway");
+            this.stopPolling();
+            this.removeOverlays();
+            this.status.activity.read = false;
             isOn = false;
 
             return true;
@@ -790,67 +793,78 @@
         /*
             turnOn : For SPA's to start Read JS when changing app state
         */
-        turnOn: function() {
+        this.turnOn = () => {
             if (!!isOn) {
                 return false;
             }
 
             //reset all status variables
-            readJS.resetConfigStatus();
+            this.resetConfigStatus();
 
             //check if there are override config values
-            readJS.setConfig();
+            this.setConfig();
 
-            if (!!initialized && !readJSConfig.spa) {
-                readJS.console("ERROR: Not a SPA. Cannot turnOn() again on the same web page");
+            if (!!initialized && !this.readJSConfig.spa) {
+                this.console("ERROR: Not a SPA. Cannot turnOn() again on the same web page");
                 return false;
             }
-            if (typeof(readJSConfig) === "undefined") {
-                readJS.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
+            if (typeof(this.readJSConfig) === "undefined") {
+                this.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
                 return false;
             }
-            if (typeof(readJSConfig.el) !== "string") {
-                readJS.console("ERROR:  readJSConfig expected el to be a string");
+            if (typeof(this.readJSConfig.el) !== "string") {
+                this.console("ERROR:  readJSConfig expected el to be a string");
                 return false;
             }
-            if (typeof(readJSConfig.cb) !== "function") {
-                readJS.console("ERROR: readJSConfig expected a callback function");
+            if (typeof(this.readJSConfig.cb) !== "function") {
+                this.console("ERROR: readJSConfig expected a callback function");
                 return false;
             }
 
             //scroll event listener
-            window.addEventListener("scroll", readJS.handleScroll);
+            window.addEventListener("scroll", this.handleScroll);
 
             //tab focus event listener
-            document.addEventListener(readJS.getVisibilityProperties().eventName, readJS.handleVisibilityChange, false);
+            document.addEventListener(this.getVisibilityProperties().eventName, this.handleVisibilityChange, false);
 
-            if (!readJS.status.spa) {
+            if (!this.status.spa) {
                 //onload event listener
-                window.addEventListener("load", readJS.handleLoad);
+                window.addEventListener("load", this.handleLoad);
             } else {
-                readJS.handleLoad();
+                this.handleLoad();
             }
 
             //set it all in motion
-            readJS.initialize(readJSConfig.cb);
+            this.initialize(this.readJSConfig.cb);
 
             isOn = true;
 
             if (!initialized) {
-                readJS.handleVisibilityChange(); //use case:user opens page in new tab which means we need to check if the tab is active before counting
+                this.handleVisibilityChange(); //use case:user opens page in new tab which means we need to check if the tab is active before counting
                 initialized = true;
             }
 
             return true;
+        };
+
+    }
+
+
+    if (typeof(readJSConfig) !== "undefined" && readJSConfig.spa !== true) {
+        if(readJSConfig.read){
+            window.readJS = new readJS(readJSConfig.read);
+            window.readJS.turnOn();
         }
-    };
-
-    window.readJS = readJS;
-
+        else if(readJSConfig.scanned){
+            window.scannedJs = new readJS(readJSConfig.scanned);
+            window.scannedJs.turnOn();
+        }
+        else{
+            window.readJS = new readJS(readJSConfig);
+            window.readJS.turnOn();
+        }
+    } else {
+        //setup status variables at a minimum
+        readJS.resetConfigStatus();
+    }
 })();
-if (typeof(readJSConfig) !== "undefined" && readJSConfig.spa !== true) {
-    readJS.turnOn(); //auto track on non SPA architecture web pages
-} else {
-    //setup status variables at a minimum
-    readJS.resetConfigStatus();
-}
