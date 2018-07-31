@@ -466,6 +466,7 @@ describe("read-js-tests", function() {
 
     it("should return visible targets from the scannableTargets list", function() {
         expect(readJS.visibleScannableTargets(readJS.scannableTargets).length).toEqual(1);
+        expect(readJS.visibleElementsMap.length).toEqual(1);
     });
 
     it("should return false if scannableTargets is undefined or 0 length", function() {

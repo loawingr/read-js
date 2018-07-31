@@ -211,6 +211,7 @@
             if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
                 readJS.visibleElementsMap = [];
+
                 for (let i = 0; i < scannableTargets.length; i++) {
                     if (readJS.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
                         visibleElements.push(scannableTargets[i]);
