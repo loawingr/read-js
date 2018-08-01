@@ -58,6 +58,9 @@ module.exports = function(grunt) {
             read: {
                 configFile: "test/conf/read.conf.js"
             },
+            readscanned: {
+                configFile: "test/conf/read-scanned.conf.js"
+            },
             coverage: {
                 configFile: "test/conf/coverage.conf.js"
             }

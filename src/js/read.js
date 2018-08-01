@@ -6,13 +6,14 @@
 (function() {
     "use strict";
     // Set the name of the hidden property and the change event for visibility
-    var isOn = false;
-    var initialized = false;
-    var intervals = [];
+
     function readJS(config){
         /*
             resetConfigStatus : resets config to default and all status variables to zero
         */
+        this.isOnValue = false;
+        this.initialized = false;
+        this.intervals = [];
         this.configKey = config;
 
         this.resetConfigStatus = () => {
@@ -67,7 +68,7 @@
         */
         this.setConfig = () => {
 
-            if (!!isOn) {
+            if (!!this.isOnValue) {
                 return false;
             }
 
@@ -170,12 +171,12 @@
                 return false;
             }
 
-            isOn = true;
+            this.isOnValue = true;
 
             this.stopPolling();
             //check if the reader is actually reading at a decaying rate
             this.readingWorker = window.setInterval(this.checkActivity, this.status.timeInterval * 1000);
-            intervals.push(this.readingWorker);
+            this.intervals.push(this.readingWorker);
             this.console("readJS: starting interval ID", this.readingWorker);
 
             this.inDebugMode();
@@ -246,7 +247,7 @@
             getIntervals: returns a list of intervals that were set by window.setInterval
         */
         this.getIntervals = () => {
-            return intervals;
+            return this.intervals;
         },
         /*
             checkActivity is meant to determine if the user is active on the page
@@ -782,16 +783,16 @@
             document.removeEventListener(this.getVisibilityProperties().eventName, this.handleVisibilityChange, false);
         },
         /*
-            isOn : returns the value of isOn private variable
+            isOn : returns the value of isOnValue private variable
         */
         this.isOn = () => {
-            return isOn;
+            return this.isOnValue;
         },
         /*
             turnOff : For SPA's to stop Read JS when changing app state
         */
         this.turnOff = () => {
-            if (!isOn) {
+            if (!this.isOnValue) {
                 return false;
             }
 
@@ -800,7 +801,7 @@
             this.stopPolling();
             this.removeOverlays();
             this.status.activity.read = false;
-            isOn = false;
+            this.isOnValue = false;
 
             return true;
         },
@@ -808,17 +809,16 @@
             turnOn : For SPA's to start Read JS when changing app state
         */
         this.turnOn = () => {
-            if (!!isOn) {
+            if (!!this.isOnValue) {
                 return false;
             }
-
             //reset all status variables
             this.resetConfigStatus();
 
             //check if there are override config values
             this.setConfig();
 
-            if (!!initialized && !this.readJSConfig.spa) {
+            if (!!this.initialized && !this.readJSConfig.spa) {
                 this.console("ERROR: Not a SPA. Cannot turnOn() again on the same web page");
                 return false;
             }
@@ -851,11 +851,11 @@
             //set it all in motion
             this.initialize(this.readJSConfig.cb);
 
-            isOn = true;
+            this.isOnValue = true;
 
-            if (!initialized) {
+            if (!this.initialized) {
                 this.handleVisibilityChange(); //use case:user opens page in new tab which means we need to check if the tab is active before counting
-                initialized = true;
+                this.initialized = true;
             }
 
             return true;
@@ -869,13 +869,18 @@
 
     if (typeof(readJSConfig) !== "undefined" && readJSConfig.spa !== true) {
 
-        window.readJS.turnOn();
-
         //only turnOn scannedJS if readJSConfig specify scanned
-        if(readJSConfig.scanned){
-            window.scannedJS.turnOn();
-        }
+        if(readJSConfig.scanned || readJSConfig.read){
+            if(readJSConfig.scanned){
+                window.scannedJS.turnOn();
+            }
+            if(readJSConfig.read){
+                window.readJS.turnOn();
+            }
 
+        }else{
+            window.readJS.turnOn();
+        }
     } else {
         //setup status variables at a minimum
         if(!!window.readJS){

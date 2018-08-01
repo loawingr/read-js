@@ -383,11 +383,6 @@ describe("read-js-tests", function() {
         expect(readJS.initialize(readJSConfig.cb)).toBeFalsy();
     });
 
-    xit("should accept readJSConfig with a property read with config", function(){
-        readJSConfig ={read:readJSConfig};
-        expect(readJS.turnOn()).toBeTruthy();
-    });
-
     it("should set the initial time", function() {
         readJS.status.activity.initialTime = 0;
         readJS.setInitialTime();
