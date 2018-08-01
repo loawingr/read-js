@@ -17,6 +17,7 @@
             readJS.status = {
                 strict: false, // be very strict on read/scan verb
                 spa: false, //tell readJS if it is in a single page app
+                ignoreScrollDepth: false,
                 debug: {
                     console: false,
                     overlay: false,
@@ -76,6 +77,9 @@
             }
             if (typeof(readJSConfig.strict) === "boolean") {
                 readJS.status.strict = readJSConfig.strict;
+            }
+            if (typeof(readJSConfig.ignoreScrollDepth) === "boolean") {
+                readJS.status.ignoreScrollDepth = readJSConfig.ignoreScrollDepth;
             }
             if (!!readJSConfig.debug) {
                 if (typeof(readJSConfig.debug.console) === "boolean") {
@@ -333,7 +337,7 @@
         */
         hasRead: function() {
             //did not scroll far down enough
-            if (readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth) {
+            if (!readJS.status.ignoreScrollDepth && readJS.status.activity.scrollDepth < readJS.status.thresholds.scrollDepth) {
                 readJS.console("Has not read yet because user didn't pass scrollDepth threshold");
                 readJS.report();
                 return false;
@@ -348,11 +352,13 @@
             }
             //not enough points scored
             if (readJS.status.activity.readingPoints <= readJS.status.thresholds.readingPoint) {
+                readJS.console("Not enough points scored for callback");
                 readJS.report();
                 return false;
             }
             //not enough time in view
             if (readJS.status.activity.timeInView < readJS.status.thresholds.timeInView) {
+                readJS.console("Not enouigh time in view for callback");
                 readJS.report();
                 return false;
             }
