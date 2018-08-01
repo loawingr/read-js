@@ -81,7 +81,8 @@ describe("spa tests of readJS", function(){
                 domPolling : 90,
                 minTimeInView : 1,
                 maxTimeInView: 10,
-                minVertical:20
+                minVertical:20,
+                maxCalls: 5
             },
             el : "#paragraph",
             cb : function(){ alert("Yay! They read it!"); }
@@ -109,6 +110,7 @@ describe("spa tests of readJS", function(){
         expect(cfg.thresholds.minTimeInView).toBe(1);
         expect(cfg.thresholds.maxTimeInView).toBe(10);
         expect(cfg.thresholds.minVertical).toBe(20);
+        expect(cfg.thresholds.maxCalls).toBe(5);
     });
 
     it("should now be ready to turn on", function(){

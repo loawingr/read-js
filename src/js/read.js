@@ -39,7 +39,8 @@
                     read: false,
                     averageReadSpeed: 300 / 60, //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
                     initialTime: 0,
-                    totalTime: 0
+                    totalTime: 0,
+                    numberOfCalls: 0
                 },
                 thresholds: {
                     viewport: 25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
@@ -50,7 +51,8 @@
                     minTimeInView: 3, //min number of seconds for the text to be in view
                     maxTimeInView: 20, //max number of seconds for the text to be in view
                     scrollDepth: 0, // dynamically calculated because dependant on dom node height
-                    percentagePoint: 30 // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
+                    percentagePoint: 30, // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
+                    maxCalls: 3
                 }
             };
             return true;
@@ -127,6 +129,9 @@
                 }
                 if (typeof(readJSConfig.thresholds.percentagePoint) === "number") {
                     readJS.status.thresholds.percentagePoint = readJSConfig.thresholds.percentagePoint;
+                }
+                if (typeof(readJSConfig.thresholds.maxCalls) === "number") {
+                    readJS.status.thresholds.maxCalls = readJSConfig.thresholds.maxCalls;
                 }
             }
             if (typeof(readJSConfig.el) !== "string") {
@@ -364,8 +369,9 @@
             }
 
             readJS.callback();
+            readJS.status.activity.numberOfCalls++;
             readJS.scannableTargets.splice(readJS.visibleElementsMap[0], 1);
-            if(readJS.scannableTargets.length <= 0) {
+            if(readJS.scannableTargets.length <= 0 || readJS.status.activity.numberOfCalls >= readJS.status.thresholds.maxCalls) {
                 readJS.removeListeners();
                 readJS.console("readJS: the user has read the article", readJS.status.activity.readingPoints);
                 readJS.stopPolling();

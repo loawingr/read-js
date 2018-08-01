@@ -206,7 +206,9 @@ describe("read-js-tests", function() {
 
         spyOn(readJS, "removeListeners");
         spyOn(readJS, "stopPolling");
+        expect(readJS.status.activity.numberOfCalls).toBe(0);
         expect(readJS.hasRead()).toBeTruthy();
+        expect(readJS.status.activity.numberOfCalls).toBe(1);
         expect(readJS.removeListeners).toHaveBeenCalled();
         expect(readJS.stopPolling).toHaveBeenCalled();
     });
@@ -474,6 +476,40 @@ describe("read-js-tests", function() {
         const target = readJS.getScannableTargets(".non-display-headline");
         expect(target.length).toEqual(1);
         expect(readJS.visibleScannableTargets(readJS.scannableTargets).length).toEqual(0);
+    });
+
+    it("should remove listeners after max calls have been reached", function() {
+        //setup read conditions
+        readJS.scannableTargets = [0,1,2,3];
+        readJS.visibleElementsMap = [0,1,2,3];
+        readJS.status.activity.readingPoints = 401; // 1 more than threshold
+        readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
+        readJS.status.ignoreScrollDepth = true;
+        readJS.status.thresholds.maxCalls = 3;
+
+        readJS.callback = function() {
+            console.log("Scanned and popped element out of scannableTargets");
+        }
+
+        spyOn(readJS, "removeListeners");
+        spyOn(readJS, "stopPolling");
+        expect(readJS.status.thresholds.maxCalls).toBe(3);
+        expect(readJS.status.activity.numberOfCalls).toBe(0);
+        expect(readJS.hasRead()).toBeTruthy();
+        expect(readJS.removeListeners).not.toHaveBeenCalled();
+        expect(readJS.stopPolling).not.toHaveBeenCalled();
+        expect(readJS.scannableTargets).toEqual([1,2,3]);
+        expect(readJS.status.activity.numberOfCalls).toBe(1);
+        expect(readJS.hasRead()).toBeTruthy();
+        expect(readJS.removeListeners).not.toHaveBeenCalled();
+        expect(readJS.stopPolling).not.toHaveBeenCalled();
+        expect(readJS.scannableTargets).toEqual([2,3]);
+        expect(readJS.status.activity.numberOfCalls).toBe(2);
+        expect(readJS.hasRead()).toBeTruthy();
+        expect(readJS.status.activity.numberOfCalls).toBe(3);
+        expect(readJS.removeListeners).toHaveBeenCalled();
+        expect(readJS.stopPolling).toHaveBeenCalled();
+        expect(readJS.scannableTargets).toEqual([3]);
     });
 
     //reset after all test cases
