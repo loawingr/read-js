@@ -1,5 +1,5 @@
 describe("spa tests of readJS", function(){
-    
+
     //custom timeout instead of 5 seconds
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -63,6 +63,7 @@ describe("spa tests of readJS", function(){
         window.readJSConfig = {
             strict: false,
             spa: true,
+            ignoreScrollDepth: true,
             timeInterval: 3,
             activity: {
                 averageReadSpeed : 6,
@@ -90,10 +91,11 @@ describe("spa tests of readJS", function(){
         expect(readJS.setConfig()).toBeTruthy();
 
         var cfg = readJS.getConfig();
-        
+
         //expect certain config values that have been overridden
         expect(cfg.strict).toBeFalsy();
         expect(cfg.spa).toBeTruthy();
+        expect(cfg.ignoreScrollDepth).toBeTruthy();
         expect(cfg.timeInterval).toBe(3);
         expect(cfg.activity.averageReadSpeed).toBe(6);
         expect(cfg.activity.increment).toBe(150);
