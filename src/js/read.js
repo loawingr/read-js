@@ -9,11 +9,11 @@
     var isOn = false;
     var initialized = false;
     var intervals = [];
-    function readJS(readJSConfig){
+    function readJS(config){
         /*
             resetConfigStatus : resets config to default and all status variables to zero
         */
-        this.readJSConfig = readJSConfig;
+        this.configKey = config;
 
         this.resetConfigStatus = () => {
             this.status = {
@@ -66,14 +66,22 @@
             setConfig: will allow you to override default config values if it's currently not running
         */
         this.setConfig = () => {
+
             if (!!isOn) {
                 return false;
             }
 
-            if (typeof(this.readJSConfig) === "undefined") {
+            if (typeof(window.readJSConfig) === "undefined") {
                 this.console("Error: Cannot find Read JS config object readJSConfig");
                 return false;
             }
+
+            if(!!this.configKey && !!window.readJSConfig[this.configKey]){
+                this.readJSConfig = window.readJSConfig[this.configKey];
+            }else{
+                this.readJSConfig = window.readJSConfig;
+            }
+
             if (typeof(this.readJSConfig.spa) === "boolean") {
                 this.status.spa = this.readJSConfig.spa;
             }
@@ -150,6 +158,12 @@
                 return false;
             }
             this.callback = callback;
+
+            if(!!this.configKey && !!window.readJSConfig[this.configKey]){
+                this.readJSConfig = window.readJSConfig[this.configKey];
+            }else{
+                this.readJSConfig = window.readJSConfig;
+            }
 
             if (typeof(this.readJSConfig.el) !== "string") {
                 this.console("ERROR: readJS.initialize() expected el to be a string or object");
@@ -849,22 +863,26 @@
 
     }
 
+    //initialize both readJS and scannedJS
+    window.readJS = new readJS("read");
+    window.scannedJS = new readJS("scanned");
 
     if (typeof(readJSConfig) !== "undefined" && readJSConfig.spa !== true) {
-        if(readJSConfig.read){
-            window.readJS = new readJS(readJSConfig.read);
-            window.readJS.turnOn();
+
+        window.readJS.turnOn();
+
+        //only turnOn scannedJS if readJSConfig specify scanned
+        if(readJSConfig.scanned){
+            window.scannedJS.turnOn();
         }
-        else if(readJSConfig.scanned){
-            window.scannedJs = new readJS(readJSConfig.scanned);
-            window.scannedJs.turnOn();
-        }
-        else{
-            window.readJS = new readJS(readJSConfig);
-            window.readJS.turnOn();
-        }
+
     } else {
         //setup status variables at a minimum
-        readJS.resetConfigStatus();
+        if(!!window.readJS){
+            window.readJS.resetConfigStatus();
+        }
+        if(!!window.scannedJS){
+            window.scannedJS.resetConfigStatus();
+        }
     }
 })();

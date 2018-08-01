@@ -87,9 +87,9 @@ describe("spa tests of readJS", function(){
         };
 
         //add overrides
-        expect(readJS.setConfig()).toBeTruthy();
+        expect(window.readJS.setConfig()).toBeTruthy();
 
-        var cfg = readJS.getConfig();
+        var cfg = window.readJS.getConfig();
         
         //expect certain config values that have been overridden
         expect(cfg.strict).toBeFalsy();
