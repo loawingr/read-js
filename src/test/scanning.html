@@ -11,7 +11,7 @@
 			.wrapper{
 				margin:0 auto;
 				display:block;
-				max-width:60rem;
+				max-width:16rem;
 			}
 			.pretend{
 				background-color:#ddd;
@@ -146,6 +146,7 @@
 		</div>
 		<script type="text/javascript">
 			var readJSConfig = {
+				ignoreScrollDepth: true,
 				debug: {
 					console: true,
 					overlay: true
@@ -153,11 +154,12 @@
 				thresholds: {
 					timeInView: 1, //5 seconds of viewing time
 					viewport: 80, //50% of the viewport must be occupied by the list of content
+					readingPoint: 150,
 				},
 				strict: false,
 				el: ".card",
 				cb: function(){ console.log("DAVID,BLISS,EDRIC,MICHAEL") }
-				
+
 			};
 		</script>
 		<script type="text/javascript" src="../js/read.js"></script>

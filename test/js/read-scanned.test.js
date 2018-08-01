@@ -8,22 +8,13 @@ describe("read-js and scanned-js tests together", function(){
     scannedJS.domNode = document.querySelector("#paragraph");
 
     it("has read for readJS but not scannedJS", function() { //this test relies on the time in view threshold test to be before it
-        //fake the lock
-        console.log("scannedJS",scannedJS.isOn());
-        console.log("readJS",readJS.isOn());
-        readJS.status.activity.read = true;
-        expect(readJS.hasRead()).toBeTruthy();
-
-        expect(scannedJS.hasRead()).toBeFalsy();
-
         //setup not read conditions
-        readJS.status.activity.read = false;
-        console.log("readingPoints: " + readJS.status.activity.readingPoints);
-        console.log("timeInView: " + readJS.status.activity.timeInView);
         expect(readJS.hasRead()).toBeFalsy();
         expect(scannedJS.hasRead()).toBeFalsy();
 
         //setup read conditions
+        readJS.scannableTargets = ["target"];
+        readJS.visibleElementsMap = [0];
         readJS.status.activity.readingPoints = 401; // 1 more than threshold
         readJS.status.activity.timeInView = readJS.status.thresholds.timeInView;
         readJS.status.activity.scrollDepth = readJS.status.thresholds.scrollDepth
@@ -36,12 +27,14 @@ describe("read-js and scanned-js tests together", function(){
         spyOn(scannedJS, "removeListeners");
         spyOn(readJS, "stopPolling");
         spyOn(scannedJS, "stopPolling");
+        expect(readJS.status.activity.numberOfCalls).toBe(0);
         expect(readJS.hasRead()).toBeTruthy();
+        expect(scannedJS.hasRead()).toBeFalsy();
+        expect(readJS.status.activity.numberOfCalls).toBe(1);
         expect(readJS.removeListeners).toHaveBeenCalled();
         expect(readJS.stopPolling).toHaveBeenCalled();
         expect(scannedJS.removeListeners).not.toHaveBeenCalled();
         expect(scannedJS.stopPolling).not.toHaveBeenCalled();
-
     });
 
     afterAll(function() {

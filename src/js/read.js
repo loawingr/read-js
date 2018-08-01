@@ -15,6 +15,8 @@
         this.initialized = false;
         this.intervals = [];
         this.configKey = config;
+        this.scannableTargets = [];
+        this.visibleElementsMap = [];
 
         this.resetConfigStatus = () => {
             this.status = {
@@ -41,7 +43,8 @@
                     read: false,
                     averageReadSpeed: 300 / 60, //A "good" reader (ref: readingsoft.com) has a 300wpm (words-per-minute) average speed on a screen. Using this as a basis and converting to words-per-second to define minimum display time.
                     initialTime: 0,
-                    totalTime: 0
+                    totalTime: 0,
+                    numberOfCalls: 0
                 },
                 thresholds: {
                     viewport: 25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
@@ -52,7 +55,8 @@
                     minTimeInView: 3, //min number of seconds for the text to be in view
                     maxTimeInView: 20, //max number of seconds for the text to be in view
                     scrollDepth: 0, // dynamically calculated because dependant on dom node height
-                    percentagePoint: 30 // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
+                    percentagePoint: 30, // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
+                    maxCalls: 3
                 }
             };
             return true;
@@ -88,6 +92,9 @@
             }
             if (typeof(this.readJSConfig.strict) === "boolean") {
                 this.status.strict = this.readJSConfig.strict;
+            }
+            if (typeof(this.readJSConfig.ignoreScrollDepth) === "boolean") {
+                this.status.ignoreScrollDepth = this.readJSConfig.ignoreScrollDepth;
             }
             if (!!this.readJSConfig.debug) {
                 if (typeof(this.readJSConfig.debug.console) === "boolean") {
@@ -136,7 +143,11 @@
                 if (typeof(this.readJSConfig.thresholds.percentagePoint) === "number") {
                     this.status.thresholds.percentagePoint = this.readJSConfig.thresholds.percentagePoint;
                 }
+                if (typeof(this.readJSConfig.thresholds.maxCalls) === "number") {
+                    this.status.thresholds.maxCalls = this.readJSConfig.thresholds.maxCalls;
+                }
             }
+
             if (typeof(this.readJSConfig.el) !== "string") {
                 this.console("ERROR: readJS.initialize() expected el to be a string");
                 return false;
@@ -212,10 +223,11 @@
         this.getScannableTargets = (className) => {
             const scannableTargets = document.querySelectorAll(className);
             if (scannableTargets.length === 0) {
-                this.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!",className,"SOM STUFF",scannableTargets);
+                this.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!");
                 return false;
             } else {
-                this.scannableTargets = scannableTargets;
+                this.scannableTargets = [];
+                this.scannableTargets = Array.prototype.slice.call(scannableTargets);
                 return this.scannableTargets;
             }
         },
@@ -226,21 +238,24 @@
         this.visibleScannableTargets = (scannableTargets) => {
             if (typeof(scannableTargets) !== "undefined" && scannableTargets.length > 0) {
                 const visibleElements = [];
+                this.visibleElementsMap = [];
+
                 for (let i = 0; i < scannableTargets.length; i++) {
-                    const r = this.inView(scannableTargets[i]);
-                    if (r.dom_node_inview_percent > 80) {
+                    if (this.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
                         visibleElements.push(scannableTargets[i]);
+                        this.visibleElementsMap.push(i);
                     }
-                    this.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
                 }
-                if(visibleElements.length > 3){
+
+                if (visibleElements.length > 3) {
+                    this.console("ERROR: readJS.visibleScannableTargets() - More than 3 elements visible!");
                     return false;
                 }
                 return visibleElements;
-            } else {
-                this.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
-                return false;
             }
+
+            this.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
+            return false;
         },
 
         /*
@@ -344,11 +359,8 @@
             hasRead() will determine if the user has read the article
         */
         this.hasRead = () => {
-            if (!!this.status.activity.read) {
-                return true;
-            }
             //did not scroll far down enough
-            if (this.status.activity.scrollDepth < this.status.thresholds.scrollDepth) {
+            if (!this.status.ignoreScrollDepth && this.status.activity.scrollDepth < this.status.thresholds.scrollDepth) {
                 this.console("Has not read yet because user didn't pass scrollDepth threshold");
                 this.report();
                 return false;
@@ -363,20 +375,25 @@
             }
             //not enough points scored
             if (this.status.activity.readingPoints <= this.status.thresholds.readingPoint) {
+                this.console("Not enough points scored for callback");
                 this.report();
                 return false;
             }
             //not enough time in view
             if (this.status.activity.timeInView < this.status.thresholds.timeInView) {
+                this.console("Not enouigh time in view for callback");
                 this.report();
                 return false;
             }
 
-            this.status.activity.read = true;
             this.callback();
-            this.removeListeners();
-            this.console("readJS: the user has read the article", this.status.activity.readingPoints);
-            this.stopPolling();
+            this.status.activity.numberOfCalls++;
+            this.scannableTargets.splice(this.visibleElementsMap[0], 1);
+            if(this.scannableTargets.length <= 0 || this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls) {
+                this.removeListeners();
+                this.console("readJS: the user has read the article", this.status.activity.readingPoints);
+                this.stopPolling();
+            }
             return true;
 
         },
@@ -812,6 +829,7 @@
             if (!!this.isOnValue) {
                 return false;
             }
+
             //reset all status variables
             this.resetConfigStatus();
 
