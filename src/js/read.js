@@ -183,6 +183,8 @@
                 return false;
             }
 
+            this.setInitialTime();
+
             this.isOnValue = true;
 
             this.stopPolling();
@@ -572,6 +574,7 @@
             if (document[hidden]) {
                 this.console("readJS: pausing after detecting focus to another tab");
                 this.stopPolling();
+                this.calculateTotalTime();
             } else {
                 this.console("readJS: reinitializing after detecting tab is in focus");
                 this.initialize(this.callback);
