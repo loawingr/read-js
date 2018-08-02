@@ -65,6 +65,8 @@ The custom callback allows the developer to do whatever they want with the detec
 
 ## Configurable Settings
 
+---
+
 Example: Assuming average person can read 300 words per minute for this article
 ```js
 	readJSConfig.activity.avgReadingSpeed = 300/60; //default is 300/60
@@ -79,7 +81,7 @@ Example: 500 reading points need to accumulate/scored before reading/scanning ac
 ```js
 	readJSConfig.thresholds.readingPoint = 500; //default is 400
 ```
-## Criteria before recalculating DOM node position relative to viewport
+### Criteria before recalculating DOM node position relative to viewport
 
 Example: Every 3 seconds the JS will check to see if the user did anything interesting like scroll, click, have enough of the viewport occupied. During idle time the readingPoints will increment by the timeInterval. In this example 
 ```js
@@ -113,7 +115,7 @@ Example: If readJSConfig.thresholds.timeInView is not defined and strict mode is
 ```
 
 
-## Criteria before reading points are scored
+### Criteria before reading points are scored
 
 The browser tab with Read JS running must be the active tab
 
@@ -137,7 +139,7 @@ Example: In strict mode the thresholds.domNode needs to be satisfied before read
 	readJSConfig.strict = true; //default is false
 ```
 
-## DOM Polling Degredation Curve
+### DOM Polling Degredation Curve
 
 Read JS will use the formula below to make sure that it's slowing down it's polling activity as time passes without any indication (DOM node clicks, window scrolls) the user is reading. Note that timeInUnknownState is directly correlated with readJSConfig.timeInterval
 
@@ -147,7 +149,7 @@ readJS.status.activity.pollingPoints += 100*Math.pow(0.9, readJS.status.activity
 
 If readJSConfig.timeInterval is set at default setting of 1.5 seconds the cadence of DOM reading/calculations are as follows in seconds: 0, 3, 6, 10.5, 18 and then it goes to sleep.
 
-## Debug Modes
+### Debug Modes
 
 Example: Want to see some log info in the developer tools?
 ```js
@@ -159,7 +161,7 @@ Example: Want to see some visual overlays to see the DOM calculations in action?
 	readJSConfig.debug.statsOverlay = true; //default is false
 ```
 
-## General Public Methods
+### General Public Methods
 
 |Method       |Return Value Type|Parameters|Description                                      | Available |
 |-------------|-----------------| -------- | ----------------------------------------------- | --------- |
@@ -169,7 +171,7 @@ Example: Want to see some visual overlays to see the DOM calculations in action?
 | turnOff()   | Boolean         | None     | Use for SPA app state changes to stop listening | Yes       |
 | turnOn()    | Boolean         | None     | Use for SPA app state changes to start listening| Yes       |
 
-## Single Page Apps (SPA) - Needs a Sample Page
+### Single Page Apps (SPA) - Needs a Sample Page
 
 You must tell ReadJS that it is in an SPA by:
 
@@ -182,6 +184,58 @@ To support SPA's there are 3 methods that are exposed.
 * Call turnOff() to stop readJS before changing app state to stop all listeners and DOM calculations
 * Set new configuration in readJSConfig object based on the content type and reading/scanning behaviour you want to encourage.
 * Call turnOn() to indicate the DOM node has been loaded and rendered and to start listening based on the new config object
+
+## Scanning Elements
+
+A user scanning elements is a lot different from reading an article, how can we tell if a user read the headline of the story? If the user is scrolling through story cards on an index page, how do we know which cards they are looking at? With the right configuration, we can track this too.
+
+### Starting ScannedJS
+
+ScannedJS is a special instance of readJS, it allows us to have readJS configured as above, and have a seperate instance looking for elements to fire a scanned callback on.
+To set up an instance of scannedJS you need to specify its own element and callback.
+
+```js
+if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
+if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
+if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(){ //callback
+    "use strict";
+    alert("The article has been scanned");
+}; }
+```
+General public methods are the same as readJS but can be accessed via scannedJS
+
+Example:
+
+`window.scannedJS.turnOn()`
+ 
+### Running ScannedJS and ReadJS
+
+We can have both readJS and scannedJS running on the same page.
+The readJSConfig object needs to specify the difference between scannedJS and readJS configurations.
+
+```js
+if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
+if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
+if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(){ //callback
+    "use strict";
+    alert("The article has been scanned");
+}; }
+if (!readJSConfig.read){ readJSConfig.read = {}; } //set read object for config
+if (!readJSConfig.read.el){ readJSConfig.read.el = ".story-body"; } //DOM node
+if (!readJSConfig.read.cb){ readJSConfig.read.cb = function(){ //callback
+    "use strict";
+    alert("The article has been read");
+}; }
+```
+
+
+To turn on both readJS and scannedJS at the same time run:
+
+
+```js
+window.readJS.turnOn();
+window.scannedJS.turnOn();
+```
 
 ## Browser Compatibility
 
