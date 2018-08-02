@@ -1,7 +1,7 @@
 {
   "name": "read-js",
-  "description": " DAVID TEST Detects if the user is reading the article",
-  "version": "1.1.7",
+  "description": "Detects if the user is reading the article",
+  "version": "1.2.0",
   "main": "build/js/read.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -30,7 +30,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "build" : "grunt",
+    "build": "grunt",
     "prepare": "npm run build"
   }
 }
