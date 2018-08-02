@@ -211,7 +211,7 @@
                 const currentTime = new Date().getTime();
                 const currentTotal = this.status.activity.totalTime;
                 this.status.activity.totalTime = parseInt(currentTotal) + parseInt(currentTime) - parseInt(this.status.activity.initialTime);
-                this.status.activity.initialTime = 0;
+                this.setInitialTime();
             }
             if (this.status.activity.totalTime > 0) {
                 return this.status.activity.totalTime;
