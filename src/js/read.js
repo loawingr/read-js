@@ -395,7 +395,7 @@
                 return false;
             }
 
-            this.callback();
+            this.callback(this.domNode,this.calculateTotalTime());
             this.status.activity.numberOfCalls++;
             this.scannableTargets.splice(this.visibleElementsMap[0], 1);
             if(this.scannableTargets.length <= 0 || this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls) {
@@ -773,6 +773,7 @@
             this.reactivate();
         },
         this.handleLoad = () => {
+            this.setInitialTime();
             this.getScannableTargets(this.readJSConfig.el);
             this.domNode = document.querySelector(this.readJSConfig.el);
             this.setTimeInViewThreshold();
