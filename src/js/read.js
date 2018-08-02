@@ -22,6 +22,7 @@
             this.status = {
                 strict: false, // be very strict on read/scan verb
                 spa: false, //tell readJS if it is in a single page app
+                ignoreScrollDepth: false,
                 debug: {
                     console: false,
                     overlay: false,
