@@ -243,7 +243,7 @@
 
                 if(scannableTargets.length == 1){
                     const domNodePercentage = this.inView(scannableTargets[0]);
-                    if(domNodePercentage.dom_node_viewport_percent > 25 || domNodePercentage.dom_node_inview_percent > 80){
+                    if(domNodePercentage.dom_node_viewport_percent > this.status.thresholds.viewport || domNodePercentage.dom_node_inview_percent > 80){
                         visibleElements.push(scannableTargets[0]);
                         this.visibleElementsMap.push(0);
                     }
