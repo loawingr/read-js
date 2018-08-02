@@ -1,8 +1,16 @@
 window.readJSConfig = {
-    el: "#paragraph",
-    cb: function() {
-        console.log("Article has been read.");
-    }
+	read: {
+		el: "#paragraph",
+    	cb: function() {
+        	console.log("Article has been read.");
+    	}
+	},
+	scanned: {
+		el: "#paragraph",
+    	cb: function() {
+        	console.log("Article has been read.");
+    	}
+	}
 };
 
 //insert all html templates into the DOM

@@ -6,8 +6,7 @@ module.exports = function(config) {
     
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: "",
-    
-    
+
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ["jasmine"],
@@ -15,10 +14,11 @@ module.exports = function(config) {
     
         // list of files / patterns to load in the browser
         files: [
-          cwd+"/build/js/read.js", //read JS library
           cwd+"/node_modules/jquery/dist/jquery.min.js", //jQuery is used to insert html snippets into DOM for automated tests
           cwd+"/test/html/*.html", //pattern for including html snippet files
-          cwd+"/test/js/*.js" //test cases
+          cwd+"/test/js/read-scanned.setup.js", //config file
+          cwd+"/build/js/read.js", //read JS library
+          cwd+"/test/js/read-scanned.test.js" //test cases
         ],
     
     
@@ -31,31 +31,21 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-          "../html/*.html": ["html2js"],
-          "../../src/js/**/*.js": ["coverage"]
+            "../html/*.html": ["html2js"]
         },
     
     
         // test results reporter to use
         // possible values: "dots", "progress"
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ["progress", "coverage", "junit"],
+        reporters: ["progress", "junit"],
     
         // the default configuration
         junitReporter: {
             outputDir: cwd+"/test/karma/",
-            outputFile: "coverage.xml",
+            outputFile: "readjs.xml",
             suite: ""
         },
-
-
-        coverageReporter: {
-            dir : "../../build/coverage",
-            reporters: [
-                { type: "html", subdir: "html" }
-            ]
-        },
-
 
         // web server port
         port: 9876,
@@ -82,6 +72,15 @@ module.exports = function(config) {
     
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true
+        singleRun: true,
+
+        // Plugins
+        plugins: [
+            "karma-chrome-launcher",
+            "karma-jasmine",
+            "karma-junit-reporter",
+            "karma-phantomjs-launcher",
+            "karma-html2js-preprocessor"
+        ]
     })
 };
