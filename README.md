@@ -195,14 +195,21 @@ ScannedJS is a special instance of readJS, it allows us to have readJS configure
 To set up an instance of scannedJS you need to specify its own element and callback.
 
 ```js
-if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
-if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
-if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(elementgi,time){ //callback
-    "use strict";
-    alert("The article has been scanned");
-}; }
-if(!readJSConfig.scanned.ignoreScrollDepth){readJSConfig.scanned.ignoreScrollDepth = true;}
-
+if (!readJSConfig.scanned) {
+    readJSConfig.scanned = {};  // set scanned object for config
+}
+if (!readJSConfig.scanned.el) {
+    readJSConfig.scanned.el = ".story-body";  // DOM node
+}
+if (!readJSConfig.scanned.cb) {
+    readJSConfig.scanned.cb = function(element, time) { // callback
+        "use strict";
+        alert("The article has been scanned");
+    };
+}
+if (!readJSConfig.scanned.ignoreScrollDepth) {
+    readJSConfig.scanned.ignoreScrollDepth = true;
+}
 ```
 General public methods are the same as readJS but can be accessed via scannedJS
 
@@ -219,19 +226,33 @@ We can have both readJS and scannedJS running on the same page.
 The readJSConfig object needs to specify the difference between scannedJS and readJS configurations.
 
 ```js
-if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
-if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
-if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(element, time){ //callback
-    "use strict";
-    alert("The article has been scanned");
-}; }
-if(!readJSConfig.scanned.ignoreScrollDepth){readJSConfig.scanned.ignoreScrollDepth = true;}
-if (!readJSConfig.read){ readJSConfig.read = {}; } //set read object for config
-if (!readJSConfig.read.el){ readJSConfig.read.el = ".story-body"; } //DOM node
-if (!readJSConfig.read.cb){ readJSConfig.read.cb = function(){ //callback
-    "use strict";
-    alert("The article has been read");
-}; }
+if (!readJSConfig.scanned) {
+    readJSConfig.scanned = {}; // set scanned object for config
+}
+if (!readJSConfig.scanned.el) {
+    readJSConfig.scanned.el = ".story-body"; // DOM node
+}
+if (!readJSConfig.scanned.cb) {
+    readJSConfig.scanned.cb = function(element, time) { // callback
+        "use strict";
+        alert("The article has been scanned");
+    };
+}
+if (!readJSConfig.scanned.ignoreScrollDepth) {
+    readJSConfig.scanned.ignoreScrollDepth = true;
+}
+if (!readJSConfig.read) {
+    readJSConfig.read = {}; // set read object for config
+}
+if (!readJSConfig.read.el) {
+    readJSConfig.read.el = ".story-body"; // DOM node
+}
+if (!readJSConfig.read.cb) {
+    readJSConfig.read.cb = function() { // callback
+        "use strict";
+        alert("The article has been read");
+    };
+}
 ```
 
 
