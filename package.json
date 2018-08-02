@@ -30,7 +30,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "build" : "grunt",
+    "build": "grunt",
     "prepare": "npm run build"
   }
 }
