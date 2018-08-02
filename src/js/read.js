@@ -241,10 +241,18 @@
                 const visibleElements = [];
                 this.visibleElementsMap = [];
 
-                for (let i = 0; i < scannableTargets.length; i++) {
-                    if (this.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
-                        visibleElements.push(scannableTargets[i]);
-                        this.visibleElementsMap.push(i);
+                if(scannableTargets.length == 1){
+                    const domNodePercentage = this.inView(scannableTargets[0]);
+                    if(domNodePercentage.dom_node_viewport_percent > 25 || domNodePercentage.dom_node_inview_percent > 80){
+                        visibleElements.push(scannableTargets[0]);
+                        this.visibleElementsMap.push(0);
+                    }
+                }else{
+                    for (let i = 0; i < scannableTargets.length; i++) {
+                        if (this.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
+                            visibleElements.push(scannableTargets[i]);
+                            this.visibleElementsMap.push(i);
+                        }
                     }
                 }
 
@@ -311,9 +319,9 @@
         /*
             console() will debug the message if the debug mode permits
         */
-        this.console = () => {
+        this.console = (...args) => {
             if (!!this.status.debug.console) {
-                console.log(this.readingWorker, arguments);
+                console.log(this.readingWorker, args);
                 return true;
             }
             return false;
@@ -382,7 +390,7 @@
             }
             //not enough time in view
             if (this.status.activity.timeInView < this.status.thresholds.timeInView) {
-                this.console("Not enouigh time in view for callback");
+                this.console("Not enough time in view for callback");
                 this.report();
                 return false;
             }
