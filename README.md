@@ -197,7 +197,7 @@ To set up an instance of scannedJS you need to specify its own element and callb
 ```js
 if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
 if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
-if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(elements,time){ //callback
+if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(elementgi,time){ //callback
     "use strict";
     alert("The article has been scanned");
 }; }
