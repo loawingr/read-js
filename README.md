@@ -187,7 +187,7 @@ To support SPA's there are 3 methods that are exposed.
 
 ## Scanning Elements
 
-A user scanning elements is a lot different from reading an article, how can we tell if a user read the headline of the story? If the user is scrolling through story cards on an index page, how do we know which cards they are looking at? With the right configuration, we can track this too.
+A user scanning elements is a lot different from reading an article. How can we tell if a user read the headline of the story? If the user is scrolling through story cards on an index page, how do we know which cards they are looking at? With the right configuration, we can track this too.
 
 ### Starting ScannedJS
 
@@ -197,10 +197,12 @@ To set up an instance of scannedJS you need to specify its own element and callb
 ```js
 if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
 if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
-if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(){ //callback
+if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(elements,time){ //callback
     "use strict";
     alert("The article has been scanned");
 }; }
+if(!readJSConfig.scanned.ignoreScrollDepth){readJSConfig.scanned.ignoreScrollDepth = true;}
+
 ```
 General public methods are the same as readJS but can be accessed via scannedJS
 
@@ -208,6 +210,9 @@ Example:
 
 `window.scannedJS.turnOn()`
  
+ *Note:*
+ > The scanned callback takes two arguments, the dom node that is targeted and the time from page load to the callback firing.
+ > This makes it easy to extract information on the element that was scanned
 ### Running ScannedJS and ReadJS
 
 We can have both readJS and scannedJS running on the same page.
@@ -216,10 +221,11 @@ The readJSConfig object needs to specify the difference between scannedJS and re
 ```js
 if(!readJSConfig.scanned){ readJSConfig.scanned = {}; } //set scanned object for config
 if (!readJSConfig.scanned.el){ readJSConfig.scanned.el = ".story-body"; } //DOM node
-if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(){ //callback
+if (!readJSConfig.scanned.cb){ readJSConfig.scanned.cb = function(element, time){ //callback
     "use strict";
     alert("The article has been scanned");
 }; }
+if(!readJSConfig.scanned.ignoreScrollDepth){readJSConfig.scanned.ignoreScrollDepth = true;}
 if (!readJSConfig.read){ readJSConfig.read = {}; } //set read object for config
 if (!readJSConfig.read.el){ readJSConfig.read.el = ".story-body"; } //DOM node
 if (!readJSConfig.read.cb){ readJSConfig.read.cb = function(){ //callback
