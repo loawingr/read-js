@@ -397,7 +397,7 @@
                 return false;
             }
 
-            this.callback();
+            this.callback(this.status.activity.timeInView, this.status.activity.timeOnPage);
             this.status.activity.numberOfCalls++;
             this.scannableTargets.splice(this.visibleElementsMap[0], 1);
             if(this.scannableTargets.length <= 0 || this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls) {

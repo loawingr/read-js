@@ -125,8 +125,8 @@
 
                     <div id="leadmedia" class="story-leadmedia col8">
                         <div class="figure">
-                            <img title="" width="620" height="349" alt="For some Canadians, the streaming party may be over. Netflix says it will crack down on users who disguise their location." width="100%" src="http://i.cbc.ca/1.3125259.1438875643!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_620/netflix-computer-streaming.jpg">
-                            <p class="figure-caption">For some Canadians, the streaming party may be over. Netflix says it will crack down on users who disguise their location. (Scott Eells/Bloomberg</p>
+                            <img title="" width="620" height="349" alt="" width="100%" src="https://i.cbc.ca/1.4097718.1493836827!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_780/markets-canada-dollar-bonds.jpg">
+                            <p class="figure-caption">The Canadian dollar has slumped to its lowest level against the U.S. dollar since last summer. (Mark Blinch/Reuters)</p>
                         </div>
                     </div>
                     <div class="wrap8 story-bodywrapper sclt-storybody">
@@ -972,12 +972,26 @@
 
     <!-- global: /g/i/footer.html -->
 
-
-
-
-
-    <script type="text/javascript" src="../js/read.js">
+    <script type="text/javascript">
+        var readJSConfig = window.readJSConfig || {};
+        if (!readJSConfig.el) { readJSConfig.el = ".story-body"; }
+        if (!readJSConfig.cb) {
+            readJSConfig.cb = function() {
+                "use strict";
+                alert("The article has been read");
+            };
+        }
+        if (!readJSConfig.debug) {
+            readJSConfig.debug = {};
+            if (typeof(readJSConfig.debug.overlay) === "undefined") {
+                readJSConfig.debug.overlay = true;
+            }
+            if (typeof(readJSConfig.debug.console) === "undefined") {
+                readJSConfig.debug.console = true;
+            }
+        }
     </script>
+    <script type="text/javascript" src="../js/read.js"></script>
 </body>
 
 </html>
