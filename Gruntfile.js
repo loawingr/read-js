@@ -28,9 +28,9 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: deployment.src_folder,
-                    src: ["**/**.html"],
+                    src: ["**/**.html", "./test/cbc-styles.css"],
                     dest: deployment.build_folder,
-                }]
+                },]
             }
         },
         uglify: {
