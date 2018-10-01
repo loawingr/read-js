@@ -543,6 +543,7 @@
             this.removeDomNode("viewport_inview");
             this.removeDomNode("overlap_inview");
             this.removeDomNode("domnode_inview");
+            this.removeDomNode("scroll_depth_marker");
         },
         /*
             Cross browser way to detect the visibility properties
@@ -583,7 +584,7 @@
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
         //the calculations assume
         this.inView = (domNode) => {
-            var dui, vui, oui;
+            var dui, vui, oui, sdui;
 
             this.domNode = domNode;
 
@@ -620,7 +621,7 @@
                     vui = document.createElement("DIV");
                     vui.id = "viewport_inview";
                     vui.style.position = "absolute";
-                    vui.style.background = "green";
+                    vui.style.background = "red";
                     vui.style.opacity = "0.5";
                     vui.style.zIndex = 9999;
                     document.body.appendChild(vui);
@@ -632,6 +633,7 @@
                 vui.style.width = vp.width + "px";
                 vui.style.height = vp.height + "px";
                 //readJS.console(vui);
+
             }
 
             //top left and bottom right coordinate points of the dom node
@@ -682,6 +684,23 @@
                 dui.style.width = bcr.width + "px";
                 dui.style.height = bcr.height + "px";
                 //this.console(dui);
+
+                //highlight the scrollDepth threshold
+                if(!this.status.debug.overlays.sdui){
+                    sdui =document.createElement("DIV");
+                    sdui.id = "scroll_depth_marker";
+                    sdui.style.position = "absolute";
+                    sdui.style.background = "black";
+                    sdui.style.width = "100%";
+                    sdui.style.height = "4px";
+                    sdui.style.opacity = "0.5";
+                    sdui.style.zIndex = 9999;
+                    document.body.appendChild(sdui);
+                    this.status.debug.overlays.sdui = sdui;
+                }
+                sdui = this.status.debug.overlays.sdui;
+                sdui.style.left = "0px";
+                sdui.style.top = Math.floor(this.status.thresholds.scrollDepth) + "px";
             }
 
             //element is not in viewport
@@ -739,7 +758,7 @@
                     oui.id = "overlap_inview";
                     document.body.appendChild(oui);
                     oui.style.position = "absolute";
-                    oui.style.background = "red";
+                    oui.style.background = "#4B0082";
                     oui.style.opacity = "0.5";
                     oui.style.zIndex = 9999;
                     this.status.debug.overlays.oui = oui;
