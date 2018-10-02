@@ -400,8 +400,14 @@
                 this.report();
                 return false;
             }
+            //fire off the callback method
+            this.callback({
+                timeInView: this.status.activity.timeInView,
+                timeOnPage: this.status.activity.timeOnPage,
+                domNode: this.domNode
+            });
 
-            this.callback(this.status.activity.timeInView, this.status.activity.timeOnPage);
+            //determine if there are any more items to monitor read/scanned status
             this.status.activity.numberOfCalls++;
             this.scannableTargets.splice(this.visibleElementsMap[0], 1);
             if(this.scannableTargets.length <= 0 || this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls) {

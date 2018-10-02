@@ -52,9 +52,9 @@
                 };
                 if (!readJSConfig.el) { readJSConfig.el = ".story"; }
                 if (!readJSConfig.cb) {
-                    readJSConfig.cb = function(activeTime, totalTime) {
+                    readJSConfig.cb = function(payload) {
                         "use strict";
-                        alert("The article has been read after "+activeTime+" seconds of being in the viewport and being on the page for a total of "+totalTime+" seconds.");
+                        alert("The article has been read after "+payload.timeInView+" seconds of being in the viewport and being on the page for a total of "+payload.timeOnPage+" seconds.");
                     };
                 }
                 if (!readJSConfig.debug) {

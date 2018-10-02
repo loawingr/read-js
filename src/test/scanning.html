@@ -13,7 +13,6 @@
         .wrapper {
             margin: 0 auto;
             display: block;
-            max-width: 16rem;
         }
 
         .pretend {
@@ -23,13 +22,11 @@
         }
 
         .card {
-            float: left;
             display: block;
-            max-width: 16rem;
             margin: 0 1rem 1rem;
             padding: 0.5rem;
             border: 2px solid black;
-            height: 20rem;
+            min-height: 20rem;
             overflow: hidden;
         }
 
@@ -47,10 +44,11 @@
         }
 
         header,
-        footer {
+        footer,
+        .wrapper {
             display: block;
             min-width: 20rem;
-            max-width: 60rem;
+            max-width: 70rem;
             padding: 1rem;
         }
 
@@ -61,7 +59,28 @@
         footer {
             margin-top: 1rem;
         }
-
+        @media only screen and (min-width: 640px) {
+            .card-list{
+                display:flex;
+                flex-wrap:wrap;
+            }
+            .card{
+                flex:1 0 45%;
+                flex-flow: wrap;
+                box-sizing: border-box;
+            }
+        }
+        @media only screen and (min-width: 880px) {
+            .card-list{
+                display:flex;
+                flex-wrap:wrap;
+            }
+            .card{
+                flex:1 0 30%;
+                flex-flow: wrap;
+                box-sizing: border-box;
+            }
+        }
         .clearfix:after {
             content: " ";
             display: block;
@@ -157,23 +176,28 @@
         </footer>
     </div>
     <script type="text/javascript">
-        var readJSConfig = {
-            ignoreScrollDepth: true,
-            debug: {
-                console: true,
-                overlay: true
-            },
-            thresholds: {
-                timeInView: 1,
-                readingPoint: 150,
-            },
-            strict: false,
-            el: ".card",
-            cb: function() {
-                console.log("scannedJS - item has been scanned!")
-            }
-
-        };
+        if (window.outerWidth <= 640){
+                var readJSConfig = {
+                ignoreScrollDepth: true,
+                debug: {
+                    console: true,
+                    overlay: true
+                },
+                thresholds: {
+                    timeInView: 1,
+                    readingPoint: 150,
+                },
+                strict: false,
+                el: ".card",
+                cb: function(payload) {
+                    var domNode = payload.domNode;
+                    var headline = domNode.querySelector("h3").innerText;
+                    console.log("scannedJS - Headline ["+headline+"] has been scanned after being in view for "+payload.timeInView+" seconds & user has been on the page for "+payload.timeOnPage+" seconds!")
+                }
+            };
+        }else{
+            alert("Scanned JS only works on skinny viewports like a smart phone.");
+        }
     </script>
     <script type="text/javascript" src="../js/read.js">
     </script>
