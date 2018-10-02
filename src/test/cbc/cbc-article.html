@@ -41,6 +41,15 @@
 
             <script type="text/javascript">
                 var readJSConfig = window.readJSConfig || {};
+                readJSConfig.thresholds = {
+                    domNode: 100,
+                    domPolling: 100,
+                    maxTimeInView: 20,
+                    minTimeInView: 3,
+                    readingPoint: 400,
+                    minVertical: 50,
+                    viewport:15
+                };
                 if (!readJSConfig.el) { readJSConfig.el = ".story"; }
                 if (!readJSConfig.cb) {
                     readJSConfig.cb = function(activeTime, totalTime) {
@@ -58,5 +67,5 @@
                     }
                 }
             </script>
-            <script type="text/javascript" src="../js/read.js"></script>
+            <script type="text/javascript" src="../../js/read.js"></script>
 </body></html>
