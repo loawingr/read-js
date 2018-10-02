@@ -17,9 +17,9 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: [
-                    { expand: true, flatten: false, src: ["./src/js/config.js"], dest: "./build/" },
-                    { expand: true, flatten: true, src: ["./src/js/read.js"], dest: "./build/" },
-                    { expand: true, flatten: true, src: ["./src/js/spa-demo.js"], dest: "./build/" }
+                    { expand: true, flatten: true, src: ["./src/js/config.js"], dest: "./build/js/" },
+                    { expand: true, flatten: true, src: ["./src/js/read.js"], dest: "./build/js/" },
+                    { expand: true, flatten: true, src: ["./src/js/spa-demo.js"], dest: "./build/js/" }
                 ]
             }
         },
@@ -39,8 +39,8 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    "build/js/read.js": ["build/read.js", "build/config.js"],
-                    "build/js/spa-demo.js": ["./src/spa-demo.js"]
+                    "build/read.js": ["build/js/config.js", "build/js/read.js"],
+                    "build/js/spa-demo.js": ["./build/js/spa-demo.js"]
                 }
             }
         },
@@ -64,6 +64,9 @@ module.exports = function(grunt) {
             coverage: {
                 configFile: "test/conf/coverage.conf.js"
             }
+        },
+        clean:{
+            build:["./build"]
         }
     };
 
@@ -74,9 +77,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-babel");
+    grunt.loadNpmTasks("grunt-contrib-clean");
 
     grunt.registerTask("default", ["build", "test"]);
-    grunt.registerTask("build", ["eslint", "babel", "uglify", "copy:build"]);
+    grunt.registerTask("build", ["clean","eslint", "babel", "uglify", "copy:build"]);
     grunt.registerTask("test", ["karma"]);
 
 };
