@@ -20,6 +20,10 @@
 
         this.resetConfigStatus = () => {
             this.status = {
+                coordinates:{  //storage for domnode and viewport coordinates
+                    domnode:{},
+                    viewport:{}
+                },
                 strict: false, // be very strict on read/scan verb
                 spa: false, //tell readJS if it is in a single page app
                 ignoreScrollDepth: false,
@@ -50,7 +54,7 @@
                 thresholds: {
                     viewport: 25, //100 points awarded if the DOM node takes up this percentage of the viewport or higher
                     domNode: 30, //100 reading points awarded if the user has 30% of DOM node in the viewport
-                    minVertical: 50, //100 reading points awarded if the user scrolls past the percentage point of the DOM node
+                    minVertical: 50, //this is the percentage of the article the user must have scrolled passed to be deemed read
                     readingPoint: 400, // if the number of points exceeds this limit than the person has read the article
                     domPolling: 100, // the number of points to accumulate before doing any calculations on the DOM
                     minTimeInView: 3, //min number of seconds for the text to be in view
@@ -482,6 +486,8 @@
                 this.scrollDataOverlay.style.bottom = "2em";
                 this.scrollDataOverlay.style.right = "2em";
                 this.scrollDataOverlay.style.zIndex = 10000;
+                this.scrollDataOverlay.style.background = "#fff";
+                this.scrollDataOverlay.style.border = "1px solid #000";
                 this.scrollDataOverlay.id = "scrollinfo";
                 document.body.appendChild(this.scrollDataOverlay);
                 //find the scroll data on initial load
@@ -503,7 +509,10 @@
             if (!this.status.debug.overlay) {
                 return false;
             }
-            document.getElementById("scrollinfo").innerHTML = this.status.activity.scrollDepth;
+            document.getElementById("scrollinfo").innerHTML = "<ul><li>Scroll Depth Peak:"+this.status.activity.scrollDepth+"</li>"+
+                "<li>Element Top: "+parseInt(this.status.coordinates.domnode.tl[1],10)+"</li>"+
+                "<li>Element Bottom: "+parseInt(this.status.coordinates.domnode.br[1],10)+"</li>"+
+                "<li>Scroll Depth Threshold: "+parseInt(this.status.thresholds.scrollDepth,10)+"</li></ul>";
             return true;
         },
         /*
@@ -614,6 +623,8 @@
             //viewport area
             vp.area = vp.width * vp.height;
 
+            this.status.coordinates.viewport = vp;
+
             //highlight viewport
             if (!!this.status.debug.overlay) {
 
@@ -658,6 +669,8 @@
 
             //y coordinate of the bottom right corner of the dom node
             dn.br[1] = dn.tl[1] + bcr.height;
+
+            this.status.coordinates.domnode = dn;
 
             //get the scroll info with the time interval/cadence
             this.getScrollInfo();
