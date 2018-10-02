@@ -28,7 +28,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: deployment.src_folder,
-                    src: ["**/**.html", "./test/cbc-styles.css"],
+                    src: ["**/**.html", "./test/cbc/cbc-styles.css"],
                     dest: deployment.build_folder,
                 },]
             }
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    "build/read.js": ["build/js/config.js", "build/js/read.js"],
+                    "build/js/read.js": ["build/js/config.js", "build/js/read.js"],
                     "build/js/spa-demo.js": ["./build/js/spa-demo.js"]
                 }
             }
@@ -80,7 +80,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
 
     grunt.registerTask("default", ["build", "test"]);
-    grunt.registerTask("build", ["clean","eslint", "babel", "uglify", "copy:build"]);
+    grunt.registerTask("build", ["clean","eslint", "babel", "copy:build"]);
+    grunt.registerTask("distribute", ["uglify"]);
     grunt.registerTask("test", ["karma"]);
 
 };

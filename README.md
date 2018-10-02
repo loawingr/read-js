@@ -39,6 +39,7 @@ Run the following commands at the root directory of read-js
 ```sh
 $ npm install
 $ npm run build
+$ npm run test
 ```
 
 Open the test file in a web browser of your choosing
@@ -101,7 +102,7 @@ Example: If readJSConfig.thresholds.timeInView is not defined then you can set a
 
 Example: The user must scroll passed 50% of the DOM node vertical height to satisfy the scroll depth threshold.
 ```js
-    readJSConfig.thresholds.scrollDepth = 50%; //default is 0%
+    readJSConfig.thresholds.minVertical = 50%; //default is 0%
 ```
 
 Example: In strict mode the thresholds.domNode & thresholds.viewport need to be satisfied to increment the timeInView
@@ -297,7 +298,7 @@ window.scannedJS.turnOn();
 * On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
 
 ## Version
-1.2.0
+1.2.1
 
 ## License
 
