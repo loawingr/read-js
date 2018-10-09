@@ -19,7 +19,8 @@ module.exports = function(grunt) {
                 files: [
                     { expand: true, flatten: true, src: ["./src/js/config.js"], dest: "./build/js/" },
                     { expand: true, flatten: true, src: ["./src/js/read.js"], dest: "./build/js/" },
-                    { expand: true, flatten: true, src: ["./src/js/spa-demo.js"], dest: "./build/js/" }
+                    { expand: true, flatten: true, src: ["./src/js/spa-demo.js"], dest: "./build/js/" },
+                    { expand: true, flatten: true, src: ["./src/test/cbc/cbc-stats.js"], dest: "./build/test/cbc/" }
                 ]
             }
         },
@@ -28,7 +29,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: deployment.src_folder,
-                    src: ["**/**.html", "./test/cbc/cbc-styles.css"],
+                    src: ["**/**.html", "./test/cbc/*.css", "./test/cbc/amplitude-loader.js"],
                     dest: deployment.build_folder,
                 },]
             }
@@ -49,7 +50,7 @@ module.exports = function(grunt) {
                 configFile: "eslint.json",
 
             },
-            target: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js", "./src/js/spa-demo.js"]
+            target: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js", "./src/js/spa-demo.js", "./src/test/cbc/cbc-stats.js"]
         },
         karma: {
             spa: {
