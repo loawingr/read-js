@@ -21,8 +21,8 @@
         this.resetConfigStatus = () => {
             this.status = {
                 coordinates:{  //storage for domnode and viewport coordinates
-                    domnode:{},
-                    viewport:{}
+                    domnode:{ tl:[0,0], tr:[0,0], br:[0,0], bl:[0,0]},
+                    viewport:{ tl:[0,0], tr:[0,0], br:[0,0], bl:[0,0]}
                 },
                 strict: false, // be very strict on read/scan verb
                 spa: false, //tell readJS if it is in a single page app
