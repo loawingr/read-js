@@ -298,7 +298,7 @@ window.scannedJS.turnOn();
 * On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
 
 ## Version
-1.2.1
+1.2.2
 
 ## License
 
