@@ -814,11 +814,16 @@
             this.reactivate();
         },
         this.handleLoad = () => {
-            this.getScannableTargets(this.readJSConfig.el);
-            this.domNode = document.querySelector(this.readJSConfig.el);
-            this.setTimeInViewThreshold();
-            this.domNode.addEventListener("click", this.handleClick);
-            this.visibleScannableTargets(this.scannableTargets);
+            try {
+                this.getScannableTargets(this.readJSConfig.el);
+                this.domNode = document.querySelector(this.readJSConfig.el);
+                this.setTimeInViewThreshold();
+                this.domNode.addEventListener("click", this.handleClick);
+                this.visibleScannableTargets(this.scannableTargets);
+            } catch (err) {
+                this.console(err);
+                return false;
+            }
         },
         this.setTimeInViewThreshold = () => {
 
