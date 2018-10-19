@@ -41,6 +41,7 @@
             position:"bottom-right-corner"
         };
         window.amplitude.getInstance().logEvent("SELECTED", selectedPayload);
+        window.history.back();
     });
 
     //define callback method to fire READ event to Amplitude
@@ -105,8 +106,8 @@
             el: ".card",
             cb: handleScanned,
             debug:{
-                overlay:true,
-                console:true
+                overlay:false,
+                console:false
             }
         };
     }
