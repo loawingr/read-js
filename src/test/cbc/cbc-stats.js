@@ -10,7 +10,7 @@
     const verbPayloadBase = {
         content:{
             title: document.title,
-            url: document.location.href,
+            url: uri,
             type: window.DataLayer.content.type,
             id: window.DataLayer.content.id
         }
