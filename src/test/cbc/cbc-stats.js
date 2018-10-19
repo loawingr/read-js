@@ -2,6 +2,10 @@
     "use strict";
     //check that the Amplitude SDK is loaded from the <head>
 
+    const uri = document.location.href.split("?")[0];
+    let qs = window.location.search;
+    qs = qs.replace("?", "");
+
     //define the base event property payload to be sent to Amplitude
     const verbPayloadBase = {
         content:{
@@ -14,6 +18,15 @@
 
     if (document.referrer !== ""){
         verbPayloadBase.referrer = { url:document.referrer };
+    }
+
+    if (qs !== ""){
+        let uid = qs.match(/^uid=([a-z0-9\-_A-Z]+)$/);
+        if (uid !== null){
+            uid = uid[1]; //reassign to the match
+            //assign the user id
+            window.amplitude.getInstance().setUserId(uid);
+        }
     }
 
     //Send LOADED verb to Amplitude
