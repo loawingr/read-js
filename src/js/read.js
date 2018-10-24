@@ -16,6 +16,7 @@
         this.intervals = [];
         this.configKey = config;
         this.scannableTargets = [];
+        this.scannableTargetsCount = 0;
         this.visibleElementsMap = [];
 
         this.resetConfigStatus = () => {
@@ -61,7 +62,7 @@
                     maxTimeInView: 20, //max number of seconds for the text to be in view
                     scrollDepth: 0, // dynamically calculated because dependant on dom node height
                     percentagePoint: 30, // the percentage of words in the body that is used to dynamically calculate the timeInView threshold using averageReadSpeed
-                    maxCalls: 3
+                    maxCalls: 3 // defines how many headlines can be SCANNED before readJS stops
                 }
             };
             return true;
@@ -234,7 +235,9 @@
                 return false;
             } else {
                 this.scannableTargets = [];
+                //turn the node list into an array
                 this.scannableTargets = Array.prototype.slice.call(scannableTargets);
+                this.scannableTargetsCount = this.scannableTargets.length;
                 return this.scannableTargets;
             }
         },
@@ -410,9 +413,20 @@
             //determine if there are any more items to monitor read/scanned status
             this.status.activity.numberOfCalls++;
             this.scannableTargets.splice(this.visibleElementsMap[0], 1);
-            if(this.scannableTargets.length <= 0 || this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls) {
+            let stop = false;
+            if(this.scannableTargetsCount === 1 && this.scannableTargets.length <= 0) {
+                this.console("readJS: stopping because the user has read the article", this.status.activity.readingPoints);
+                stop = true;
+            }else if(this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls){
+                this.console("scannedJS: stopping because the user has scanned the maximum number of headlines", this.status.thresholds.maxCalls);
+                stop = true;
+            }else if (this.scannableTargets.length <= 0){
+                this.console("scannedJS: stopping because the user has scanned all available headlines", this.status.activity.numberOfCalls);
+                stop = true;
+            }
+
+            if (!!stop){
                 this.removeListeners();
-                this.console("readJS: the user has read the article", this.status.activity.readingPoints);
                 this.stopPolling();
             }
             return true;

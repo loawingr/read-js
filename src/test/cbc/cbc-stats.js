@@ -53,6 +53,7 @@
                 inview:payload.timeInView
             }
         };
+        console.log("Article has been read", readPayload);
         window.amplitude.getInstance().logEvent("READ", readPayload);
     };
 
@@ -92,6 +93,7 @@
                 inview:payload.timeInView
             }
         };
+        console.log("Headline has been scanned", scannedPayload);
         window.amplitude.getInstance().logEvent("SCANNED", scannedPayload);
     };
 
@@ -102,6 +104,7 @@
                 thresholds : {
                     timeInView: 1.75,
                     readingPoint: 150,
+                    maxCalls: 6
                 },
                 ignoreScrollDepth:true,
                 strict: false,
