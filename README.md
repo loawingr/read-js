@@ -234,8 +234,11 @@ if (!readJSConfig.scanned.el) {
     readJSConfig.scanned.el = ".story-body"; // DOM node
 }
 if (!readJSConfig.scanned.cb) {
-    readJSConfig.scanned.cb = function(element, time) { // callback
+    readJSConfig.scanned.cb = function(payload) { // callback
         "use strict";
+        var domNode = payload.domNode,
+        timeInView = payload.timeInView,
+        timeOnPage = payload.timeOnPage;
         alert("The article has been scanned");
     };
 }
