@@ -92,22 +92,25 @@
                 inview:payload.timeInView
             }
         };
+        window.amplitude.getInstance().logEvent("SCANNED", scannedPayload);
     };
 
     //check that if in index and configure scannedJS
     if (window.DataLayer.content.type ==="index"){
         window.readJSConfig = {
-            thresholds : {
-                timeInView: 1.75,
-                readingPoint: 150,
-            },
-            ignoreScrollDepth:true,
-            strict: false,
-            el: ".card",
-            cb: handleScanned,
-            debug:{
-                overlay:false,
-                console:false
+            scanned: {
+                thresholds : {
+                    timeInView: 1.75,
+                    readingPoint: 150,
+                },
+                ignoreScrollDepth:true,
+                strict: false,
+                el: ".card.cardFullBleed, .card.cardDefault",
+                cb: handleScanned,
+                debug:{
+                    overlay:true,
+                    console:true
+                }
             }
         };
     }
