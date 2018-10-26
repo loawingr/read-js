@@ -31,6 +31,7 @@
                 debug: {
                     console: false,
                     overlay: false,
+                    level:3,
                     overlays: {}
                 },
                 timeInterval: 1.5, //number of seconds between checking whether to poll the DOM
@@ -83,7 +84,7 @@
             }
 
             if (typeof(window.readJSConfig) === "undefined") {
-                this.console("Error: Cannot find Read JS config object readJSConfig");
+                this.console("Error: Cannot find Read JS config object readJSConfig", 1);
                 return false;
             }
 
@@ -155,11 +156,11 @@
             }
 
             if (typeof(this.readJSConfig.el) !== "string") {
-                this.console("ERROR: readJS.initialize() expected el to be a string");
+                this.console("ERROR: readJS.initialize() expected el to be a string", 1);
                 return false;
             }
             if (typeof(this.readJSConfig.cb) !== "function") {
-                this.console("ERROR: readJS.setConfig() expected a callback function");
+                this.console("ERROR: readJS.setConfig() expected a callback function", 1);
                 return false;
             }
 
@@ -172,7 +173,7 @@
         this.initialize = (callback) => {
 
             if (typeof(callback) !== "function") {
-                this.console("ERROR: readJS.initialize() expected a callback function");
+                this.console("ERROR: readJS.initialize() expected a callback function", 1);
                 return false;
             }
             this.callback = callback;
@@ -184,7 +185,7 @@
             }
 
             if (typeof(this.readJSConfig.el) !== "string") {
-                this.console("ERROR: readJS.initialize() expected el to be a string or object");
+                this.console("ERROR: readJS.initialize() expected el to be a string or object", 1);
                 return false;
             }
 
@@ -196,9 +197,9 @@
             //check if the reader is actually reading at a decaying rate
             this.readingWorker = window.setInterval(this.checkActivity, this.status.timeInterval * 1000);
             this.intervals.push(this.readingWorker);
-            this.console("readJS: starting interval ID", this.readingWorker);
+            this.console("readJS: starting interval ID", this.readingWorker, 1);
 
-            this.inDebugMode();
+            this.inDebugMode(document.location.href);
 
             return true;
         },
@@ -221,17 +222,17 @@
             if (this.status.activity.totalTime > 0) {
                 return this.status.activity.totalTime;
             }
-            this.console("ERROR: readJS.calculateTotalTIme() - initialTime not set");
+            this.console("ERROR: readJS.calculateTotalTIme() - initialTime not set", 1);
             return false;
         },
 
         /*
             getScannableTargets: returns an object containing all the domnodes of the parameter class
         */
-        this.getScannableTargets = (className) => {
-            const scannableTargets = document.querySelectorAll(className);
+        this.getScannableTargets = (cssSelector) => {
+            const scannableTargets = document.querySelectorAll(cssSelector);
             if (scannableTargets.length === 0) {
-                this.console("ERROR: readJS.getScannableTargets(className) - No elements by that className!");
+                this.console("ERROR: readJS.getScannableTargets(cssSelector) - No elements by that CSS selector!", 1);
                 return false;
             } else {
                 this.scannableTargets = [];
@@ -251,14 +252,14 @@
                 this.visibleElementsMap = [];
 
                 if(scannableTargets.length == 1){
-                    const domNodePercentage = this.inView(scannableTargets[0]);
+                    const domNodePercentage = this.inView(scannableTargets[0], false);
                     if(domNodePercentage.dom_node_viewport_percent > this.status.thresholds.viewport || domNodePercentage.dom_node_inview_percent > 80){
                         visibleElements.push(scannableTargets[0]);
                         this.visibleElementsMap.push(0);
                     }
                 }else{
                     for (let i = 0; i < scannableTargets.length; i++) {
-                        if (this.inView(scannableTargets[i]).dom_node_inview_percent > 80) {
+                        if (this.inView(scannableTargets[i], false).dom_node_inview_percent > 80) {
                             visibleElements.push(scannableTargets[i]);
                             this.visibleElementsMap.push(i);
                         }
@@ -266,13 +267,13 @@
                 }
 
                 if (visibleElements.length > 3) {
-                    this.console("ERROR: readJS.visibleScannableTargets() - More than 3 elements visible!");
+                    this.console("ERROR: readJS.visibleScannableTargets() - More than 3 elements visible!", 1);
                     return false;
                 }
                 return visibleElements;
             }
 
-            this.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!");
+            this.console("ERROR: readJS.visibleScannableTargets() - No scannableTargets found!", 1);
             return false;
         },
 
@@ -303,9 +304,10 @@
             if (!!this.isUpdateRequired()) {
 
                 const allVisibleElements = this.visibleScannableTargets(this.scannableTargets);
-                if(allVisibleElements && allVisibleElements.length > 0){
-                    const firstElementInView = allVisibleElements[0];
-                    this.domNode = firstElementInView;
+                //check if there are less than 4 visible scannable elements but more than 0 too
+                if(!!allVisibleElements && allVisibleElements.length > 0){
+                    this.domNode = allVisibleElements[0];
+                    this.inView(this.domNode);
                     this.addPoints();
                     this.hasRead();
                     return true;
@@ -320,7 +322,7 @@
             if (!!this.status.activity.scrolled) {
                 this.status.activity.scrolled = false;
                 this.reactivate();
-                this.console("detected scroll:", this.status.activity.timeOnPage, " seconds");
+                this.console(`detected scroll: ${this.status.activity.timeOnPage} seconds`, 3);
                 return true;
             }
             return false;
@@ -328,9 +330,9 @@
         /*
             console() will debug the message if the debug mode permits
         */
-        this.console = (...args) => {
-            if (!!this.status.debug.console) {
-                console.log(this.readingWorker, args);
+        this.console = (message, level) => {
+            if (!!this.status.debug.console && level <= this.status.debug.level) {
+                console.log(this.readingWorker, message);
                 return true;
             }
             return false;
@@ -356,20 +358,7 @@
                 }
                 return ret.replace(/[\t\n\r]+/g, "").replace(/\s+/g, " ").trim();
             } catch (err) {
-                this.console(err);
-                return false;
-            }
-        },
-        /*
-            calculateCoordinates() will determine the amount of overlap between the dom node and the viewport
-        */
-        this.calculateCoordinates = () => {
-            if (!!this.domNode) {
-                var r = this.inView(this.domNode);
-                this.console("dom_node_inview_percent", r.dom_node_inview_percent, "dom_node_viewport_percent", r.dom_node_viewport_percent);
-                return true;
-            } else {
-                this.console("ERROR: could not find the story body");
+                this.console(err, 1);
                 return false;
             }
         },
@@ -379,27 +368,27 @@
         this.hasRead = () => {
             //did not scroll far down enough
             if (!this.status.ignoreScrollDepth && this.status.activity.scrollDepth < this.status.thresholds.scrollDepth) {
-                this.console("Has not read yet because user didn't pass scrollDepth threshold");
+                this.console("Has not read yet because user didn't pass scrollDepth threshold", 3);
                 this.report();
                 return false;
             }
             if (!!this.status.strict) {
                 //does not have enough of the dom node in the viewport (display ad viewability)
                 if (this.status.activity.dnp < this.status.thresholds.domNode) {
-                    this.console("STRICT MODE: not enough of dom node is in view");
+                    this.console("STRICT MODE: not enough of dom node is in view", 3);
                     this.report();
                     return false;
                 }
             }
             //not enough points scored
             if (this.status.activity.readingPoints <= this.status.thresholds.readingPoint) {
-                this.console("Not enough points scored for callback");
+                this.console("Not enough points scored for callback", 3);
                 this.report();
                 return false;
             }
             //not enough time in view
             if (this.status.activity.timeInView < this.status.thresholds.timeInView) {
-                this.console("Not enough time in view for callback");
+                this.console("Not enough time in view for callback", 3);
                 this.report();
                 return false;
             }
@@ -415,13 +404,13 @@
             this.scannableTargets.splice(this.visibleElementsMap[0], 1);
             let stop = false;
             if(this.scannableTargetsCount === 1 && this.scannableTargets.length <= 0) {
-                this.console("readJS: stopping because the user has read the article", this.status.activity.readingPoints);
+                this.console(`readJS: stopping because the user has read the article ${this.status.activity.readingPoints}`, 2);
                 stop = true;
             }else if(this.status.activity.numberOfCalls >= this.status.thresholds.maxCalls){
-                this.console("scannedJS: stopping because the user has scanned the maximum number of headlines", this.status.thresholds.maxCalls);
+                this.console(`scannedJS: stopping because the user has scanned the maximum number of headlines ${this.status.thresholds.maxCalls}`, 2);
                 stop = true;
             }else if (this.scannableTargets.length <= 0){
-                this.console("scannedJS: stopping because the user has scanned all available headlines", this.status.activity.numberOfCalls);
+                this.console(`scannedJS: stopping because the user has scanned all available headlines ${this.status.activity.numberOfCalls}`, 2);
                 stop = true;
             }
 
@@ -438,7 +427,7 @@
         this.stopPolling = () => {
             if (!!this.readingWorker) {
                 window.clearInterval(this.readingWorker);
-                this.console("readJS: ending interval ID", this.readingWorker);
+                this.console(`readJS: ending interval ID ${this.readingWorker}`, 3);
                 delete this.readingWorker;
             }
         },
@@ -446,7 +435,7 @@
             report() will console out what readJS knows so far
         */
         this.report = () => {
-            this.console("readingPoints: " + this.status.activity.readingPoints, "timeInView: " + this.status.activity.timeInView, this.status.thresholds.readingPoint, this.status.thresholds.timeInView);
+            this.console(`readingPoints: ${this.status.activity.readingPoints} timeInView: ${this.status.activity.timeInView} readingPointThreshold: ${this.status.thresholds.readingPoint} timeInViewThreshold: ${this.status.thresholds.timeInView}`);
         },
         /*
             addPoints() will recognize actions that will get us closer to the reading state
@@ -476,7 +465,7 @@
             this.status.activity.pollingPoints += 100 * Math.pow(0.9, this.status.activity.timeInUnknownState);
             //it's been long enough to check again
             if (this.status.activity.pollingPoints >= this.status.thresholds.domPolling) {
-                this.console("readJS: analyzing the DOM at", this.status.activity.timeOnPage, " seconds", this.status.activity.pollingPoints);
+                this.console(`readJS: analyzing the DOM at ${this.status.activity.timeOnPage} seconds; current polling points: ${this.status.activity.pollingPoints}`, 3);
                 this.status.activity.pollingPoints = 0;
                 return true;
             }
@@ -488,7 +477,7 @@
             reactivate: the user has done something interesting on the page like click or scroll so it is time to reset the decay curve
         */
         this.reactivate = () => {
-            this.console("readJS: reactivating refresh rate");
+            this.console("readJS: reactivating refresh rate", 3);
             this.status.activity.timeInUnknownState = 0;
             this.status.activity.pollingPoints += this.status.activity.increment;
 
@@ -496,24 +485,30 @@
         /*
             inDebugMode: reads the query string to figure out how to behave
         */
-        this.inDebugMode = () => {
+        this.inDebugMode = (uri) => {
 
-            //add the scrolling debugging console
-            if (!!this.status.debug.overlay) {
-                //add the dom node to overlay
-                this.scrollDataOverlay = document.createElement("DIV");
-                this.scrollDataOverlay.style.position = "fixed";
-                this.scrollDataOverlay.style.bottom = "2em";
-                this.scrollDataOverlay.style.right = "2em";
-                this.scrollDataOverlay.style.zIndex = 10000;
-                this.scrollDataOverlay.style.background = "#fff";
-                this.scrollDataOverlay.style.border = "1px solid #000";
-                this.scrollDataOverlay.id = "scrollinfo";
-                document.body.appendChild(this.scrollDataOverlay);
-                //find the scroll data on initial load
-                this.showScrollInfo();
+            const qs = uri.split("?")[1];
+            if (typeof(qs) !== "string"){
+                return false;
             }
 
+            //check if the url says for the overlay debugging to be on
+            if (qs.match(/overlay=true/)){
+                this.status.debug.overlay = true;
+            }
+
+            //check if the url says for the console debugging to be on
+            if (qs.match(/console=true/)){
+                this.status.debug.console = true;
+            }
+
+            //check if the url says for the console debugging be at a certain verbosity
+            const level = qs.match(/level=([0-3])/);
+            if (!!level){
+                this.status.debug.level = parseInt(level[1], 10);
+            }
+
+            return true;
         },
         /*
             inViewport: utility function to determine if any part of the element in question is in the viewport
@@ -521,19 +516,6 @@
         this.inViewport = (el) => {
             var rect = el.getBoundingClientRect();
             return rect.bottom > 0 && rect.right > 0 && rect.left < window.innerWidth && rect.top < window.innerHeight;
-        },
-        /*
-            showScrollInfo: overlay display to show the maximum scroll depth of the user
-        */
-        this.showScrollInfo = () => {
-            if (!this.status.debug.overlay) {
-                return false;
-            }
-            document.getElementById("scrollinfo").innerHTML = "<ul><li>Scroll Depth Peak:"+this.status.activity.scrollDepth+"</li>"+
-                "<li>Element Top: "+parseInt(this.status.coordinates.domnode.tl[1],10)+"</li>"+
-                "<li>Element Bottom: "+parseInt(this.status.coordinates.domnode.br[1],10)+"</li>"+
-                "<li>Scroll Depth Threshold: "+parseInt(this.status.thresholds.scrollDepth,10)+"</li></ul>";
-            return true;
         },
         /*
             getScrollInfo: will detect if user has scrolled pass threshold point
@@ -602,20 +584,17 @@
         this.handleVisibilityChange = () => {
             var hidden = this.getVisibilityProperties().hiddenProp;
             if (document[hidden]) {
-                this.console("readJS: pausing after detecting focus to another tab");
+                this.console("readJS: pausing after detecting focus to another tab", 2);
                 this.stopPolling();
                 this.calculateTotalTime();
             } else {
-                this.console("readJS: reinitializing after detecting tab is in focus");
+                this.console("readJS: reinitializing after detecting tab is in focus", 2);
                 this.initialize(this.callback);
             }
         },
         //give inView a dom node and it will tell you what percentage of it is inside the viewport
         //the calculations assume
-        this.inView = (domNode) => {
-            var dui, vui, oui, sdui;
-
-            this.domNode = domNode;
+        this.inView = (domNode, shouldUpdateStatus = true) => {
 
             //top left and bottom right coordinate points of the viewport
             var vp = {
@@ -643,28 +622,8 @@
             //viewport area
             vp.area = vp.width * vp.height;
 
-            this.status.coordinates.viewport = vp;
-
-            //highlight viewport
-            if (!!this.status.debug.overlay) {
-
-                if (!this.status.debug.overlays.vui) {
-                    vui = document.createElement("DIV");
-                    vui.id = "viewport_inview";
-                    vui.style.position = "absolute";
-                    vui.style.background = "red";
-                    vui.style.opacity = "0.5";
-                    vui.style.zIndex = 9999;
-                    document.body.appendChild(vui);
-                    this.status.debug.overlays.vui = vui;
-                }
-                vui = this.status.debug.overlays.vui;
-                vui.style.left = vp.tl[0] + "px";
-                vui.style.top = vp.tl[1] + "px";
-                vui.style.width = vp.width + "px";
-                vui.style.height = vp.height + "px";
-                //readJS.console(vui);
-
+            if (!!shouldUpdateStatus){
+                this.status.coordinates.viewport = vp;
             }
 
             //top left and bottom right coordinate points of the dom node
@@ -690,54 +649,18 @@
             //y coordinate of the bottom right corner of the dom node
             dn.br[1] = dn.tl[1] + bcr.height;
 
-            this.status.coordinates.domnode = dn;
+            if (!!shouldUpdateStatus){
+                this.status.coordinates.domnode = dn;
 
-            //get the scroll info with the time interval/cadence
-            this.getScrollInfo();
+                //get the scroll info with the time interval/cadence
+                this.getScrollInfo();
 
-            //pixel point of minVertical percentage
-            this.status.thresholds.scrollDepth = Math.abs(dn.tl[1]) + (bcr.height * this.status.thresholds.minVertical / 100);
-
-            if (!!this.status.debug.overlay) {
-                //highlight dom node
-                if (!this.status.debug.overlays.dui) {
-                    dui = document.createElement("DIV");
-                    dui.id = "domnode_inview";
-                    dui.style.position = "absolute";
-                    dui.style.background = "blue";
-                    dui.style.opacity = "0.5";
-                    dui.style.zIndex = 9999;
-                    document.body.appendChild(dui);
-                    this.status.debug.overlays.dui = dui;
-                }
-                dui = this.status.debug.overlays.dui;
-
-                dui.style.left = dn.tl[0] + "px";
-                dui.style.top = dn.tl[1] + "px";
-                dui.style.width = bcr.width + "px";
-                dui.style.height = bcr.height + "px";
-                //this.console(dui);
-
-                //highlight the scrollDepth threshold
-                if(!this.status.debug.overlays.sdui){
-                    sdui =document.createElement("DIV");
-                    sdui.id = "scroll_depth_marker";
-                    sdui.style.position = "absolute";
-                    sdui.style.background = "black";
-                    sdui.style.width = "100%";
-                    sdui.style.height = "4px";
-                    sdui.style.opacity = "0.5";
-                    sdui.style.zIndex = 9999;
-                    document.body.appendChild(sdui);
-                    this.status.debug.overlays.sdui = sdui;
-                }
-                sdui = this.status.debug.overlays.sdui;
-                sdui.style.left = "0px";
-                sdui.style.top = Math.floor(this.status.thresholds.scrollDepth) + "px";
+                //pixel point of minVertical percentage
+                this.status.thresholds.scrollDepth = Math.abs(dn.tl[1]) + (bcr.height * this.status.thresholds.minVertical / 100);
             }
 
             //element is not in viewport
-            if (!this.inViewport(this.domNode)) {
+            if (!this.inViewport(domNode)) {
                 return {
                     "dom_node_inview_percent": 0,
                     "dom_node_viewport_percent": 0
@@ -763,19 +686,19 @@
             //console.log("dom node", dn);
             //console.log("overlap", overlap);
             //width of overlap
-            var width_of_overlap = Math.abs(overlap.tl[0] - overlap.br[0]);
-            //console.log("width_of_overlap", width_of_overlap);
+            overlap.width = Math.abs(overlap.tl[0] - overlap.br[0]);
+            //console.log("width_of_overlap", overlap.width);
 
             //height of overlap
-            var height_of_overlap = Math.abs(overlap.tl[1] - overlap.br[1]);
-            //console.log("height_of_overlap", height_of_overlap);
+            overlap.height = Math.abs(overlap.tl[1] - overlap.br[1]);
+            //console.log("height_of_overlap", overlap.height);
 
             //determine the area of the dom node
             var dom_node_area = Math.abs((dn.tl[0] - dn.br[0]) * (dn.tl[1] - dn.br[1]));
             //console.log("dom_node_area", dom_node_area);
 
             //determine the area of the overlap
-            var overlap_node_area = Math.abs(width_of_overlap * height_of_overlap);
+            var overlap_node_area = Math.abs(overlap.width * overlap.height);
             //console.log("overlap_node_area", overlap_node_area);
 
             //percentage of overlap in the dom node
@@ -784,27 +707,11 @@
             //percentage of dom node occupying viewport
             var dnvp = overlap_node_area / vp.area * 100;
 
-            if (!!this.status.debug.overlay) {
-                //highlight the overlap area
-                if (!this.status.debug.overlays.oui) {
-                    oui = document.createElement("DIV");
-                    oui.id = "overlap_inview";
-                    document.body.appendChild(oui);
-                    oui.style.position = "absolute";
-                    oui.style.background = "#4B0082";
-                    oui.style.opacity = "0.5";
-                    oui.style.zIndex = 9999;
-                    this.status.debug.overlays.oui = oui;
-                }
-                oui = this.status.debug.overlays.oui;
-                oui.style.left = overlap.tl[0] + "px";
-                oui.style.top = overlap.tl[1] + "px";
-                oui.style.width = width_of_overlap + "px";
-                oui.style.height = height_of_overlap + "px";
-                //this.console(oui);
+            if (!!shouldUpdateStatus){
+                this.status.activity.dnp = dnip;
+                this.status.activity.vpp = dnvp;
+                this.renderOverlays(vp,dn,bcr,overlap);
             }
-            this.status.activity.dnp = dnip;
-            this.status.activity.vpp = dnvp;
 
             var retval = {
                 "dom_node_inview_percent": dnip,
@@ -812,16 +719,120 @@
             };
 
             //if in strict mode and not enough of the dom node is in the viewport or not enough of the viewport is occupied by dom node then don't increment timeInView
-            if (!!this.status.strict && (dnip < this.status.thresholds.domNode || dnvp < this.status.thresholds.viewport)) {
+            if (!!this.status.strict && (dnip < this.status.thresholds.domNode || dnvp < this.status.thresholds.viewport) || !shouldUpdateStatus) {
                 return retval;
             }
             //increment timeInView
             this.status.activity.timeInView += this.status.timeInterval;
             return retval;
         },
+        this.renderOverlays = (vp,dn,bcr,overlap) => {
+            var dui, vui, oui, sdui, sdmui;
+
+            if (!this.status.debug.overlay) {
+                return false;
+            }
+
+            //create the viewport overlay
+            if (!this.status.debug.overlays.vui) {
+                vui = document.createElement("DIV");
+                vui.id = "viewport_inview";
+                vui.style.position = "absolute";
+                vui.style.background = "red";
+                vui.style.opacity = "0.5";
+                vui.style.zIndex = 9999;
+                document.body.appendChild(vui);
+                this.status.debug.overlays.vui = vui;
+            }
+
+            //create the domNode overlay
+            if (!this.status.debug.overlays.dui) {
+                dui = document.createElement("DIV");
+                dui.id = "domnode_inview";
+                dui.style.position = "absolute";
+                dui.style.background = "blue";
+                dui.style.opacity = "0.5";
+                dui.style.zIndex = 9999;
+                document.body.appendChild(dui);
+                this.status.debug.overlays.dui = dui;
+            }
+
+            //create the overlay overlay
+            if (!this.status.debug.overlays.oui) {
+                oui = document.createElement("DIV");
+                oui.id = "overlap_inview";
+                document.body.appendChild(oui);
+                oui.style.position = "absolute";
+                oui.style.background = "#4B0082";
+                oui.style.opacity = "0.5";
+                oui.style.zIndex = 9999;
+                this.status.debug.overlays.oui = oui;
+            }
+
+            //create the scrollDepth marker
+            if(!this.status.debug.overlays.sdmui){
+                sdmui =document.createElement("DIV");
+                sdmui.id = "scroll_depth_marker";
+                sdmui.style.position = "absolute";
+                sdmui.style.background = "black";
+                sdmui.style.width = "100%";
+                sdmui.style.height = "4px";
+                sdmui.style.opacity = "0.5";
+                sdmui.style.zIndex = 9999;
+                document.body.appendChild(sdmui);
+                this.status.debug.overlays.sdmui = sdmui;
+            }
+
+            //create the scrollInfo overlay
+            if(!this.status.debug.overlays.sdui){
+                sdui = document.createElement("DIV");
+                sdui.style.position = "fixed";
+                sdui.style.bottom = "2em";
+                sdui.style.right = "2em";
+                sdui.style.zIndex = 10000;
+                sdui.style.background = "#fff";
+                sdui.style.border = "1px solid #000";
+                sdui.id = "scrollinfo";
+                document.body.appendChild(sdui);
+                this.status.debug.overlays.sdui = sdui;
+            }
+
+            //position the viewport overlay
+            vui = this.status.debug.overlays.vui;
+            vui.style.left = vp.tl[0] + "px";
+            vui.style.top = vp.tl[1] + "px";
+            vui.style.width = vp.width + "px";
+            vui.style.height = vp.height + "px";
+
+            //position the domNode overlay
+            dui = this.status.debug.overlays.dui;
+            dui.style.left = dn.tl[0] + "px";
+            dui.style.top = dn.tl[1] + "px";
+            dui.style.width = bcr.width + "px";
+            dui.style.height = bcr.height + "px";
+
+            //position the overlap overlay
+            oui = this.status.debug.overlays.oui;
+            oui.style.left = overlap.tl[0] + "px";
+            oui.style.top = overlap.tl[1] + "px";
+            oui.style.width = overlap.width + "px";
+            oui.style.height = overlap.height + "px";
+
+            //position the scroll depth marker
+            sdmui = this.status.debug.overlays.sdmui;
+            sdmui.style.left = "0px";
+            sdmui.style.top = Math.floor(this.status.thresholds.scrollDepth) + "px";
+
+            //find the scroll data on initial load
+            sdui = this.status.debug.overlays.sdui;
+            sdui.innerHTML = "<ul><li>Scroll Depth Peak:"+this.status.activity.scrollDepth+"</li>"+
+                "<li>Element Top: "+parseInt(this.status.coordinates.domnode.tl[1],10)+"</li>"+
+                "<li>Element Bottom: "+parseInt(this.status.coordinates.domnode.br[1],10)+"</li>"+
+                "<li>Scroll Depth Threshold: "+parseInt(this.status.thresholds.scrollDepth,10)+"</li></ul>";
+
+        },
         this.handleScroll = () => {
             this.status.activity.scrolled = true;
-            this.showScrollInfo();
         },
         this.handleClick = () => {
             this.status.activity.readingPoints += this.status.activity.increment;
@@ -878,7 +889,7 @@
             }
 
             this.removeListeners();
-            this.console("readJS: stopping midway");
+            this.console("readJS: has been asked to stop midway and has complied", 1);
             this.stopPolling();
             this.removeOverlays();
             this.status.activity.read = false;
@@ -901,19 +912,19 @@
             this.setConfig();
 
             if (!!this.initialized && !this.readJSConfig.spa) {
-                this.console("ERROR: Not a SPA. Cannot turnOn() again on the same web page");
+                this.console("ERROR: Not a SPA. Cannot turnOn() again on the same web page", 1);
                 return false;
             }
             if (typeof(this.readJSConfig) === "undefined") {
-                this.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig");
+                this.console("ERROR: Could not find callback and/or domNode css selector in window.readJSConfig", 1);
                 return false;
             }
             if (typeof(this.readJSConfig.el) !== "string") {
-                this.console("ERROR:  readJSConfig expected el to be a string");
+                this.console("ERROR:  readJSConfig expected el to be a string", 1);
                 return false;
             }
             if (typeof(this.readJSConfig.cb) !== "function") {
-                this.console("ERROR: readJSConfig expected a callback function");
+                this.console("ERROR: readJSConfig expected a callback function", 1);
                 return false;
             }
 

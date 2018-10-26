@@ -58,7 +58,7 @@
     };
 
     //check that if in an article and configure readJS
-    if (window.DataLayer.content.type ==="article"){
+    if (window.DataLayer.content.type === "article"){
         window.readJSConfig = {
             thresholds : {
                 domNode: 100,
