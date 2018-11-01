@@ -1,0 +1,17 @@
+.feed .imageMedia .placeholder img,
+.feed .trendingList .trendingListItem>a{
+    height:auto;
+}
+#next-step{
+    position:fixed;
+    bottom:0;
+    right:0;
+    z-index:10001;
+    font-size:2rem;
+    padding-top:0.5rem;
+    padding-bottom:0.5rem;
+}
+ #next-step:active, #next-step:hover, #next-step:focus{
+    border-color:#333;
+    color:#333;
+}
