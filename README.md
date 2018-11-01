@@ -271,7 +271,7 @@ window.scannedJS.turnOn();
 ## Browser Compatibility
 
 | Device | OS | Browser | Compatible? | Last Test Date | Last Version Tested |
-|-------------------|-------------------|----------------|----------|----------|
+|-------------------|-------------------|----------------|----------|----------|----------|
 | MacBook Pro (Mid 2014) | OSX Yosemite | Safari 9.1 (10601.5.17.4) | Yes | 2018/11/01 | 1.3.0 |
 | MacBook Pro (Mid 2014) | OSX Yosemite | Chrome 70.0.3538.77 | Yes | 2018/11/01 | 1.3.0 |
 | MacBook Pro (Mid 2014) | OSX Yosemite | Firefox 62.0.2 | Yes | 2018/11/01 | 1.3.0 |
