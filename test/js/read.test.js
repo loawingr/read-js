@@ -287,19 +287,42 @@ describe("read-js-tests", function() {
     });
 
     it("will-handle-scrolls", function() {
-        spyOn(readJS, "showScrollInfo");
         readJS.handleScroll();
         expect(readJS.status.activity.scrolled).toBeTruthy();
-        expect(readJS.showScrollInfo).toHaveBeenCalled();
     });
 
     it("console", function() {
         readJS.status.debug.console = true;
-        expect(readJS.console("hello Richard!")).toBeTruthy();
-        expect(readJS.console("apple", "orange")).toBeTruthy();
+        expect(readJS.console("hello Richard!")).toBeFalsy();
+        expect(readJS.console("apple", "orange")).toBeFalsy();
+        expect(readJS.console("apple", 1)).toBeTruthy();
 
         readJS.status.debug.console = false;
         expect(readJS.console("hello Richard!")).toBeFalsy();
+    });
+
+    it("will-detect-debug-mode-via-url", function() {
+        
+        readJS.inDebugMode("https://localhost?console=hello");
+        expect(readJS.status.debug.console).toBeFalsy();
+
+        readJS.inDebugMode("https://localhost?overlay=12");
+        expect(readJS.status.debug.overlay).toBeFalsy();
+
+        expect(readJS.status.debug.level).toBe(3);
+
+        readJS.inDebugMode("https://localhost?console=true");
+        expect(readJS.status.debug.console).toBeTruthy();
+
+        readJS.inDebugMode("https://localhost?overlay=true");
+        expect(readJS.status.debug.overlay).toBeTruthy();
+
+        readJS.inDebugMode("https://localhost?level=2");
+        expect(readJS.status.debug.level).toBe(2);
+
+        readJS.status.debug.console = false;
+        readJS.status.debug.overlay = false;
+        readJS.status.debug.level = 3;
     });
 
     it("initialize", function() {
@@ -313,21 +336,6 @@ describe("read-js-tests", function() {
         spyOn(window, "setInterval");
         expect(readJS.initialize(readJSConfig.cb)).toBeTruthy();
         expect(window.setInterval).toHaveBeenCalled();
-    });
-
-    it("calculates-coordinates", function() {
-        var el = readJS.domNode;
-        delete readJS.domNode;
-        expect(readJS.calculateCoordinates()).toBeFalsy();
-
-        readJS.domNode = el;
-        expect(readJS.calculateCoordinates()).toBeTruthy();
-
-    });
-
-    it("prevents-scroll-info", function() {
-        readJS.status.debug.overlay = false;
-        expect(readJS.showScrollInfo()).toBeFalsy();
     });
 
     it("returns default config", function() {
