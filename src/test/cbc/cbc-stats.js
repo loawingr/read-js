@@ -25,12 +25,12 @@
         if (uid !== null){
             uid = uid[1]; //reassign to the match
             //assign the user id
-            window.amplitude.getInstance().setUserId(uid);
+            //window.amplitude.getInstance().setUserId(uid);
         }
     }
 
     //Send LOADED verb to Amplitude
-    window.amplitude.getInstance().logEvent("LOADED", verbPayloadBase);
+    //window.amplitude.getInstance().logEvent("LOADED", verbPayloadBase);
 
     //detect when the user clicks the next button and send a SELECTED event to window.amplitude
     const nextButton = document.getElementById("next-step");
@@ -40,7 +40,7 @@
             name:"nextButton",
             position:"bottom-right-corner"
         };
-        window.amplitude.getInstance().logEvent("SELECTED", selectedPayload);
+        //window.amplitude.getInstance().logEvent("SELECTED", selectedPayload);
         window.history.back();
     });
 
@@ -54,7 +54,7 @@
             }
         };
         console.log("Article has been read", readPayload);
-        window.amplitude.getInstance().logEvent("READ", readPayload);
+        //window.amplitude.getInstance().logEvent("READ", readPayload);
     };
 
     //check that if in an article and configure readJS
@@ -94,7 +94,7 @@
             }
         };
         console.log("Headline has been scanned", scannedPayload);
-        window.amplitude.getInstance().logEvent("SCANNED", scannedPayload);
+        //window.amplitude.getInstance().logEvent("SCANNED", scannedPayload);
     };
 
     //check that if in index and configure scannedJS
