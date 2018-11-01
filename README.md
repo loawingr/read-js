@@ -270,38 +270,44 @@ window.scannedJS.turnOn();
 
 ## Browser Compatibility
 
-| Device | OS | Browser | Compatible? |
-|-------------------|-------------------|----------------|----------|
-| Desktop | OSX El Capitan | Safari 9.1.1 | Yes |
-| Desktop | OSX El Capitan | Chrome 56 | Yes |
-| Desktop | OSX El Capitan | Firefox 43 | Yes |
-| Desktop | Windows 8 64-bit | IE 10 | Partial |
-| Desktop | Windows 8 64-bit | Chrome 54 | Yes |
-| Desktop | Windows 8 64-bit | Firefox 51 | Yes |
-| Desktop | Windows 8 64-bit | Opera 43 | Yes |
-| Apple iPad Air 2 | iOS 9.3.1 | Safari | Yes |
-| Apple iPad Air 2 | iOS 9.3.1 | Chrome 55 | Yes |
-| Apple iPad Air 2 | iOS 9.3.1 | Firefox 6.1 | Yes |
-| Apple iPad 2 | iOS 9.2.1 | Safari | Yes |
-| Apple iPad 2 | iOS 9.2.1 | Chrome 56 | Yes |
-| Apple iPad 2 | iOS 9.2.1 | Firefox 6.1 | Yes |
-| Apple iPad 2 | iOS 9.2.1 | Opera Mini | No |
-| Samsung Galaxy Tab 4 | Android 5.1.1 | Chrome 55+ | Partial |
-| Samsung Galaxy Tab 4 | Android 5.1.1 | Firefox 51+ | Yes |
-| iPhone 6 | iOS 10.2 | Safari | Yes |
-| iPhone 6 | iOS 10.2 | Chrome 56 | Yes |
-| iPhone 6 | iOS 10.2 | Firefox 6.1 git | Yes |
-| Nexus 5 | Android 6.0.1 | Chrome 56+ | Yes |
-| Nexus 5 | Android 6.0.1 | Firefox 51+| Yes |
-| Nexus 5 | Android 6.0.1 | Opera Mini | No |
+| Device | OS | Browser | Compatible? | Last Test Date | Last Version Tested |
+|-------------------|-------------------|----------------|----------|----------|
+| MacBook Pro (Mid 2014) | OSX Yosemite | Safari 9.1 (10601.5.17.4) | Yes | 2018/11/01 | 1.3.0 |
+| MacBook Pro (Mid 2014) | OSX Yosemite | Chrome 70.0.3538.77 | Yes | 2018/11/01 | 1.3.0 |
+| MacBook Pro (Mid 2014) | OSX Yosemite | Firefox 62.0.2 | Yes | 2018/11/01 | 1.3.0 |
+| MacBook Pro (Mid 2012)| OSX El Capitan | Safari 9.1.2 (11601.7.7) | Yes | 2018/11/01 | 1.3.0 |
+| MacBook Pro (Mid 2012)| OSX El Capitan | Chrome 70.0.3538.77 | Yes | 2018/11/01 | 1.3.0 |
+| MacBook Pro (Mid 2012)| OSX El Capitan | Firefox 43 | Yes | 2018/11/01 | 1.3.0 |
+| Dell Laptop | Windows 10 64-bit | IE 11 | No | 2018/11/01 | 1.3.0 |
+| Dell Laptop | Windows 10 64-bit | Chrome 70.03538.77 | Yes | 2018/11/01 | 1.3.0 |
+| Dell Laptop | Windows 10 64-bit | Firefox 62.0.3 | Yes | 2018/11/01 | 1.3.0 |
+| Apple iPad Air 2 | iOS 9.3.1 | Safari 9.3.1 | Yes | 2018/11/01 | 1.3.0 |
+| Apple iPad Air 2 | iOS 9.3.1 | Chrome 63.03239.73 | Yes | 2018/11/01 | 1.3.0 |
+| Apple iPad Air 2 | iOS 9.3.1 | Firefox 6.1(1) | Yes | 2018/11/01 | 1.3.0 |
+| Apple iPad 2 | iOS 9.2.1 | Safari | Yes | 2017/03/01 | 1.1.3 |
+| Apple iPad 2 | iOS 9.2.1 | Chrome 56 | Yes | 2017/03/01 | 1.1.3 |
+| Apple iPad 2 | iOS 9.2.1 | Firefox 6.1 | Yes | 2017/03/01 | 1.1.3 |
+| Apple iPad 2 | iOS 9.2.1 | Opera Mini | No | 2017/03/01 | 1.1.3 |
+| Pixel 2 | Android 8.1.0 | Chrome 70.0.3538.80 | Yes | 2018/11/01 | 1.3.0 |
+| Pixel 2 | Android 8.1.0 | Firefox 62.0.3 | Yes | 2018/11/01 | 1.3.0 |
+| Pixel 2 | Android 8.1.0 | Opera 62.0.3 | Yes | 2018/11/01 | 1.3.0 |
+| Samsung Galaxy Tab 4 | Android 5.1.1 | Chrome 55+ | Partial | 2017/03/01 | 1.1.3 |
+| Samsung Galaxy Tab 4 | Android 5.1.1 | Firefox 51+ | Yes | 2017/03/01 | 1.1.3 |
+| iPhone 6 | iOS 10.2 | Safari | Yes | 2017/03/01 | 1.1.3 |
+| iPhone 6 | iOS 10.2 | Chrome 56 | Yes | 2017/03/01 | 1.1.3 |
+| iPhone 6 | iOS 10.2 | Firefox 6.1 git | Yes | 2017/03/01 | 1.1.3 |
+| Nexus 5 | Android 6.0.1 | Chrome 56+ | Yes | 2017/03/01 | 1.1.3 |
+| Nexus 5 | Android 6.0.1 | Firefox 51+| Yes | 2017/03/01 | 1.1.3 |
+| Nexus 5 | Android 6.0.1 | Opera Mini | No | 2017/03/01 | 1.1.3 |
 
 ## Known Bugs
 
 * Compatibility mode in Internet Explorer is currently not supported.
 * On the Android Samsung Galaxy Tab 4 (5.1.1) in Google Chrome the zoom function confuses read JS.
+* IE11 on Windows 10 doesn't support the Object.assign method. Need to find an alternative.
 
 ## Version
-1.2.1
+1.3.0
 
 ## License
 
