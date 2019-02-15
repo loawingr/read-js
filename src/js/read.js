@@ -7,6 +7,10 @@
     "use strict";
     // Set the name of the hidden property and the change event for visibility
 
+    if (typeof window === "undefined") {
+        return;
+    }
+
     function readJS(config){
         /*
             resetConfigStatus : resets config to default and all status variables to zero
