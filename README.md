@@ -307,7 +307,7 @@ window.scannedJS.turnOn();
 * IE11 on Windows 10 doesn't support the Object.assign method. Need to find an alternative.
 
 ## Version
-1.3.0
+1.3.1
 
 ## License
 
