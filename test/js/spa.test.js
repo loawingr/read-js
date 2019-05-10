@@ -14,14 +14,14 @@ describe("spa tests of readJS", function(){
     });
 
     it("should return false if the user agent contains \"Googlebot\"", function() {
-        expect(readJS.checkGooglebot("Googlebot-Image/1.0")).toBeFalsy();
-        expect(readJS.checkGooglebot("Googlebot-News")).toBeFalsy();
-        expect(readJS.checkGooglebot("Googlebot-Video/1.0")).toBeFalsy();
-        expect(readJS.checkGooglebot("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).toBeFalsy();
-        expect(readJS.checkGooglebot("Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36")).toBeFalsy();
-        expect(readJS.checkGooglebot("Googlebot/2.1 (+http://www.google.com/bot.html)")).toBeFalsy();
-        expect(readJS.checkGooglebot("Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).toBeFalsy();
-        expect(readJS.checkGooglebot("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36")).toBeTruthy();
+        expect(readJS.checkGooglebot("Googlebot-Image/1.0")).toBeTruthy();
+        expect(readJS.checkGooglebot("Googlebot-News")).toBeTruthy();
+        expect(readJS.checkGooglebot("Googlebot-Video/1.0")).toBeTruthy();
+        expect(readJS.checkGooglebot("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).toBeTruthy();
+        expect(readJS.checkGooglebot("Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36")).toBeTruthy();
+        expect(readJS.checkGooglebot("Googlebot/2.1 (+http://www.google.com/bot.html)")).toBeTruthy();
+        expect(readJS.checkGooglebot("Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).toBeTruthy();
+        expect(readJS.checkGooglebot("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36")).toBeFalsy();
     });
 
     it("should not be turned on", function(){
