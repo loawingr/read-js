@@ -907,10 +907,21 @@
             return true;
         },
         /*
+            checkGooglebot: checks if a value (navigator.userAgent) contains "Googlebot", and returns false if it does
+        */
+        this.checkGooglebot = (userAgent) => {
+            const Googlebot = new RegExp("Googlebot");
+            return Googlebot.test(userAgent);
+        },
+        /*
             turnOn : For SPA's to start Read JS when changing app state
         */
         this.turnOn = () => {
             if (!!this.isOnValue) {
+                return false;
+            }
+
+            if (navigator && navigator.userAgent && this.checkGooglebot(navigator.userAgent)) {
                 return false;
             }
 
