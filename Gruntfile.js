@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: false,
-                presets: ["env"],
+                presets: ["@babel/preset-env"],
                 compact: false
             },
             dist: {
@@ -52,18 +52,10 @@ module.exports = function(grunt) {
             },
             target: ["Gruntfile.js", "./src/js/config.js", "./src/js/read.js", "./src/js/spa-demo.js", "./src/test/cbc/cbc-stats.js"]
         },
-        karma: {
-            spa: {
-                configFile: "test/conf/spa.conf.js"
-            },
-            read: {
-                configFile: "test/conf/read.conf.js"
-            },
-            readscanned: {
-                configFile: "test/conf/read-scanned.conf.js"
-            },
-            coverage: {
-                configFile: "test/conf/coverage.conf.js"
+        run: {
+            tests:{
+                cmd:"npm",
+                args:["test"]
             }
         },
         clean:{
@@ -72,17 +64,14 @@ module.exports = function(grunt) {
     };
 
     grunt.initConfig(config);
-
-    grunt.loadNpmTasks("grunt-eslint");
-    grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-babel");
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-eslint");
+    grunt.loadNpmTasks("grunt-run");
 
-    grunt.registerTask("default", ["build", "test"]);
-    grunt.registerTask("build", ["clean","eslint", "babel", "copy:build"]);
+    grunt.registerTask("default", ["clean","eslint", "babel", "copy:build", "run:tests"]);
     grunt.registerTask("distribute", ["uglify"]);
-    grunt.registerTask("test", ["karma"]);
 
 };

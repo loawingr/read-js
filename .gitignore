@@ -26,4 +26,4 @@ nbproject
 
 node_modules
 build
-test/karma
+coverage
