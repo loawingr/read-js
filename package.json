@@ -24,7 +24,8 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "grunt",
+    "build": "grunt default",
+    "prepublishOnly":"npm test",
     "prepare": "npm run build"
   },
   "jest": {
