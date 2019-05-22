@@ -1,4 +1,12 @@
-describe("read-js and scanned-js tests together", function(){
+//in spa mode with a default paragraph as the text to read
+import { setupTestEnvironment, mockGetBoundingClientRect } from "./setup.js";
+setupTestEnvironment();
+mockGetBoundingClientRect();
+
+//pull in the readJS library
+import defaultExport from "../read.js";
+
+describe("read-js and scanned-js are running simultaneously together", function(){
 
 	//turn on console logging
     readJS.status.debug.console = true;
