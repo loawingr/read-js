@@ -63,7 +63,8 @@ describe("read-js-config-tests", () => {
                 minTimeInView : 1,
                 maxTimeInView: 10,
                 minVertical:20,
-                maxCalls: 5
+                maxCalls: 5,
+                percentagePoint:30 //30% vertical scroll threshold
             },
             el : "#paragraph",
             cb : () => { alert("Yay! They read it!"); }
@@ -92,6 +93,11 @@ describe("read-js-config-tests", () => {
         expect(cfg.thresholds.maxTimeInView).toBe(10);
         expect(cfg.thresholds.minVertical).toBe(20);
         expect(cfg.thresholds.maxCalls).toBe(5);
+    });
+
+    it("tests if window.readJSConfig exists", ()=>{
+        delete(window.readJSConfig);
+        expect(readJS.setConfig()).toBeFalsy();
     });
 
     //reset after all test cases

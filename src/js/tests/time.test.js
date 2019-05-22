@@ -11,6 +11,10 @@ describe("read-js-time-based-tests", () => {
         readJS.turnOn();
     });
 
+    it("should return an array of set interval timers", () => {
+        expect(readJS.getIntervals().length).toBeGreaterThan(0);
+    });
+
     it("should set the initial time", () => {
         readJS.status.activity.initialTime = 0;
         readJS.setInitialTime();
@@ -115,7 +119,6 @@ describe("read-js-time-in-view-tests", () => {
 
     it("time-in-view-threshold", () => {
         var dn = readJS.domNode;
-        console.log(dn);
 
         //word count the paragraph and predict how long it should take the reader to read enough of the paragraph
         //the paragraph has 91 words in it
@@ -128,6 +131,11 @@ describe("read-js-time-in-view-tests", () => {
         readJS.setTimeInViewThreshold();
         expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView); //read through a very short paragraph
 
+        document.body.innerHTML = `<div id="breaking-news">All 6 big banks report large net losses due to too little loan loss provisioning!</div>`;
+        readJS.domNode = document.getElementById("breaking-news");
+        delete(readJS.status.thresholds.timeInView);
+        readJS.setTimeInViewThreshold();
+        expect(readJS.status.thresholds.timeInView).toBe(readJS.status.thresholds.minTimeInView);
 
         document.body.innerHTML = `<div id="story-body">
         <p>To Sherlock Holmes she is always THE woman. I have seldom
