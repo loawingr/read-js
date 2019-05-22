@@ -14,9 +14,10 @@ const setupTestEnvironment = () => {
 };
 
 //https://davidwalsh.name/monkey-patching
-const mockGetBoundingClientRect = () => {
-    //mocking a 500 x 500px square at the top left corner of the viewport that is 100% in view of a 1024 x 768 viewport size
-    const getBoundingClientRectSpy = jest.fn(() => ({ width: 500, height:500, top:0, left:0, right:524, bottom:268, x:0, y:0 }));
+const mockGetBoundingClientRect = (dimensions = { width: 500, height:500, top:0, left:0, right:524, bottom:268, x:0, y:0 }) => {
+    //mocking a 500 x 500px square at the top left corner of the viewport that is 100% in view of a 1024 x 768 viewport size by default
+    //you can overwrite the default
+    const getBoundingClientRectSpy = jest.fn(() => ({width:dimensions.width, height:dimensions.height, top:dimensions.top, left:dimensions.left, right:dimensions.right, bottom: dimensions.bottom, x:dimensions.x, y:dimensions.y }));
     global.document.getElementById = jest.fn(() => ({
         getBoundingClientRect: getBoundingClientRectSpy  // <= add getBoundingClientRect
     }));
@@ -26,7 +27,6 @@ const mockGetBoundingClientRect = () => {
     global.document.querySelectorAll = jest.fn(() => ([{
         getBoundingClientRect: getBoundingClientRectSpy  // <= add getBoundingClientRect
     }]));
-
 };
 
 module.exports = {

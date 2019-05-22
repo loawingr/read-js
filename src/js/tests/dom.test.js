@@ -40,6 +40,25 @@ describe("read-js-dom-tests", () => {
         expect(targets.length).toEqual(1);
     });
 
+    //it("should not fire a SCANNED signal since there are too many headlines in the viewport", () => {
+    //    document.body.innerHTML = `<a class="card" data-contentid="1" href="#">headline 1</div></a><a class="card" data-contentid="2" href="#">headline 2</div></a><a class="card" data-contentid="3" href="#">headline 3</div></a><a class="card" data-contentid="4" href="#">headline 4</div></a>`;
+    //    const targets = readJS.getScannableTargets(".card");
+    //    expect(targets.length).toEqual(4);
+    //    expect(readJS.visibleScannableTargets(targets)).toBeFalsy();
+    //});
+
+    it("should be able to remove DOM nodes after being provided an HTML ID", ()=>{
+        document.body.innerHTML = `<div id="test">hello world</div>`;
+        expect(document.getElementById("test")).not.toBeNull();
+        expect(readJS.removeDomNode("test")).toBeTruthy();
+        expect(document.getElementById("test")).toBeNull();
+    });
+
+    it("should not return scannable targets that don't exist", () => {
+        const target = readJS.getScannableTargets(".does-not-exist");
+        expect(target).toBeFalsy();
+    });
+
     //reset after all test cases
     afterAll(() => {
         readJS.turnOff();
